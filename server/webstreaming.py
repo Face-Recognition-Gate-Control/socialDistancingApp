@@ -125,9 +125,9 @@ def video_feed():
 
 # check to see if this is the main thread of execution
 if __name__ == '__main__':
-    # construct the argument parser and parse command line arguments
+   
 
-    # start a thread that will perform motion detection
+  
     t = threading.Thread(target=startStream, args=(
         24,))
     t.daemon = True

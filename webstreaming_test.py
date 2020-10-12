@@ -1,31 +1,55 @@
+# USAGE
+# python webstreaming.py --ip 0.0.0.0 --port 8000
+
+# import the necessary packages
+from imutils.video import VideoStream
+from flask import Response
+from flask import Flask
+from flask import render_template,url_for,redirect,flash,request
+from threading import Thread
+import threading
+import argparse
+import datetime
+import imutils
+import time
+import cv2
+import socket
+import struct
+import pickle
+import numpy
+
 import pyrealsense2 as rs
 import cv2
 from multiprocessing import Process, Queue
 import numpy as np
 
-from flask import Response
-from flask import Flask
-from flask import render_template
 # from detect.detection import detect_people
 # from detect import social_distancing_config as config
 from detect import config_caffe as config
 from detect.detectCaffe import detect_people
 import os
-from threading import Thread
 import imutils
 from imutils.object_detection import non_max_suppression
 import json
 import math
-import threading
-import pickle
-import socket
-import logging
 import datetime
-import struct
+
+# initialize the output frame and a lock used to ensure thread-safe
+# exchanges of the output frames (useful for multiple browsers/tabs
+# are viewing tthe stream)
+outputFrame = None
+lock = threading.Lock()
+
 
 # initialize a flask object
 app = Flask(__name__)
+numberOfPeople=0
 
+
+@app.route("/")
+def index():
+    # return the rendered template
+    return render_template("index.html")
 
 
 def predict_bbox_mp(image_queue, predicted_data):
@@ -141,6 +165,7 @@ def euclideanDistance(points):
                 + (points[i]["z"] - points[j]["z"]) ** 2
             )
 
+            #print(dist)
             if dist < config.MIN_DISTANCE:
 
                 violate.add(i)
@@ -207,95 +232,7 @@ def Show_Image_mp(processed_image, original_image):
                 break
 
 
-class ClientThread(threading.Thread):
-    def __init__(self, clientAddress, clientsocket, stream):
-        threading.Thread.__init__(self)
-        self.csocket = clientsocket
-        self.clientAddress = clientAddress
-        self.stream = stream
-        self.lock = threading.Lock()
-        self.frame = stream.get()
 
-        print("New connection added: ", clientAddress)
-        self.stopped = False
-
-    def run(self):
-        encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
-        print("Connection from : ", self.clientAddress)
-
-        while not self.stopped:
-
-            self.lock.acquire()
-
-            try:
-                if not self.stream.empty():
-                   
-                    self.frame = self.stream.get()
-
-                    a = pickle.dumps(self.frame, 0)
-                    message = struct.pack("Q", len(a)) + a
-                    self.csocket.sendall(message)
-            except Exception as e:
-                print(e)
-            finally:
-                logging.debug("Released a lock")
-
-                self.lock.release()
-
-        cam.release()
-        print("Client at ", self.clientAddress, " disconnected...")
-
-
-# starts a tcp-socket stream process
-# accepts clients and spawns a new client thread for the video stream
-def socketVideoStream(host, port, processed_frames):
-
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    server.bind((host, port))
-    lock = threading.Lock()
-
-    print("Server started")
-    print("Waiting for client request..")
-    while True:
-        server.listen(5)
-        clientsocket, clientAddress = server.accept()
-        newthread = ClientThread(clientAddress, clientsocket, processed_frames)
-
-        newthread.start()
-    server.close()
-
-
-def get3d(x, y, frames):
-
-    align_to = rs.stream.color
-    align = rs.align(align_to)
-
-    # Align the depth frame to color frame
-    aligned_frames = align.process(frames)
-
-    # Get aligned frames
-    aligned_depth_frame = aligned_frames.get_depth_frame()
-    aligned_depth_intrin = (
-        aligned_depth_frame.profile.as_video_stream_profile().intrinsics
-    )
-
-    depth_pixel = [x, y]
-    # In meters
-    dist_to_center = aligned_depth_frame.get_distance(x, y)
-    pose = rs.rs2_deproject_pixel_to_point(
-        aligned_depth_intrin, depth_pixel, dist_to_center
-    )
-
-    # The (x,y,z) coordinate system of the camera is accordingly
-    # Origin is at the centre of the camera
-    # Positive x axis is towards right
-    # Positive y axis is towards down
-    # Positive z axis is into the 2d xy plane
-
-    response_dict = {"x": pose[0], "y": pose[1], "z": pose[2]}
-
-    return response_dict
 
 
 
@@ -319,11 +256,11 @@ def detect_video_realtime_mp():
         target=Show_Image_mp, args=(processed_frames, original_frames), daemon=True
     )
 
-    p4 = Thread(
-        target=socketVideoStream,
-        args=("10.22.183.75", 8080, processed_frames),
-        daemon=True,
-    )
+    # p4 = Process(
+    #     target=socketVideoStream,
+    #     args=("10.22.183.75", 8080, processed_frames),
+    #     daemon=True,
+    # )
 
     
 
@@ -331,7 +268,7 @@ def detect_video_realtime_mp():
 
     p1.start()
     p2.start()
-    p3.start()
+    #p3.start()
     #p4.start()
 
     
@@ -367,7 +304,9 @@ def detect_video_realtime_mp():
 
                 pred_bbox = predicted_data.get()
                 numberOfPeople = len(pred_bbox)
-                print(numberOfPeople)
+                
+                
+                #print(numberOfPeople)
                 bboxes = []
                 vectors = []
 
@@ -388,18 +327,133 @@ def detect_video_realtime_mp():
             print("Error is ", str(e))
 
 
+def get3d(x, y, frames):
+
+    align_to = rs.stream.color
+    align = rs.align(align_to)
+
+    # Align the depth frame to color frame
+    aligned_frames = align.process(frames)
+
+    # Get aligned frames
+    aligned_depth_frame = aligned_frames.get_depth_frame()
+    aligned_depth_intrin = (
+        aligned_depth_frame.profile.as_video_stream_profile().intrinsics
+    )
+
+    depth_pixel = [x, y]
+    # In meters
+    dist_to_center = aligned_depth_frame.get_distance(x, y)
+    pose = rs.rs2_deproject_pixel_to_point(
+        aligned_depth_intrin, depth_pixel, dist_to_center
+    )
+
+    # The (x,y,z) coordinate system of the camera is accordingly
+    # Origin is at the centre of the camera
+    # Positive x axis is towards right
+    # Positive y axis is towards down
+    # Positive z axis is into the 2d xy plane
+
+    response_dict = {"x": pose[0], "y": pose[1], "z": pose[2]}
+
+    return response_dict
 
 
+def startApp():
+    
+    camera =False
+    # tries to connect to realsense camera
+
+    while not camera:
+        try:
+
+            print("connecting to realsense")
+            cfg = pipeline.start(rsconfig)
+            dev = cfg.get_device()
+            advnc_mode = rs.rs400_advanced_mode(dev)
+            advnc_mode.load_json(json_string)
+
+            # get depthscale from camera. converting distance to meter
+            depth_scale = cfg.get_device().first_depth_sensor().get_depth_scale()
+
+           
+
+           
+
+        except Exception as e:
+            print(e)
+            print("no device connected")
+
+        finally:
+            print("connected")
+            camera = True
+
+         
+
+            p =  Process(target=detect_video_realtime_mp()).start()
 
 
-if __name__ == "__main__":
-
+def generate():
    
 
+    # loop over frames from the output stream
+    while True:
+        # wait until the lock is acquired
+        with lock:
+            # check if the output frame is available, otherwise skip
+            # the iteration of the loop
+            if processed_frames.empty():
+                continue
+            
+            outputFrame = processed_frames.get()
+            # encode the frame in JPEG format
+            (flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
+
+            # ensure the frame was successfully encoded
+            if not flag:
+                continue
+
+        # yield the output frame in the byte format
+        yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
+              bytearray(encodedImage) + b'\r\n')
+
+
+
+
+
+
+
+@app.route("/video_feed")
+def video_feed():
+    # return the response generated along with the specific media
+    # type (mime type)
+    return Response(generate(),
+                    mimetype="multipart/x-mixed-replace; boundary=frame")
+
+@app.route('/changeconfig')
+def changeconfig():
+    
+
+
+    return "nothing"
+
+@app.route('/',methods=['POST'])
+def getvalue():
+    name = numberOfPeople
+    age =request.form['age']
+
+    config.MIN_DISTANCE= age
+    
+    db = request.form['dateofbirth']
    
 
+    return render_template('index.html',n =name,age=age,db = db)
 
-    # load config file made
+# check to see if this is the main thread of execution
+if __name__ == '__main__':
+
+    numberOfPeople =0
+     # load config file made
     # do adjustment in realsense depth quality tool
     jsonObj = json.load(open("configrealsense.json"))
     json_string = str(jsonObj).replace("'", '"')
@@ -425,44 +479,21 @@ if __name__ == "__main__":
         rs.format.bgr8,
         int(jsonObj["stream-fps"]),
     )
-    camera =False
-    # tries to connect to realsense camera
+   
+     # initilize the queues for sharing recources between processes
+    original_frames = Queue()
+    depthFrames = Queue()
+    predicted_data = Queue()
+    boundingBoxes = Queue()
+    processed_frames = Queue()
 
-    while not camera:
-        try:
+  
+    t = Thread(target=startApp)
+    t.setDaemon(True)
+    t.start()
 
-            print("connecting to realsense")
-            cfg = pipeline.start(rsconfig)
-            dev = cfg.get_device()
-            advnc_mode = rs.rs400_advanced_mode(dev)
-            advnc_mode.load_json(json_string)
+    # start the flask app
+    app.run(host="10.0.0.36", port="8000", debug=True,
+            threaded=True, use_reloader=False)
 
-            # get depthscale from camera. converting distance to meter
-            depth_scale = cfg.get_device().first_depth_sensor().get_depth_scale()
 
-            # initilize the queues for sharing recources between processes
-            original_frames = Queue()
-            depthFrames = Queue()
-            predicted_data = Queue()
-            boundingBoxes = Queue()
-            processed_frames = Queue()
-
-           
-
-        except Exception as e:
-            print(e)
-            print("no device connected")
-
-        finally:
-            print("connected")
-            camera = True
-
-         
-
-            p =  Process(target=detect_video_realtime_mp()).start()
-
-            
-            
-            
-            
-            
