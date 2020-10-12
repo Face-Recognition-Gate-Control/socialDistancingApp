@@ -1,0 +1,7 @@
+
+numpy
+pyrealsense2
+flask 
+flask-socketio 
+eventlet
+imutils
