@@ -1,0 +1,59 @@
+
+def drawBox(image, predicitons):
+    violation = set()
+
+    if len(predicitons[1]) >= 2:
+
+        violation = euclideanDistance(predicitons[1])
+
+    for (i, (box)) in enumerate(predicitons[0]):
+
+        # extract the bounding box and centroid coordinates, then
+        # initialize the color of the annotation
+        (startX, startY, endX, endY) = box
+
+        color = (255, 0, 0)
+        if i in violation:
+            color = (0, 0, 255)
+        cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
+        w = startX + (endX - startX) / 2
+        h = startY + (endY - startY) / 2
+
+        cv2.circle(image, (int(w), int(h)), 5, color, 1)
+
+    return image
+
+
+
+
+    
+def get3d(x, y, frames):
+
+    align_to = rs.stream.color
+    align = rs.align(align_to)
+
+    # Align the depth frame to color frame
+    aligned_frames = align.process(frames)
+
+    # Get aligned frames
+    aligned_depth_frame = aligned_frames.get_depth_frame()
+    aligned_depth_intrin = (
+        aligned_depth_frame.profile.as_video_stream_profile().intrinsics
+    )
+
+    depth_pixel = [x, y]
+    # In meters
+    dist_to_center = aligned_depth_frame.get_distance(x, y)
+    pose = rs.rs2_deproject_pixel_to_point(
+        aligned_depth_intrin, depth_pixel, dist_to_center
+    )
+
+    # The (x,y,z) coordinate system of the camera is accordingly
+    # Origin is at the centre of the camera
+    # Positive x axis is towards right
+    # Positive y axis is towards down
+    # Positive z axis is into the 2d xy plane
+
+    response_dict = {"x": pose[0], "y": pose[1], "z": pose[2]}
+
+    return response_dict

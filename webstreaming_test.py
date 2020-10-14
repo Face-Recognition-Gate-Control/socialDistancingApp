@@ -23,8 +23,6 @@ import cv2
 from multiprocessing import Process, Queue
 import numpy as np
 
-# from detect.detection import detect_people
-# from detect import social_distancing_config as config
 from detect import config_caffe as config
 from detect.detectCaffe import detect_people
 import os
@@ -33,6 +31,9 @@ from imutils.object_detection import non_max_suppression
 import json
 import math
 import datetime
+
+from utils.calculation import euclideanDistance 
+from utils.post_process import  drawBox
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful for multiple browsers/tabs
@@ -108,95 +109,11 @@ def predict_bbox_mp(image_queue, predicted_data):
             predicted_data.put(results)
 
 
-# calcualate the distance from all the coordinates(x,y,z) from detected personns
-def detectHog(frame, HOGCV):
-
-    frame = cv2.resize(frame, (300, 300))
-    print(frame.shape)
-    start = datetime.datetime.now()
-
-    # Factor for scale to original size of frame
-    heightFactor = frame.shape[0] / 300.0
-    widthFactor = frame.shape[1] / 300.0
-
-    (rects, weights) = HOGCV.detectMultiScale(
-        frame, winStride=(4, 4), padding=(128, 128), scale=1.05
-    )
-
-    print(rects)
-    rects = np.array(
-        [
-            [
-                int(x * widthFactor),
-                int(y * heightFactor),
-                int(w * widthFactor),
-                int(h * heightFactor),
-            ]
-            for (x, y, w, h) in rects
-        ]
-    )
-    result = non_max_suppression(rects, probs=None, overlapThresh=0.65)
-
-    print("people", len(rects))
-
-    # print(
-    #     "[INFO] detection took: {}s".format(
-    #         (datetime.datetime.now() - start).total_seconds()
-    #     )
-    # )
-
-    # for box, weight in zip(bounding_box_cordinates, weights):
-    #     print(box, weight)
-
-    return result
 
 
-def euclideanDistance(points):
-
-    violate = set()
-
-    for i in range(0, len(points)):
-
-        for j in range(i + 1, len(points)):
-
-            dist = math.sqrt(
-                (points[i]["x"] - points[j]["x"]) ** 2
-                + (points[i]["y"] - points[j]["y"]) ** 2
-                + (points[i]["z"] - points[j]["z"]) ** 2
-            )
-
-            #print(dist)
-            if dist < config.MIN_DISTANCE:
-
-                violate.add(i)
-                violate.add(j)
-
-    return violate
 
 
-def drawBox(image, predicitons):
-    violation = set()
 
-    if len(predicitons[1]) >= 2:
-
-        violation = euclideanDistance(predicitons[1])
-
-    for (i, (box)) in enumerate(predicitons[0]):
-
-        # extract the bounding box and centroid coordinates, then
-        # initialize the color of the annotation
-        (startX, startY, endX, endY) = box
-
-        color = (255, 0, 0)
-        if i in violation:
-            color = (0, 0, 255)
-        cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
-        w = startX + (endX - startX) / 2
-        h = startY + (endY - startY) / 2
-
-        cv2.circle(image, (int(w), int(h)), 5, color, 1)
-
-    return image
 
 
 # post process the frames. draw bounding boxes of people

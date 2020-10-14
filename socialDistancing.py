@@ -23,8 +23,11 @@ import logging
 import datetime
 import struct
 
-# initialize a flask object
-app = Flask(__name__)
+from utils.calculation import euclideanDistance 
+from utils.post_process import  drawBox,get3d
+from server.ClientThead import ClientThread
+
+
 
 
 
@@ -84,94 +87,11 @@ def predict_bbox_mp(image_queue, predicted_data):
             predicted_data.put(results)
 
 
-# calcualate the distance from all the coordinates(x,y,z) from detected personns
-def detectHog(frame, HOGCV):
-
-    frame = cv2.resize(frame, (300, 300))
-    print(frame.shape)
-    start = datetime.datetime.now()
-
-    # Factor for scale to original size of frame
-    heightFactor = frame.shape[0] / 300.0
-    widthFactor = frame.shape[1] / 300.0
-
-    (rects, weights) = HOGCV.detectMultiScale(
-        frame, winStride=(4, 4), padding=(128, 128), scale=1.05
-    )
-
-    print(rects)
-    rects = np.array(
-        [
-            [
-                int(x * widthFactor),
-                int(y * heightFactor),
-                int(w * widthFactor),
-                int(h * heightFactor),
-            ]
-            for (x, y, w, h) in rects
-        ]
-    )
-    result = non_max_suppression(rects, probs=None, overlapThresh=0.65)
-
-    print("people", len(rects))
-
-    # print(
-    #     "[INFO] detection took: {}s".format(
-    #         (datetime.datetime.now() - start).total_seconds()
-    #     )
-    # )
-
-    # for box, weight in zip(bounding_box_cordinates, weights):
-    #     print(box, weight)
-
-    return result
 
 
-def euclideanDistance(points):
-
-    violate = set()
-
-    for i in range(0, len(points)):
-
-        for j in range(i + 1, len(points)):
-
-            dist = math.sqrt(
-                (points[i]["x"] - points[j]["x"]) ** 2
-                + (points[i]["y"] - points[j]["y"]) ** 2
-                + (points[i]["z"] - points[j]["z"]) ** 2
-            )
-
-            if dist < config.MIN_DISTANCE:
-
-                violate.add(i)
-                violate.add(j)
-
-    return violate
 
 
-def drawBox(image, predicitons):
-    violation = set()
 
-    if len(predicitons[1]) >= 2:
-
-        violation = euclideanDistance(predicitons[1])
-
-    for (i, (box)) in enumerate(predicitons[0]):
-
-        # extract the bounding box and centroid coordinates, then
-        # initialize the color of the annotation
-        (startX, startY, endX, endY) = box
-
-        color = (255, 0, 0)
-        if i in violation:
-            color = (0, 0, 255)
-        cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
-        w = startX + (endX - startX) / 2
-        h = startY + (endY - startY) / 2
-
-        cv2.circle(image, (int(w), int(h)), 5, color, 1)
-
-    return image
 
 
 # post process the frames. draw bounding boxes of people
@@ -207,43 +127,6 @@ def Show_Image_mp(processed_image, original_image):
                 break
 
 
-class ClientThread(threading.Thread):
-    def __init__(self, clientAddress, clientsocket, stream):
-        threading.Thread.__init__(self)
-        self.csocket = clientsocket
-        self.clientAddress = clientAddress
-        self.stream = stream
-        self.lock = threading.Lock()
-        self.frame = stream.get()
-
-        print("New connection added: ", clientAddress)
-        self.stopped = False
-
-    def run(self):
-        encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
-        print("Connection from : ", self.clientAddress)
-
-        while not self.stopped:
-
-            self.lock.acquire()
-
-            try:
-                if not self.stream.empty():
-                   
-                    self.frame = self.stream.get()
-
-                    a = pickle.dumps(self.frame, 0)
-                    message = struct.pack("Q", len(a)) + a
-                    self.csocket.sendall(message)
-            except Exception as e:
-                print(e)
-            finally:
-                logging.debug("Released a lock")
-
-                self.lock.release()
-
-        cam.release()
-        print("Client at ", self.clientAddress, " disconnected...")
 
 
 # starts a tcp-socket stream process
@@ -266,36 +149,6 @@ def socketVideoStream(host, port, processed_frames):
     server.close()
 
 
-def get3d(x, y, frames):
-
-    align_to = rs.stream.color
-    align = rs.align(align_to)
-
-    # Align the depth frame to color frame
-    aligned_frames = align.process(frames)
-
-    # Get aligned frames
-    aligned_depth_frame = aligned_frames.get_depth_frame()
-    aligned_depth_intrin = (
-        aligned_depth_frame.profile.as_video_stream_profile().intrinsics
-    )
-
-    depth_pixel = [x, y]
-    # In meters
-    dist_to_center = aligned_depth_frame.get_distance(x, y)
-    pose = rs.rs2_deproject_pixel_to_point(
-        aligned_depth_intrin, depth_pixel, dist_to_center
-    )
-
-    # The (x,y,z) coordinate system of the camera is accordingly
-    # Origin is at the centre of the camera
-    # Positive x axis is towards right
-    # Positive y axis is towards down
-    # Positive z axis is into the 2d xy plane
-
-    response_dict = {"x": pose[0], "y": pose[1], "z": pose[2]}
-
-    return response_dict
 
 
 
