@@ -56,17 +56,11 @@ def detect_people(frame, net):
         ]
     )
 
-    (h, w) = frame.shape[:2]
-
-    frame_resized = cv2.resize(frame, (300, 300))
-
-    blob = cv2.dnn.blobFromImage(
-        frame_resized, 0.007843, (300, 300), (127.5, 127.5, 127.5), False
-    )
+    
 
     # pass the blob through the network and obtain the detections and
     # predictions
-    net.setInput(blob)
+    net.setInput(frame)
     detections = net.forward()
 
     boxes = []
@@ -74,8 +68,8 @@ def detect_people(frame, net):
     confidences = []
     numberofPeople = 0
 
-    cols = frame_resized.shape[1]
-    rows = frame_resized.shape[0]
+    cols = 300
+    rows = 300
 
     numberofDetections = detections.shape[2]
 

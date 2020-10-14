@@ -31,10 +31,9 @@ from server.ClientThead import ClientThread
 
 
 
-def predict_bbox_mp(image_queue, predicted_data):
+def predict_bbox(image_queue, predicted_data):
 
-    HOGCV = cv2.HOGDescriptor()
-    HOGCV.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
+  
 
     # # load the class labels the  model was trained on
     labelsPath = os.path.sep.join([config.MODEL_PATH, "caffe.names"])
@@ -45,33 +44,15 @@ def predict_bbox_mp(image_queue, predicted_data):
     )
     configPath = os.path.sep.join([config.MODEL_PATH, "MobileNetSSD_deploy.prototxt"])
 
-    # # load the COCO class labels our YOLO model was trained on
-    # labelsPath = os.path.sep.join([config.MODEL_PATH, "coco.names"])
-    # LABELS = open(labelsPath).read().strip().split("\n")
-
-    # # derive the paths to the YOLO weights and model configuration
-    # weightsPath = os.path.sep.join([config.MODEL_PATH, "yolov3.weights"])
-    # configPath = os.path.sep.join([config.MODEL_PATH, "yolov3.cfg"])
-
-    # load our YOLO object detector trained on COCO dataset (80 classes)
-    # print("[INFO] loading YOLO from disk...")
-    # net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
 
     # # load our SSD object detector trained on caffe dataset (80 classes)
     print("[INFO] loading Caffe modell from disk...")
     # # Load the Caffe model
     net = cv2.dnn.readNetFromCaffe(configPath, weightsPath)
 
-    # check if we are going to use GPU
-    if config.USE_GPU:
-        # set CUDA as the preferable backend and target
-        print("[INFO] setting preferable backend and target to CUDA...")
-        net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
-        net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+    
 
-    # determine only the *output* layer names that we need from YOLO
-    # ln = net.getLayerNames()
-    # ln = [ln[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+  
 
     while True:
         if not image_queue.empty():
@@ -82,7 +63,7 @@ def predict_bbox_mp(image_queue, predicted_data):
             # )
 
             results = detect_people(color_image, net)
-            # results = detectHog(color_image, HOGCV)
+            
 
             predicted_data.put(results)
 
@@ -97,7 +78,8 @@ def predict_bbox_mp(image_queue, predicted_data):
 # post process the frames. draw bounding boxes of people
 
 
-def postprocess_mp(bboxes, original_frames, processed_frames):
+def postprocess(bboxes, preProcessed_frames, processed_frames):
+
 
     while True:
 
@@ -111,7 +93,28 @@ def postprocess_mp(bboxes, original_frames, processed_frames):
             processed_frames.put(image)
 
 
-def Show_Image_mp(processed_image, original_image):
+
+def preProcess(original_frames,preProcessed_frames):
+
+    while True:
+
+        if not original_frames.empty():
+            rgb_image = original_frames.get()
+
+            (h, w) = rgb_image.shape[:2]
+
+            frame_resized = cv2.resize(rgb_image, (300, 300))
+
+            blob = cv2.dnn.blobFromImage(
+                frame_resized, 0.007843, (300, 300), (127.5, 127.5, 127.5), False
+            )
+            preProcessed_frames.put(blob)
+
+
+
+
+
+def Show_Image(processed_image, original_image):
 
     print("show image thread")
 
@@ -153,28 +156,28 @@ def socketVideoStream(host, port, processed_frames):
 
 
 
-def detect_video_realtime_mp():
+def detect_video_realtime():
 
     # Start processes
     p1 = Thread(
-        target=predict_bbox_mp,
-        args=(original_frames, predicted_data),
+        target=predict_bbox,
+        args=(preProcessed_frames, predicted_data),
         daemon=True,
     )
 
     p2 = Thread(
-        target=postprocess_mp,
+        target=postprocess,
         args=(boundingBoxes, original_frames, processed_frames),
         daemon=True,
     )
 
     p3 = Thread(
-        target=Show_Image_mp, args=(processed_frames, original_frames), daemon=True
+        target=Show_Image, args=(processed_frames, original_frames), daemon=True
     )
 
     p4 = Thread(
-        target=socketVideoStream,
-        args=("10.22.183.75", 8080, processed_frames),
+        target=preProcess,
+        args=(original_frames,preProcessed_frames),
         daemon=True,
     )
 
@@ -185,7 +188,7 @@ def detect_video_realtime_mp():
     p1.start()
     p2.start()
     p3.start()
-    #p4.start()
+    p4.start()
 
     
 
@@ -220,12 +223,10 @@ def detect_video_realtime_mp():
 
                 pred_bbox = predicted_data.get()
                 numberOfPeople = len(pred_bbox)
-                print(numberOfPeople)
                 bboxes = []
                 vectors = []
 
                 if numberOfPeople >= 2:
-
                     for bbox in pred_bbox:
 
                         (sx, sy, ex, ey) = bbox
@@ -299,6 +300,7 @@ if __name__ == "__main__":
             predicted_data = Queue()
             boundingBoxes = Queue()
             processed_frames = Queue()
+            preProcessed_frames =Queue()
 
            
 
@@ -312,7 +314,7 @@ if __name__ == "__main__":
 
          
 
-            p =  Process(target=detect_video_realtime_mp()).start()
+            detect_video_realtime()
 
             
             
