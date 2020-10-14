@@ -31,7 +31,7 @@ from utils.post_process import  drawBox,get3d
 
 
 
-def predict_bbox(image_queue, predicted_data):
+def predict_bbox(preProcessed_frames, predicted_data):
 
   
 
@@ -55,8 +55,8 @@ def predict_bbox(image_queue, predicted_data):
   
 
     while True:
-        if not image_queue.empty():
-            color_image = image_queue.get()
+        if not preProcessed_frames.empty():
+            color_image = preProcessed_frames.get()
 
             # results = detect_people(
             #     color_image, net, ln, personIdx=LABELS.index("person")
@@ -83,14 +83,16 @@ def postprocess(bboxes, preProcessed_frames, processed_frames):
 
     while True:
 
-        rgb_image = original_frames.get()
+        if not preProcessed_frames.empty():
 
-        if not bboxes.empty():
-            pred_bbox = bboxes.get()
+            rgb_image = preProcessed_frames.get()
 
-            image = drawBox(rgb_image, pred_bbox)
+            if not bboxes.empty():
+                pred_bbox = bboxes.get()
 
-            processed_frames.put(image)
+                image = drawBox(rgb_image, pred_bbox)
+
+                processed_frames.put(image)
 
 
 
@@ -159,23 +161,23 @@ def socketVideoStream(host, port, processed_frames):
 def detect_video_realtime():
 
     # Start processes
-    p1 = Thread(
+    p1 = Process(
         target=predict_bbox,
         args=(preProcessed_frames, predicted_data),
         daemon=True,
     )
 
-    p2 = Thread(
+    p2 = Process(
         target=postprocess,
         args=(boundingBoxes, original_frames, processed_frames),
         daemon=True,
     )
 
-    p3 = Thread(
+    p3 = Process(
         target=Show_Image, args=(processed_frames, original_frames), daemon=True
     )
 
-    p4 = Thread(
+    p4 = Process(
         target=preProcess,
         args=(original_frames,preProcessed_frames),
         daemon=True,
