@@ -23,7 +23,7 @@ import logging
 import datetime
 import struct
 
-from utils.calculation import euclideanDistance 
+
 from utils.post_process import  drawBox,get3d
 
 
@@ -97,6 +97,7 @@ def postprocess(bboxes, original_frames, processed_frames):
 
 
 def preProcess(original_frames,preProcessed_frames):
+
 
     while True:
 
@@ -227,9 +228,11 @@ def detect_video_realtime():
                 numberOfPeople = len(pred_bbox)
                 bboxes = []
                 vectors = []
+                
                
                 if numberOfPeople >= 2:
                     for bbox in pred_bbox:
+                        print(bbox)
 
                         (sx, sy, ex, ey) = bbox
                         bboxes.append(bbox)
