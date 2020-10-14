@@ -98,8 +98,8 @@ def detect_people(frame, net):
             yRightTop = int(detections[0, 0, i, 6] * rows)
 
             # Factor for scale to original size of frame
-            heightFactor = frame.shape[0] / 300.0
-            widthFactor = frame.shape[1] / 300.0
+            heightFactor = 480 / 300.0
+            widthFactor = 640 / 300.0
             # Scale object detection to frame
             startX = int(widthFactor * xLeftBottom)
             startY = int(heightFactor * yLeftBottom)

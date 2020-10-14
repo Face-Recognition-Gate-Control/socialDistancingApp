@@ -5,7 +5,7 @@ LABEL = "person"
 
 # initialize minimum probability to filter weak detections along with
 # the threshold when applying non-maxima suppression
-MIN_CONF = 0.65
+MIN_CONF = 0.8
 NMS_THRESH = 0.3
 
 # boolean indicating if NVIDIA CUDA GPU should be used
