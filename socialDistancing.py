@@ -25,7 +25,7 @@ import struct
 
 from utils.calculation import euclideanDistance 
 from utils.post_process import  drawBox,get3d
-from server.ClientThead import ClientThread
+
 
 
 
