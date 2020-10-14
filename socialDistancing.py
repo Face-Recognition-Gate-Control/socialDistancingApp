@@ -78,14 +78,14 @@ def predict_bbox(preProcessed_frames, predicted_data):
 # post process the frames. draw bounding boxes of people
 
 
-def postprocess(bboxes, preProcessed_frames, processed_frames):
+def postprocess(bboxes, original_frames, processed_frames):
 
 
     while True:
 
-        if not preProcessed_frames.empty():
+        if not original_frames.empty():
 
-            rgb_image = preProcessed_frames.get()
+            rgb_image = original_frames.get()
 
             if not bboxes.empty():
                 pred_bbox = bboxes.get()
