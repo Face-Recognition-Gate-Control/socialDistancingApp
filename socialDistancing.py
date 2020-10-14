@@ -225,7 +225,7 @@ def detect_video_realtime():
                 numberOfPeople = len(pred_bbox)
                 bboxes = []
                 vectors = []
-
+               
                 if numberOfPeople >= 2:
                     for bbox in pred_bbox:
 
@@ -239,7 +239,7 @@ def detect_video_realtime():
                 boundingBoxes.put((bboxes, vectors))
 
         except Exception as e:
-            print("Error is ", str(e))
+            print("Error is :", str(e))
 
 
 
