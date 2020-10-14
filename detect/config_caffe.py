@@ -5,11 +5,11 @@ LABEL = "person"
 
 # initialize minimum probability to filter weak detections along with
 # the threshold when applying non-maxima suppression
-MIN_CONF = 0.6
+MIN_CONF = 0.8
 NMS_THRESH = 0.3
 
 # boolean indicating if NVIDIA CUDA GPU should be used
-USE_GPU = True
+USE_GPU = False
 
 # minimum distance meter
-MIN_DISTANCE = 1.5
+MIN_DISTANCE = 1
