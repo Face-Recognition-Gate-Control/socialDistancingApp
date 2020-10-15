@@ -6,9 +6,7 @@ import numpy as np
 from flask import Response
 from flask import Flask
 from flask import render_template
-# from detect.detection import detect_people
-# from detect import social_distancing_config as config
-import detect.config_caffe  as config
+from detect.config_caffe  import MODEL_PATH
 from detect.detectCaffe import detect_people
 import os
 from threading import Thread

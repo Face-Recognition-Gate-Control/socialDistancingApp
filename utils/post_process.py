@@ -1,6 +1,6 @@
 import pyrealsense2 as rs
 import math
-from detect import config_caffe as config
+from detect.config_caffe import MIN_CONF,MIN_DISTANCE
 import cv2
 def drawBox(image, predicitons):
     violation = set()
