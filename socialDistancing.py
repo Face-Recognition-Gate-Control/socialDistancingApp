@@ -169,7 +169,7 @@ def detect_video_realtime():
     p1 = Thread(
         target=predict_bbox,
         args=(preProcessed_frames, predicted_data),
-        daemon=True,
+        daemon=True
     )
 
     p2 = Thread(
