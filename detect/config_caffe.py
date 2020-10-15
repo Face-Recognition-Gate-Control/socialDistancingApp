@@ -9,7 +9,7 @@ MIN_CONF = 0.8
 NMS_THRESH = 0.3
 
 # boolean indicating if NVIDIA CUDA GPU should be used
-USE_GPU = False
+USE_GPU = True
 
 # minimum distance meter
 MIN_DISTANCE = 1

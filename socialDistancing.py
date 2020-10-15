@@ -49,13 +49,19 @@ def predict_bbox(preProcessed_frames, predicted_data):
     configPath = os.path.sep.join([config.MODEL_PATH, "MobileNetSSD_deploy.prototxt"])
 
 
+
+
     # # load our SSD object detector trained on caffe dataset (80 classes)
     print("[INFO] loading Caffe modell from disk...")
     # # Load the Caffe model
     net = cv2.dnn.readNetFromCaffe(configPath, weightsPath)
 
     
-
+    if config.USE_GPU:
+	# set CUDA as the preferable backend and target
+        print("[INFO] setting preferable backend and target to CUDA...")
+        net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+        net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
   
 
     while True:
