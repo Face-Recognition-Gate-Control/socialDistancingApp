@@ -304,7 +304,7 @@ if __name__ == "__main__":
             boundingBoxes = Queue()
             processed_frames = Queue()
             global preProcessed_frames
-            preProcessed_frames=  =Queue()
+            preProcessed_frames =Queue()
 
            
 
