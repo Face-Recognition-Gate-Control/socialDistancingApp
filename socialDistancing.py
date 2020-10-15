@@ -8,7 +8,7 @@ from flask import Flask
 from flask import render_template
 # from detect.detection import detect_people
 # from detect import social_distancing_config as config
-from detect import config_caffe as config
+import detect.config_caffe  as config
 from detect.detectCaffe import detect_people
 import os
 from threading import Thread
