@@ -303,7 +303,8 @@ if __name__ == "__main__":
             predicted_data = Queue()
             boundingBoxes = Queue()
             processed_frames = Queue()
-            global preProcessed_frames =Queue()
+            global preProcessed_frames
+            preProcessed_frames=  =Queue()
 
            
 
