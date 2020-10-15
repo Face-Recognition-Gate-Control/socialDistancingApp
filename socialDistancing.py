@@ -25,7 +25,13 @@ import struct
 from utils.post_process import  drawBox,get3d
 
 
-
+ # initilize the queues for sharing recources between processes
+original_frames = Queue()
+depthFrames = Queue()
+predicted_data = Queue()
+boundingBoxes = Queue()
+processed_frames = Queue()
+preProcessed_frames =Queue()
 
 
 
@@ -297,14 +303,7 @@ if __name__ == "__main__":
             # get depthscale from camera. converting distance to meter
             depth_scale = cfg.get_device().first_depth_sensor().get_depth_scale()
 
-            # initilize the queues for sharing recources between processes
-            original_frames = Queue()
-            depthFrames = Queue()
-            predicted_data = Queue()
-            boundingBoxes = Queue()
-            processed_frames = Queue()
-            global preProcessed_frames
-            preProcessed_frames =Queue()
+           
 
            
 
