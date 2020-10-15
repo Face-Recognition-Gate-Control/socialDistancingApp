@@ -6,7 +6,7 @@ import numpy as np
 from flask import Response
 from flask import Flask
 from flask import render_template
-from detect.config_caffe  import MODEL_PATH
+from config_caffe  import MODEL_PATH
 from detect.detectCaffe import detect_people
 import os
 from threading import Thread
