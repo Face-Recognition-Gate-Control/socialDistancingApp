@@ -168,24 +168,21 @@ def detect_video_realtime():
     # Start processes
     p1 = Thread(
         target=predict_bbox,
-        args=(preProcessed_frames, predicted_data),
-        daemon=True
+        args=(preProcessed_frames, predicted_data)
     )
 
     p2 = Thread(
         target=postprocess,
-        args=(boundingBoxes, original_frames, processed_frames),
-        daemon=True,
+        args=(boundingBoxes, original_frames, processed_frames)
     )
 
     p3 = Thread(
-        target=Show_Image, args=(processed_frames, original_frames), daemon=True
+        target=Show_Image, args=(processed_frames, original_frames)
     )
 
     p4 = Thread(
         target=preProcess,
-        args=(original_frames,preProcessed_frames),
-        daemon=True,
+        args=(original_frames,preProcessed_frames)
     )
 
     
