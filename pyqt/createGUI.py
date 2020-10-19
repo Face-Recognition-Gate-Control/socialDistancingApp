@@ -24,9 +24,8 @@ def createSlider(self):
     sld.setRange(0, 100)
     sld.setFocusPolicy(Qt.NoFocus)
     sld.setPageStep(5)
-
+    
     sld.valueChanged.connect(self.updateLabel)
-
     self.label1 = QLabel('0', self)
     self.label1.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
     self.label1.setMinimumWidth(80)
