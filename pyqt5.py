@@ -36,7 +36,7 @@ class MainWindow(QMainWindow):
         self.showImage.signals.changePixmap.connect(self.setImage)
 
         self.pre_process = PreProcess()
-        self.post_process = PostProcess()
+        self.post_process = PostProcess(self.signals)
 
         #start threads
         self.pre_process.start()

@@ -2,6 +2,7 @@ from PyQt5.QtCore import QObject,QRunnable,pyqtSlot,pyqtSignal,Qt,QThread
 from PyQt5.QtGui import QImage
 import cv2
 import threading
+from threading import Lock
 import pyrealsense2 as rs
 import os
 from detect import config_caffe as config
@@ -18,6 +19,7 @@ predicted_data = Queue()
 boundingBoxes = Queue()
 processed_frames = Queue()
 preProcessed_frames =Queue()
+image_lock = Lock()
 
 
 class webcamThread(QThread):
@@ -133,9 +135,10 @@ class realsenseThread(QThread):
 
     def startStreaming(self):
 
+        self.threadActive = True
         
         print('starting stream')
-        while True:
+        while  self.threadActive:
             
 
             try:
@@ -161,9 +164,9 @@ class realsenseThread(QThread):
 
                 depth = np.asanyarray(aligned_depth_frame.get_data())
 
-                depthFrames.put(colorized_depth)
+                depthFrames.put(colorized_depth,timeout=1)
 
-                original_frames.put(color_image)
+                original_frames.put(color_image,timeout=1)
 
                 if not predicted_data.empty():
 
@@ -190,6 +193,7 @@ class realsenseThread(QThread):
             except Exception as e:
                 print("Error is :", str(e))
 
+        self.pipeline.stop()
 
        
     def stop(self):
@@ -205,7 +209,7 @@ class Show(QThread):
     
     def updateSignal(self,value):
 
-        print(value)
+        
         self.selection = value
        
         
@@ -221,14 +225,15 @@ class Show(QThread):
                 if processed_frames.empty() or depthFrames.empty():
 
                     continue
+                
+                depth = depthFrames.get()
+                rgb = processed_frames.get()
 
-                
-               
-                
-                    
-               
-                image = processed_frames.get()
-                    
+                if self.selection:
+                    image = rgb
+                else:
+                    image = depth
+
                 # https://stackoverflow.com/a/55468544/6622587
                 rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 h, w, ch = rgbImage.shape
@@ -245,16 +250,23 @@ class Show(QThread):
 
 class PostProcess(QThread):
 
-    def __init__(self):
+    def __init__(self,signals):
         super(PostProcess, self).__init__()
-        
-       
-       
+        self.signals = signals
+        self.signals.min_distance.connect(self.updateSignal)
+        self.minDistance = 1
+
+
+    def updateSignal(self,value):
+
+        self.minDistance = value
         
     @pyqtSlot()
     def run(self):
         global original_frames,boundingBoxes,processed_frames
         while True:
+
+           
 
             if not original_frames.empty():
 
@@ -263,7 +275,7 @@ class PostProcess(QThread):
                 if not boundingBoxes.empty():
                     pred_bbox = boundingBoxes.get()
 
-                    image = drawBox(rgb_image, pred_bbox)
+                    image = drawBox(rgb_image, pred_bbox,self.minDistance)
 
                     processed_frames.put(image)
 

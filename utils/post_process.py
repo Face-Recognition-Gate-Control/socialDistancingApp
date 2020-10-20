@@ -2,12 +2,12 @@ import pyrealsense2 as rs
 import math
 import detect.config_caffe as config
 import cv2
-def drawBox(image, predicitons):
+def drawBox(image, predicitons,min_dist):
     violation = set()
     
     if len(predicitons[1]) >= 2:
 
-        violation = euclideanDistance(predicitons[1])
+        violation = euclideanDistance(predicitons[1],min_dist)
 
     for (i, (box)) in enumerate(predicitons[0]):
 
@@ -62,7 +62,7 @@ def get3d(x, y, frames):
     return response_dict
 
 
-def euclideanDistance(points):
+def euclideanDistance(points,min_dist):
 
     violate = set()
 
@@ -76,8 +76,8 @@ def euclideanDistance(points):
                 + (points[i]["z"] - points[j]["z"]) ** 2
             )
             
-            #print(dist)
-            if dist < config.MIN_DISTANCE:
+            
+            if dist < min_dist:
 
                 violate.add(i)
                 violate.add(j)

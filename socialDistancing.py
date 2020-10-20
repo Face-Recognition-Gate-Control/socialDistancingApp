@@ -251,9 +251,11 @@ def detect_video_realtime():
                 boundingBoxes.put((bboxes, vectors))
 
         except Exception as e:
+            
             print("Error is :", str(e))
 
 
+    
 
 
 
