@@ -5,7 +5,8 @@ from PyQt5.QtCore import QThread, Qt, pyqtSignal, pyqtSlot,QRunnable,QThreadPool
 from PyQt5.QtGui import QImage, QPixmap,QColor
 from pyqt.createGUI import create
 import time
-import threading
+import threading,queue
+from multiprocessing import Queue
 from pyqt.classes.classes import *
 
 from pyqt.gui.ui_splash_screen import Ui_SplashScreen
@@ -13,6 +14,9 @@ from pyqt.gui.ui_main import Ui_MainWindow
 
 ## ==> GLOBALS
 counter = 0
+
+
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -23,37 +27,59 @@ class MainWindow(QMainWindow):
         self.signals = WorkerSignals()
         self.ui.camera.clicked.connect(self.test)
         self.ui.distance.valueChanged.connect(self.updateDistance)
-        self.threadpool = QThreadPool()
+        self.ui.radioButton.toggled.connect(lambda:self.btnstate(self.ui.radioButton))
+        self.image = realsenseThread(self.signals)
+        self.image.signals.people.connect(self.setValue)
         self.detect = detectionThread(self.signals)
-        self.threadpool.start(self.detect)
-        print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
+        
+        self.showImage = Show(self.signals)
+        self.showImage.signals.changePixmap.connect(self.setImage)
+
+        self.pre_process = PreProcess()
+        self.post_process = PostProcess()
+
+        #start threads
+        self.pre_process.start()
+        self.post_process.start()
+        self.detect.start()
+        self.showImage.start()
+       
         
 
 
-
+    def btnstate(self,b):
+       
+        if b.isChecked():
+            self.signals.frameSelection.emit(True)
+        else:
+            self.signals.frameSelection.emit(False)
     
     def updateDistance(self, value):
 
         self.ui.distance_value.setText(str(value))
         self.signals.min_distance.emit(int(self.ui.distance_value.text()))
 
+    
+    def setValue(self,value):
+        self.ui.people.setText(str(value))
+
     def test(self):
 
         try:
             if(not self.camerastream):
                 
-                self.image = imageThread(self.signals)
-                self.image.signals.changePixmap.connect(self.setImage)
-                self.threadpool.start(self.image)
+               
+                self.image.start()
                 self.camerastream = True
             
             else:
-                self.image.stop()
+                self.image.threadActive = False
+                
                 
                 self.camerastream = False
         except Exception as e:
 
-            print(e)  
+            pass 
 
 
     @pyqtSlot(QImage)
@@ -128,89 +154,6 @@ class SplashScreen(QMainWindow):
 
         # INCREASE COUNTER
         counter += 1
-
-
-
-
-
-
-
-
-
-
-class App(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.title = 'PyQt5 Video'
-        self.left = 100
-        self.top = 100
-        self.width = 640
-        self.height = 480
-        self.stream = False
-        self.number_of_people = 0 
-        self.minDistance =0
-        self.signals = WorkerSignals()
-        self.initUI()
-    
-    
-
-
-
-
-
-    def updateLabel(self, value):
-
-        self.label1.setText(str(value))
-        self.signals.min_distance.emit(int(self.label1.text()))
-    
-    
-
-
-
-    @pyqtSlot(QImage)
-    def setImage(self, image):
-        self.label.setPixmap(QPixmap.fromImage(image))
-
-
-
-    def test2(self):
-        detect = detectionThread(self.signals)
-        
-        self.threadpool.start(detect)
-
-    def test(self):
-        image = imageThread(self.signals)
-        image.signals.changePixmap.connect(self.setImage)
-        self.threadpool.start(image) 
-
-
-
-    def initUI(self):
-
-        hbox = create(self)
-        btn1 = QPushButton()
-        self.threadpool = QThreadPool()
-        print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
-
-        self.test2()
-        
-        btn1.clicked.connect(self.test)
-        btn1.resize(btn1.sizeHint())
-        btn1.move(50,50)
-
-        hbox.addWidget(btn1)
-
-        self.setLayout(hbox)
-
-        #self.startDetect()       
-        self.show()
-
-
-
-  
-        
-
-    
 
 
 

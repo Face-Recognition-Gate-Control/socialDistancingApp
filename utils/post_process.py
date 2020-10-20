@@ -1,10 +1,10 @@
 import pyrealsense2 as rs
 import math
-from detect.config_caffe import MIN_CONF,MIN_DISTANCE
+import detect.config_caffe as config
 import cv2
 def drawBox(image, predicitons):
     violation = set()
-
+    
     if len(predicitons[1]) >= 2:
 
         violation = euclideanDistance(predicitons[1])
@@ -75,7 +75,7 @@ def euclideanDistance(points):
                 + (points[i]["y"] - points[j]["y"]) ** 2
                 + (points[i]["z"] - points[j]["z"]) ** 2
             )
-
+            
             #print(dist)
             if dist < config.MIN_DISTANCE:
 
