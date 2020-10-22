@@ -369,8 +369,8 @@ class detectionThread(QThread):
         if config.USE_GPU:
         # set CUDA as the preferable backend and target
             print("[INFO] setting preferable backend and target to CUDA...")
-            net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
-            net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+            net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
+            net.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL_FP16)
 
 
         self.threadActive = True
