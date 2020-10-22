@@ -28,8 +28,10 @@ class MainWindow(QMainWindow):
         self.ui.camera.clicked.connect(self.test)
         self.ui.distance.valueChanged.connect(self.updateDistance)
         self.ui.radioButton.toggled.connect(lambda:self.btnstate(self.ui.radioButton))
+
         self.image = realsenseThread(self.signals)
         self.image.signals.people.connect(self.setValue)
+        
         self.detect = detectionThread(self.signals)
         
         self.showImage = Show(self.signals)

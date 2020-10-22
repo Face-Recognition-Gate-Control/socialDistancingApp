@@ -13,13 +13,14 @@ from detect.detectCaffe import detect_people
 from utils.post_process import *
 
  # initilize the queues for sharing recources between processes
-original_frames = Queue()
-depthFrames = Queue()
-predicted_data = Queue()
-boundingBoxes = Queue()
-processed_frames = Queue()
-preProcessed_frames =Queue()
-image_lock = Lock()
+original_frames = Queue(maxsize=0)
+detect_frames = Queue(maxsize=0)
+depthFrames = Queue(maxsize=0)
+predicted_data = Queue(maxsize=0)
+boundingBoxes = Queue(maxsize=0)
+processed_frames = Queue(maxsize=0)
+preProcessed_frames =Queue(maxsize=0)
+
 
 
 class webcamThread(QThread):
@@ -72,7 +73,11 @@ class realsenseThread(QThread):
     def __init__(self,signals):
         super(realsenseThread, self).__init__()
         self.signals = signals
-        
+        self.signals.frameSelection.connect(self.updateSignal)
+        self.selection= False
+    
+    def updateSignal(self,value):
+        self.selection = value
      
         
     @pyqtSlot()
@@ -134,6 +139,9 @@ class realsenseThread(QThread):
 
 
     def startStreaming(self):
+        global depthFrames,original_frames,predicted_data,boundingBoxes
+
+       
 
         self.threadActive = True
         
@@ -152,6 +160,7 @@ class realsenseThread(QThread):
                 colorizer = rs.colorizer()
                 color_image = color_frame.get_data()
                 color_image = np.asanyarray(color_image)
+                color_image2 = np.asanyarray(color_image)
                 # align images
                 align = rs.align(rs.stream.color)
 
@@ -163,10 +172,15 @@ class realsenseThread(QThread):
                 colorized_depth = np.asanyarray(colorizer.colorize(aligned_depth_frame).get_data())
 
                 depth = np.asanyarray(aligned_depth_frame.get_data())
+                
+                if self.selection:
 
-                depthFrames.put(colorized_depth,timeout=1)
+                    depthFrames.put(colorized_depth)
+                
+                else:
+                    original_frames.put(color_image)
 
-                original_frames.put(color_image,timeout=1)
+                    detect_frames.put(color_image2)
 
                 if not predicted_data.empty():
 
@@ -188,7 +202,7 @@ class realsenseThread(QThread):
 
                             vectors.append(get3d(int(w), int(h), frames))
 
-                    boundingBoxes.put((bboxes, vectors))
+                            boundingBoxes.put((bboxes, vectors))
 
             except Exception as e:
                 print("Error is :", str(e))
@@ -220,19 +234,14 @@ class Show(QThread):
         while True:
 
 
+           
             try:
-
-                if processed_frames.empty() or depthFrames.empty():
-
-                    continue
-                
-                depth = depthFrames.get()
-                rgb = processed_frames.get()
+               
 
                 if self.selection:
-                    image = rgb
+                    image = depthFrames.get(timeout=0.1)
                 else:
-                    image = depth
+                    image = processed_frames.get(timeout=0.1)
 
                 # https://stackoverflow.com/a/55468544/6622587
                 rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -255,6 +264,7 @@ class PostProcess(QThread):
         self.signals = signals
         self.signals.min_distance.connect(self.updateSignal)
         self.minDistance = 1
+        
 
 
     def updateSignal(self,value):
@@ -266,8 +276,9 @@ class PostProcess(QThread):
         global original_frames,boundingBoxes,processed_frames
         while True:
 
-           
 
+            
+            
             if not original_frames.empty():
 
                 rgb_image = original_frames.get()
@@ -278,6 +289,8 @@ class PostProcess(QThread):
                     image = drawBox(rgb_image, pred_bbox,self.minDistance)
 
                     processed_frames.put(image)
+                else:
+                    processed_frames.put(rgb_image)
 
 
 
@@ -292,13 +305,13 @@ class PreProcess(QThread):
         
     @pyqtSlot()
     def run(self):
-        global original_frames,preProcessed_frames
+        global detect_frames,preProcessed_frames
 
         while True:
 
-            if not original_frames.empty():
+            if not detect_frames.empty():
 
-                rgb_image = original_frames.get()
+                rgb_image = detect_frames.get()
 
                 (h, w) = rgb_image.shape[:2]
 
