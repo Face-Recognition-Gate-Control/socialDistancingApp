@@ -373,7 +373,7 @@ class detectionThread(QThread):
 
         # load our YOLO object detector trained on COCO dataset (80 classes)
         print("[INFO] loading YOLO from disk...")
-        net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
+        net = cv2.dnn.readNet(configPath, weightsPath)
         
         if config.USE_GPU:
         # set CUDA as the preferable backend and target
