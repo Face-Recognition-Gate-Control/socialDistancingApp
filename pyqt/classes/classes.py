@@ -373,13 +373,13 @@ class detectionThread(QThread):
 
         # load our YOLO object detector trained on COCO dataset (80 classes)
         print("[INFO] loading YOLO from disk...")
-        net = cv2.dnn.readNet(configPath, weightsPath)
+        net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
         
         if config.USE_GPU:
         # set CUDA as the preferable backend and target
             print("[INFO] setting preferable backend and target to CUDA...")
-            net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
-            net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+            net.setPreferableBackend(cv2.dnn.DNN_TARGET_CUDA_FP16)
+            net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA_FP16)
 
         # determine only the *output* layer names that we need from YOLO
         ln = net.getLayerNames()
