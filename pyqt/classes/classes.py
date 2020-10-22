@@ -349,28 +349,39 @@ class detectionThread(QThread):
     def run(self):
         global preProcessed_frames,predicted_data
             # # load the class labels the  model was trained on
-        labelsPath = os.path.sep.join([config.MODEL_PATH, "caffe.names"])
-        LABELS = open(labelsPath).read().strip().split("\n")
+        # labelsPath = os.path.sep.join([config.MODEL_PATH, "caffe.names"])
+        # LABELS = open(labelsPath).read().strip().split("\n")
         # # derive the paths to the YOLO weights and model configuration
-        weightsPath = os.path.sep.join(
-            [config.MODEL_PATH, "MobileNetSSD_deploy.caffemodel"]
-        )
-        configPath = os.path.sep.join([config.MODEL_PATH, "MobileNetSSD_deploy.prototxt"])
+        # weightsPath = os.path.sep.join(
+        #     [config.MODEL_PATH, "MobileNetSSD_deploy.caffemodel"]
+        # )
+        # configPath = os.path.sep.join([config.MODEL_PATH, "MobileNetSSD_deploy.prototxt"])
 
+        # load the COCO class labels our YOLO model was trained on
+        labelsPath = os.path.sep.join([config.MODEL_PATH, "coco.names"])
+        LABELS = open(labelsPath).read().strip().split("\n")
 
-
+        weightsPath = os.path.sep.join([config.MODEL_PATH, "yolov3.weights"])
+        configPath = os.path.sep.join([config.MODEL_PATH, "yolov3.cfg"])
 
         # # load our SSD object detector trained on caffe dataset (80 classes)
         print("[INFO] loading Caffe modell from disk...")
         # # Load the Caffe model
-        net = cv2.dnn.readNetFromCaffe(configPath, weightsPath)
+        # net = cv2.dnn.readNetFromCaffe(configPath, weightsPath)
 
+        # load our YOLO object detector trained on COCO dataset (80 classes)
+        print("[INFO] loading YOLO from disk...")
+        net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
         
         if config.USE_GPU:
         # set CUDA as the preferable backend and target
             print("[INFO] setting preferable backend and target to CUDA...")
-            net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
-            net.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL_FP16)
+            net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+            net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+
+        # determine only the *output* layer names that we need from YOLO
+        ln = net.getLayerNames()
+        ln = [ln[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
 
         self.threadActive = True
@@ -381,11 +392,11 @@ class detectionThread(QThread):
                 if not preProcessed_frames.empty():
                     color_image = preProcessed_frames.get()
 
-                    # results = detect_people(
-                    #     color_image, net, ln, personIdx=LABELS.index("person")
-                    # )
+                    results = detect_people(
+                        color_image, net, ln, personIdx=LABELS.index("person")
+                    )
 
-                    results = detect_people(color_image, net)
+                    #results = detect_people(color_image, net)
             
 
                     predicted_data.put(results)
