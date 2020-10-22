@@ -5,11 +5,11 @@ import threading
 from threading import Lock
 import pyrealsense2 as rs
 import os
-from detect import config_caffe as config
+from detect import social_distancing_config as config
 import json
 import numpy as np
 from multiprocessing import Queue
-from detect.detectCaffe import detect_people
+from detect.detection import detect_people
 from utils.post_process import *
 
  # initilize the queues for sharing recources between processes
