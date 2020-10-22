@@ -40,7 +40,6 @@ if config.USE_GPU:
 	print("[INFO] setting preferable backend and target to CUDA...")
 	net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
 	net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
-
 # determine only the *output* layer names that we need from YOLO
 ln = net.getLayerNames()
 ln = [ln[i[0] - 1] for i in net.getUnconnectedOutLayers()]

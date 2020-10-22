@@ -12,6 +12,8 @@ def detect_people(frame, net, ln, personIdx=0):
     (H, W) = frame.shape[:2]
     results = []
 
+   
+
     # construct a blob from the input frame and then perform a forward
     # pass of the YOLO object detector, giving us our bounding boxes
     # and associated probabilities
@@ -78,4 +80,5 @@ def detect_people(frame, net, ln, personIdx=0):
             results.append(r)
 
     # return the list of results
+    print(results)
     return results

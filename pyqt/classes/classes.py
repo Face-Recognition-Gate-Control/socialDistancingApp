@@ -11,6 +11,7 @@ import numpy as np
 from multiprocessing import Queue
 from detect.detection import detect_people
 from utils.post_process import *
+import imutils
 
  # initilize the queues for sharing recources between processes
 original_frames = Queue(maxsize=0)
@@ -191,8 +192,8 @@ class realsenseThread(QThread):
                     vectors = []
                     
                 
-                    if numberOfPeople >= 2:
-                        for bbox in pred_bbox:
+                    if numberOfPeople >= 1:
+                        for (pob, bbox, centroid) in pred_bbox:
                             
 
                             (sx, sy, ex, ey) = bbox
@@ -313,14 +314,15 @@ class PreProcess(QThread):
 
                 rgb_image = detect_frames.get()
 
-                (h, w) = rgb_image.shape[:2]
+                # (h, w) = rgb_image.shape[:2]
 
-                frame_resized = cv2.resize(rgb_image, (300, 300))
+                # frame_resized = cv2.resize(rgb_image, (300, 300))
 
-                blob = cv2.dnn.blobFromImage(
-                    frame_resized, 0.007843, (300, 300), (127.5, 127.5, 127.5), False
-                )
-                preProcessed_frames.put(blob)
+                # blob = cv2.dnn.blobFromImage(
+                #     frame_resized, 0.007843, (300, 300), (127.5, 127.5, 127.5), False
+                # )
+                frame = imutils.resize(rgb_image, width=700)
+                preProcessed_frames.put(frame)
 
 
 class WorkerSignals(QObject):
@@ -395,6 +397,8 @@ class detectionThread(QThread):
                     results = detect_people(
                         color_image, net, ln, personIdx=LABELS.index("person")
                     )
+
+
 
                     #results = detect_people(color_image, net)
             

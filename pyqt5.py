@@ -8,7 +8,6 @@ import time
 import threading,queue
 from multiprocessing import Queue
 from pyqt.classes.classes import *
-
 from pyqt.gui.ui_splash_screen import Ui_SplashScreen
 from pyqt.gui.ui_main import Ui_MainWindow
 
