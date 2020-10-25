@@ -19,7 +19,6 @@ import time
 
  # initilize the queues for sharing recources between processes
 original_frames = Queue(maxsize=0)
-detect_frames = Queue(maxsize=0)
 depthFrames = Queue(maxsize=0)
 predicted_data = Queue(maxsize=0)
 boundingBoxes = Queue(maxsize=0)
@@ -197,6 +196,7 @@ class realsenseThread(QThread):
                         
                         detect_lock.release()
                         
+                        
                     
 
 
@@ -209,7 +209,7 @@ class realsenseThread(QThread):
                     vectors = []
                     
                 
-                    if numberOfPeople >= 1:
+                    if numberOfPeople >= 2:
                         for bbox in pred_bbox:
                             
                             (sx, sy, ex, ey) = bbox
@@ -351,6 +351,7 @@ class WorkerSignals(QObject):
     people = pyqtSignal(int)
     min_distance = pyqtSignal(int)
     violation = pyqtSignal(set)
+    finished = pyqtSignal()
 
 
 
@@ -408,7 +409,7 @@ class detectionThread(QThread):
 
         self.threadActive = True
         while self.threadActive:
-            
+            time.sleep(0.025)
             detect_lock.acquire()
             try:
                 
@@ -471,6 +472,9 @@ class Worker(QRunnable):
         except Exception as e:
            
             print(str(e))
+        
+        finally:
+            self.signals.finished.emit()  # Done
         
 
 

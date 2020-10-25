@@ -22,6 +22,7 @@ class MainWindow(QMainWindow):
         QMainWindow.__init__(self)
         self.ui=Ui_MainWindow()
         self.ui.setupUi(self)
+        self.sound = False
         self.camerastream = False
         self.signals = WorkerSignals()
         self.ui.camera.clicked.connect(self.test)
@@ -52,11 +53,15 @@ class MainWindow(QMainWindow):
     def playSound(self):
 
         worker = Worker(self.testLyd)
+        worker.signals.finished.connect(self.warning_complete)
         self.threadpool.start(worker) 
+
+    def warning_complete(self):
+        self.sound = False
 
 
     def testLyd(self):
-        filename = 'alert2.wav'
+        filename = 'record.wav'
         wave_obj = sa.WaveObject.from_wave_file(filename)
         play_obj = wave_obj.play()
         play_obj.wait_done()  # Wait until sound has finished playing
@@ -79,8 +84,12 @@ class MainWindow(QMainWindow):
 
     
     def violation(self,value):
-        if len(value)>0:
+
+        if len(value)>0 and not self.sound:
+            self.sound = True
             self.playSound()
+        
+
 
     def test(self):
 
