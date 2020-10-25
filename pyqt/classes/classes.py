@@ -378,8 +378,8 @@ class detectionThread(QThread):
         if config.USE_GPU:
         # set CUDA as the preferable backend and target
             print("[INFO] setting preferable backend and target to CUDA...")
-            net.setPreferableBackend(cv2.dnn.DNN_TARGET_CUDA_FP16)
-            net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA_FP16)
+            net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+            net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
 
         # determine only the *output* layer names that we need from YOLO
         ln = net.getLayerNames()
