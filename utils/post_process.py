@@ -24,7 +24,7 @@ def drawBox(image, predicitons,min_dist):
 
         cv2.circle(image, (int(w), int(h)), 5, color, 1)
 
-    return image
+    return image,violation
 
 
 

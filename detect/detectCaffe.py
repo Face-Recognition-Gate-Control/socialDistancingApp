@@ -114,6 +114,7 @@ def detect_people(frame, net):
 
             predbox = [abs(startX), abs(startY), abs(endX), abs(endY)]
             boxes.append(predbox)
+
     arr = np.array(boxes)
 
     result = non_max_suppression(arr, probs=None, overlapThresh=0.65)

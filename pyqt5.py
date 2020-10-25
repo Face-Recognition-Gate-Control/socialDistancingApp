@@ -27,7 +27,8 @@ class MainWindow(QMainWindow):
         self.ui.camera.clicked.connect(self.test)
         self.ui.distance.valueChanged.connect(self.updateDistance)
         self.ui.radioButton.toggled.connect(lambda:self.btnstate(self.ui.radioButton))
-
+        self.threadpool = QThreadPool()
+    
         self.image = realsenseThread(self.signals)
         self.image.signals.people.connect(self.setValue)
         
@@ -38,15 +39,27 @@ class MainWindow(QMainWindow):
 
         self.pre_process = PreProcess()
         self.post_process = PostProcess(self.signals)
-
+        self.post_process.signals.violation.connect(self.violation)
         #start threads
-        self.pre_process.start()
+        #self.pre_process.start()
         self.post_process.start()
         self.detect.start()
         self.showImage.start()
        
         
+    
+    
+    def playSound(self):
 
+        worker = Worker(self.testLyd)
+        self.threadpool.start(worker) 
+
+
+    def testLyd(self):
+        filename = 'alert2.wav'
+        wave_obj = sa.WaveObject.from_wave_file(filename)
+        play_obj = wave_obj.play()
+        play_obj.wait_done()  # Wait until sound has finished playing
 
     def btnstate(self,b):
        
@@ -63,6 +76,11 @@ class MainWindow(QMainWindow):
     
     def setValue(self,value):
         self.ui.people.setText(str(value))
+
+    
+    def violation(self,value):
+        if len(value)>0:
+            self.playSound()
 
     def test(self):
 

@@ -80,5 +80,5 @@ def detect_people(frame, net, ln, personIdx=0):
             results.append(r)
 
     # return the list of results
-    print(results)
+    
     return results

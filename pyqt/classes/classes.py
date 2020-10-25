@@ -5,13 +5,17 @@ import threading
 from threading import Lock
 import pyrealsense2 as rs
 import os
-from detect import social_distancing_config as config
+from detect import config_caffe as config
 import json
 import numpy as np
 from multiprocessing import Queue
-from detect.detection import detect_people
+from detect.detectCaffe import detect_people
 from utils.post_process import *
 import imutils
+import simpleaudio as sa
+import time
+
+                   
 
  # initilize the queues for sharing recources between processes
 original_frames = Queue(maxsize=0)
@@ -21,8 +25,8 @@ predicted_data = Queue(maxsize=0)
 boundingBoxes = Queue(maxsize=0)
 processed_frames = Queue(maxsize=0)
 preProcessed_frames =Queue(maxsize=0)
-
-
+detect_lock = Lock()
+color_image2 = []
 
 class webcamThread(QThread):
     def __init__(self,signals):
@@ -129,7 +133,7 @@ class realsenseThread(QThread):
             except Exception as e:
 
 
-                print(e)
+                print(str(e))
                 print("no device connected")
                 
             finally:
@@ -137,10 +141,13 @@ class realsenseThread(QThread):
                 camera =True
                 self.startStreaming()
 
+    
+    
+    
 
 
     def startStreaming(self):
-        global depthFrames,original_frames,predicted_data,boundingBoxes
+        global depthFrames,original_frames,predicted_data,boundingBoxes,color_image2
 
        
 
@@ -161,7 +168,7 @@ class realsenseThread(QThread):
                 colorizer = rs.colorizer()
                 color_image = color_frame.get_data()
                 color_image = np.asanyarray(color_image)
-                color_image2 = np.asanyarray(color_image)
+                test = np.asanyarray(color_image)
                 # align images
                 align = rs.align(rs.stream.color)
 
@@ -179,9 +186,19 @@ class realsenseThread(QThread):
                     depthFrames.put(colorized_depth)
                 
                 else:
-                    original_frames.put(color_image)
+                    
+                    original_frames.put(color_image,timeout=0.01)
+                    detect_lock.acquire()
+                    try:
+                        
+                        color_image2 = test
+                    
+                    finally:
+                        
+                        detect_lock.release()
+                        
+                    
 
-                    detect_frames.put(color_image2)
 
                 if not predicted_data.empty():
 
@@ -193,9 +210,8 @@ class realsenseThread(QThread):
                     
                 
                     if numberOfPeople >= 1:
-                        for (pob, bbox, centroid) in pred_bbox:
+                        for bbox in pred_bbox:
                             
-
                             (sx, sy, ex, ey) = bbox
                             bboxes.append(bbox)
                             w = sx + (ex - sx) / 2
@@ -240,9 +256,9 @@ class Show(QThread):
                
 
                 if self.selection:
-                    image = depthFrames.get(timeout=0.1)
+                    image = depthFrames.get(timeout=0.01)
                 else:
-                    image = processed_frames.get(timeout=0.1)
+                    image = processed_frames.get(timeout=0.01)
 
                 # https://stackoverflow.com/a/55468544/6622587
                 rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -271,30 +287,33 @@ class PostProcess(QThread):
     def updateSignal(self,value):
 
         self.minDistance = value
+
+  
         
     @pyqtSlot()
     def run(self):
         global original_frames,boundingBoxes,processed_frames
         while True:
 
-
             
             
-            if not original_frames.empty():
+            
 
-                rgb_image = original_frames.get()
+            rgb_image = original_frames.get()
 
-                if not boundingBoxes.empty():
-                    pred_bbox = boundingBoxes.get()
+            if not boundingBoxes.empty():
+                pred_bbox = boundingBoxes.get()
 
-                    image = drawBox(rgb_image, pred_bbox,self.minDistance)
+                image,violation = drawBox(rgb_image, pred_bbox,self.minDistance)
+                
+                
+                self.signals.violation.emit(violation)
+                processed_frames.put(image)
+            else:
+                processed_frames.put(rgb_image)
 
-                    processed_frames.put(image)
-                else:
-                    processed_frames.put(rgb_image)
 
-
-
+            
 
 class PreProcess(QThread):
 
@@ -314,15 +333,15 @@ class PreProcess(QThread):
 
                 rgb_image = detect_frames.get()
 
-                # (h, w) = rgb_image.shape[:2]
+                
 
-                # frame_resized = cv2.resize(rgb_image, (300, 300))
+                frame_resized = cv2.resize(rgb_image, (300, 300))
 
-                # blob = cv2.dnn.blobFromImage(
-                #     frame_resized, 0.007843, (300, 300), (127.5, 127.5, 127.5), False
-                # )
-                frame = imutils.resize(rgb_image, width=700)
-                preProcessed_frames.put(frame)
+                blob = cv2.dnn.blobFromImage(
+                    frame_resized, 0.007843, (300, 300), (127.5, 127.5, 127.5), False
+                )
+                # frame = imutils.resize(rgb_image, width=700)
+                preProcessed_frames.put(blob)
 
 
 class WorkerSignals(QObject):
@@ -331,6 +350,7 @@ class WorkerSignals(QObject):
     frameSelection = pyqtSignal(bool)
     people = pyqtSignal(int)
     min_distance = pyqtSignal(int)
+    violation = pyqtSignal(set)
 
 
 
@@ -343,70 +363,116 @@ class detectionThread(QThread):
         self.signals = signals
         self.signals.min_distance.connect(self.updateSignal)
         self.min_Distance =1
+        
    
     def updateSignal(self,value):
        self.min_Distance = int(value)
 
+    
+    def preProcess(self,image):
+
+
+        frame_resized = cv2.resize(image, (300, 300))
+
+        blob = cv2.dnn.blobFromImage(
+            frame_resized, 0.007843, (300, 300), (127.5, 127.5, 127.5), False
+        )
+        # frame = imutils.resize(rgb_image, width=700)
+        return blob
+
+
     @pyqtSlot()
     def run(self):
-        global preProcessed_frames,predicted_data
+        global color_image2,predicted_data
             # # load the class labels the  model was trained on
-        # labelsPath = os.path.sep.join([config.MODEL_PATH, "caffe.names"])
-        # LABELS = open(labelsPath).read().strip().split("\n")
-        # # derive the paths to the YOLO weights and model configuration
-        # weightsPath = os.path.sep.join(
-        #     [config.MODEL_PATH, "MobileNetSSD_deploy.caffemodel"]
-        # )
-        # configPath = os.path.sep.join([config.MODEL_PATH, "MobileNetSSD_deploy.prototxt"])
-
-        # load the COCO class labels our YOLO model was trained on
-        labelsPath = os.path.sep.join([config.MODEL_PATH, "coco.names"])
+        labelsPath = os.path.sep.join([config.MODEL_PATH, "caffe.names"])
         LABELS = open(labelsPath).read().strip().split("\n")
+        # # derive the paths to the YOLO weights and model configuration
+        weightsPath = os.path.sep.join(
+            [config.MODEL_PATH, "MobileNetSSD_deploy.caffemodel"]
+        )
+        configPath = os.path.sep.join([config.MODEL_PATH, "MobileNetSSD_deploy.prototxt"])
 
-        weightsPath = os.path.sep.join([config.MODEL_PATH, "yolov3.weights"])
-        configPath = os.path.sep.join([config.MODEL_PATH, "yolov3.cfg"])
-
+      
         # # load our SSD object detector trained on caffe dataset (80 classes)
         print("[INFO] loading Caffe modell from disk...")
-        # # Load the Caffe model
-        # net = cv2.dnn.readNetFromCaffe(configPath, weightsPath)
+        # Load the Caffe model
+        net = cv2.dnn.readNetFromCaffe(configPath, weightsPath)
 
-        # load our YOLO object detector trained on COCO dataset (80 classes)
-        print("[INFO] loading YOLO from disk...")
-        net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
         
-        if config.USE_GPU:
-        # set CUDA as the preferable backend and target
-            print("[INFO] setting preferable backend and target to CUDA...")
-            net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
-            net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+        
+       
 
-        # determine only the *output* layer names that we need from YOLO
-        ln = net.getLayerNames()
-        ln = [ln[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+       
 
 
         self.threadActive = True
         while self.threadActive:
-
-            try:
-
-                if not preProcessed_frames.empty():
-                    color_image = preProcessed_frames.get()
-
-                    results = detect_people(
-                        color_image, net, ln, personIdx=LABELS.index("person")
-                    )
-
-
-
-                    #results = detect_people(color_image, net)
             
+            detect_lock.acquire()
+            try:
+                
+
+                if(len(color_image2)>0): 
+                
+                    color_image = color_image2
+
+                    blob = self.preProcess(color_image)
+
+                # results = detect_people(
+                #     color_image, net, ln, personIdx=LABELS.index("person")
+                # )
+
+
+
+                    results = detect_people(blob, net)
+
+                
 
                     predicted_data.put(results)
-
             except Exception as e:
-                print(e)
+                print(str(e))
                 self.threadActive=False
+            finally:
+
+                detect_lock.release()
+            
+
+
+
+
+
+class Worker(QRunnable):
+
+
+    
+    def __init__(self, fn, *args, **kwargs):
+
+        super(Worker, self).__init__()
+
+        # Store constructor arguments (re-used for processing)
+        self.fn = fn
+        self.args = args
+        self.kwargs = kwargs
+        self.signals = WorkerSignals()    
+
+              
+
+    @pyqtSlot()
+    def run(self):
+
+        '''
+        Initialise the runner function with passed args, kwargs.
+        '''
+        
+        # Retrieve args/kwargs here; and fire processing using them
+        try:
+            self.fn()
+        except Exception as e:
+           
+            print(str(e))
+        
+
+
 
 
