@@ -207,7 +207,7 @@ class realsenseThread(QThread):
                 )
 
                 predictions = self.detect(color_image)
-                print(predictions)
+
                 numberOfPeople = 0
 
                 numberOfPeople = len(predictions)
@@ -216,7 +216,7 @@ class realsenseThread(QThread):
                 vectors = []
                 pred_bbox = [[], []]
 
-                if numberOfPeople >= 2:
+                if numberOfPeople >= 1:
 
                     for bbox in predictions:
 
