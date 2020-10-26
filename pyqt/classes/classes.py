@@ -14,6 +14,8 @@ from utils.post_process import *
 import imutils
 import simpleaudio as sa
 import time
+import jetson.inference
+import jetson.utils
 
                    
 
@@ -26,6 +28,7 @@ processed_frames = Queue(maxsize=0)
 preProcessed_frames =Queue(maxsize=0)
 detect_lock = Lock()
 color_image2 = []
+bbox_lock = Lock
 
 class webcamThread(QThread):
     def __init__(self,signals):
@@ -385,27 +388,9 @@ class detectionThread(QThread):
     @pyqtSlot()
     def run(self):
         global color_image2,predicted_data
-            # # load the class labels the  model was trained on
-        labelsPath = os.path.sep.join([config.MODEL_PATH, "caffe.names"])
-        LABELS = open(labelsPath).read().strip().split("\n")
-        # # derive the paths to the YOLO weights and model configuration
-        weightsPath = os.path.sep.join(
-            [config.MODEL_PATH, "MobileNetSSD_deploy.caffemodel"]
-        )
-        configPath = os.path.sep.join([config.MODEL_PATH, "MobileNetSSD_deploy.prototxt"])
-
-      
-        # # load our SSD object detector trained on caffe dataset (80 classes)
-        print("[INFO] loading Caffe modell from disk...")
-        # Load the Caffe model
-        net = cv2.dnn.readNetFromCaffe(configPath, weightsPath)
-
-        
-        
        
-
-       
-
+        net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
+        display = jetson.utils.videoOutput("display://0") # 'my_video.mp4' for file
 
         self.threadActive = True
         while self.threadActive:
@@ -423,14 +408,15 @@ class detectionThread(QThread):
                 # results = detect_people(
                 #     color_image, net, ln, personIdx=LABELS.index("person")
                 # )
+                    detections = net.Detect(img)
+                    print(detections)
 
+                    #results = detect_people(blob, net)
 
-
-                    results = detect_people(blob, net)
 
                 
 
-                    predicted_data.put(results)
+                    predicted_data.put(detections)
             except Exception as e:
                 print(str(e))
                 self.threadActive=False
