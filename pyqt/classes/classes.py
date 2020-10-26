@@ -342,7 +342,12 @@ class detectionThread(QThread):
     def getBBox(self, detections):
         results = []
         for detection in detections:
-            bbox = (detection.Left, detection.Top, detection.Left, detection.Bottom)
+            bbox = (
+                int(detection.Left),
+                int(detection.Top),
+                int(detection.Left),
+                int(detection.Bottom),
+            )
 
             results.append(bbox)
 
