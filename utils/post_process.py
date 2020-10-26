@@ -31,6 +31,15 @@ def drawBox(image, predicitons, min_dist):
 
 def get3d(x, y, frames):
 
+    align_to = rs.stream.color
+    align = rs.align(align_to)
+
+    # Align the depth frame to color frame
+    aligned_frames = align.process(frames)
+
+    # Get aligned frames
+    aligned_depth_frame = aligned_frames.get_depth_frame()
+
     aligned_depth_intrin = frames.profile.as_video_stream_profile().intrinsics
 
     depth_pixel = [x, y]
