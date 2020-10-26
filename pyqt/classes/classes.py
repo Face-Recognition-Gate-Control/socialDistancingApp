@@ -180,6 +180,30 @@ class realsenseThread(QThread):
 
                         detect_lock.release()
 
+
+
+                numberOfPeople = 0
+                if not predicted_data.empty():
+
+                    pred_bbox = predicted_data.get()
+                    numberOfPeople = len(pred_bbox)
+
+                    bboxes = []
+                    vectors = []
+
+                    if numberOfPeople >= 1:
+                        for bbox in pred_bbox:
+
+                            (sx, sy, ex, ey) = bbox
+                            bboxes.append(bbox)
+                            w = sx + (ex - sx) / 2
+                            h = sy + (ey - sy) / 2
+
+                            vectors.append(get3d(int(w), int(h), aligned_depth_frame))
+
+                            boundingBoxes.put((bboxes, vectors))
+                self.signals.people.emit(numberOfPeople)
+
             except Exception as e:
                 print("Error is :", str(e))
 
@@ -281,9 +305,8 @@ class PreProcess(QThread):
 
 
 class getVectors(QThread):
-    def __init__(self, signals):
+    def __init__(self):
         super(getVectors, self).__init__()
-        self.signals = signals
 
     @pyqtSlot()
     def run(self):
@@ -291,28 +314,7 @@ class getVectors(QThread):
 
         while True:
 
-            numberOfPeople = 0
-
-            if not predicted_data.empty():
-
-                pred_bbox = predicted_data.get()
-                numberOfPeople = len(pred_bbox)
-
-                bboxes = []
-                vectors = []
-
-                if numberOfPeople >= 1:
-                    for bbox in pred_bbox:
-
-                        (sx, sy, ex, ey) = bbox
-                        bboxes.append(bbox)
-                        w = sx + (ex - sx) / 2
-                        h = sy + (ey - sy) / 2
-
-                        vectors.append(get3d(int(w), int(h), frames))
-
-                        boundingBoxes.put((bboxes, vectors))
-            self.signals.people.emit(numberOfPeople)
+          
 
 
 class WorkerSignals(QObject):
