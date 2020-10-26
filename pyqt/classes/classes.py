@@ -188,7 +188,7 @@ class realsenseThread(QThread):
                     bboxes = []
                     vectors = []
 
-                    if numberOfPeople >= 1:
+                    if numberOfPeople >= 2:
                         for bbox in pred_bbox:
 
                             (sx, sy, ex, ey) = bbox
@@ -365,7 +365,7 @@ class detectionThread(QThread):
 
         self.threadActive = True
         while self.threadActive:
-            time.sleep(0.03)
+
             detect_lock.acquire()
             try:
 
