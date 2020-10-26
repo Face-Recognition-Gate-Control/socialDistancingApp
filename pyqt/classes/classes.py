@@ -191,6 +191,9 @@ class Show(QThread):
             except Exception as e:
                 print(str(e))
 
+            finally:
+                detect_lock.release()
+
 
 class PostProcess(QThread):
     def __init__(self, signals):
