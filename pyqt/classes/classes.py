@@ -402,13 +402,14 @@ class detectionThread(QThread):
                 if(len(color_image2)>0): 
                 
                     color_image = color_image2
+                    bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=True)
 
                     blob = self.preProcess(color_image)
 
                 # results = detect_people(
                 #     color_image, net, ln, personIdx=LABELS.index("person")
                 # )
-                    detections = net.Detect(color_image)
+                    detections = net.Detect(bgr_img)
                     print(detections)
 
                     #results = detect_people(blob, net)
