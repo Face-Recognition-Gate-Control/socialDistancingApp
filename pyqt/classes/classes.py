@@ -321,13 +321,15 @@ class detectionThread(QThread):
 
     def preProcess(self, image):
 
-        frame_resized = cv2.resize(image, (300, 300))
-
-        blob = cv2.dnn.blobFromImage(
-            frame_resized, 0.007843, (300, 300), (127.5, 127.5, 127.5), False
+        bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=True)
+        # convert from BGR -> RGB
+        rgb_img = jetson.utils.cudaAllocMapped(
+            width=bgr_img.width, height=bgr_img.height, format="rgb8"
         )
-        # frame = imutils.resize(rgb_image, width=700)
-        return blob
+
+        jetson.utils.cudaConvertColor(bgr_img, rgb_img)
+
+        return rgb_img
 
     def listToString(self, s):
 
@@ -336,6 +338,15 @@ class detectionThread(QThread):
 
         # return string
         return str1.join(s)
+
+    def getBBox(self, detections):
+        results = []
+        for detection in detections:
+            bbox = (detection.Left, detection.Top, detection.Left, detection.Bottom)
+
+            results.append(bbox)
+
+        return results
 
     @pyqtSlot()
     def run(self):
@@ -353,26 +364,13 @@ class detectionThread(QThread):
                 if len(color_image2) > 0:
 
                     color_image = color_image2
-                    bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=True)
-                    # convert from BGR -> RGB
-                    rgb_img = jetson.utils.cudaAllocMapped(
-                        width=bgr_img.width, height=bgr_img.height, format="rgb8"
-                    )
+                    rgb_img = self.preProcess(color_image)
 
-                    jetson.utils.cudaConvertColor(bgr_img, rgb_img)
-                    blob = self.preProcess(color_image)
-
-                    # results = detect_people(
-                    #     color_image, net, ln, personIdx=LABELS.index("person")
-                    # )
                     detections = net.Detect(rgb_img)
-                    display.Render(rgb_img)
 
-                    for detection in detections:
-                        print(detection.ClassID)
+                    bboxes = self.getBBox(detections)
 
-                    # results = detect_people(blob, net)
-                    # predicted_data.put(detections)
+                    predicted_data.put(bboxes)
             except Exception as e:
                 print(str(e))
                 self.threadActive = False
