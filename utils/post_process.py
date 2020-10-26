@@ -13,6 +13,8 @@ def drawBox(image, predicitons, min_dist):
 
     for (i, (box)) in enumerate(predicitons[0]):
 
+        print(box)
+
         # extract the bounding box and centroid coordinates, then
         # initialize the color of the annotation
         (startX, startY, endX, endY) = box
