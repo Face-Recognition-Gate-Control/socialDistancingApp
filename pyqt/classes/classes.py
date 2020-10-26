@@ -415,6 +415,8 @@ class detectionThread(QThread):
                 #     color_image, net, ln, personIdx=LABELS.index("person")
                 # )
                     detections = net.Detect(rgb_img)
+                    display.Render(rgb_img)
+	                display.SetStatus("Object Detection | Network {:.0f} FPS".format(net.GetNetworkFPS()))
                     print(detections)
 
                     #results = detect_people(blob, net)
@@ -422,7 +424,7 @@ class detectionThread(QThread):
 
                 
 
-                    predicted_data.put(detections)
+                    #predicted_data.put(detections)
             except Exception as e:
                 print(str(e))
                 self.threadActive=False
