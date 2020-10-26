@@ -409,7 +409,7 @@ class detectionThread(QThread):
 
         self.threadActive = True
         while self.threadActive:
-            time.sleep(0.025)
+            time.sleep(0.03)
             detect_lock.acquire()
             try:
                 
