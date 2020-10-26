@@ -266,6 +266,7 @@ class PostProcess(QThread):
             rgb_image = original_frames.get()
 
             if not boundingBoxes.empty():
+                print("hello")
                 pred_bbox = boundingBoxes.get()
 
                 image, violation = drawBox(rgb_image, pred_bbox, self.minDistance)
@@ -351,8 +352,6 @@ class detectionThread(QThread):
             )
 
             results.append(bbox)
-
-        print(results)
 
         return results
 
