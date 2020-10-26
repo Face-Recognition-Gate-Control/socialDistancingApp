@@ -341,7 +341,7 @@ class detectionThread(QThread):
     def run(self):
         global color_image2, predicted_data
 
-        net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
+        net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.7)
         display = jetson.utils.videoOutput("display://0")  # 'my_video.mp4' for file
 
         self.threadActive = True
