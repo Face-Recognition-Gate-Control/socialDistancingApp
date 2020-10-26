@@ -153,6 +153,18 @@ class realsenseThread(QThread):
 
         return results
 
+    def preProcess(self, color_image):
+
+        bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=True)
+        # convert from BGR -> RGB
+        rgb_img = jetson.utils.cudaAllocMapped(
+            width=bgr_img.width, height=bgr_img.height, format="rgb8"
+        )
+
+        jetson.utils.cudaConvertColor(bgr_img, rgb_img)
+
+        return rgb_img
+
     def detect(self, color_image):
 
         rgb_img = self.preProcess(color_image)
