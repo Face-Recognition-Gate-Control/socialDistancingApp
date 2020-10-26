@@ -178,15 +178,15 @@ class Show(QThread):
                 if len(color_image2) > 0:
                     image = color_image2
 
-                # https://stackoverflow.com/a/55468544/6622587
-                rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                h, w, ch = rgbImage.shape
-                bytesPerLine = ch * w
-                convertToQtFormat = QImage(
-                    rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888
-                )
-                p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
-                self.signals.changePixmap.emit(p)
+                    # https://stackoverflow.com/a/55468544/6622587
+                    rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                    h, w, ch = rgbImage.shape
+                    bytesPerLine = ch * w
+                    convertToQtFormat = QImage(
+                        rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888
+                    )
+                    p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+                    self.signals.changePixmap.emit(p)
 
             except Exception as e:
                 print(str(e))
