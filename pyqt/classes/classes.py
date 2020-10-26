@@ -73,13 +73,21 @@ class realsenseThread(QThread):
         super(realsenseThread, self).__init__()
         self.signals = signals
         self.signals.frameSelection.connect(self.updateSignal)
+        self.signals.min_distance.connect(self.updateSignal2)
         self.selection = False
+        self.minDistance = 1
 
     def updateSignal(self, value):
         self.selection = value
 
+    def updateSignal2(self, value):
+
+        self.minDistance = value
+
     @pyqtSlot()
     def run(self):
+
+        self.net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.7)
 
         # load config file made
         # do adjustment in realsense depth quality tool
@@ -130,6 +138,30 @@ class realsenseThread(QThread):
                 camera = True
                 self.startStreaming()
 
+    def getBBox(self, detections):
+        results = []
+
+        for detection in detections:
+            bbox = (
+                int(detection.Left),
+                int(detection.Top),
+                int(detection.Right),
+                int(detection.Bottom),
+            )
+
+            results.append(bbox)
+
+        return results
+
+    def detect(self, color_image):
+
+        rgb_img = self.preProcess(color_image)
+        detections = net.Detect(rgb_img)
+
+        bboxes = self.getBBox(detections)
+
+        return bboxes
+
     def startStreaming(self):
         global depthFrames, original_frames, predicted_data, boundingBoxes, color_image2
 
@@ -149,7 +181,7 @@ class realsenseThread(QThread):
                 colorizer = rs.colorizer()
                 color_image = color_frame.get_data()
                 color_image = np.asanyarray(color_image)
-                test = np.asanyarray(color_image)
+
                 # align images
                 align = rs.align(rs.stream.color)
 
@@ -162,45 +194,36 @@ class realsenseThread(QThread):
                     colorizer.colorize(aligned_depth_frame).get_data()
                 )
 
-                depth = np.asanyarray(aligned_depth_frame.get_data())
-
-                if self.selection:
-
-                    depthFrames.put(colorized_depth)
-
-                else:
-
-                    original_frames.put(color_image, timeout=0.01)
-                    detect_lock.acquire()
-                    try:
-
-                        color_image2 = test
-
-                    finally:
-
-                        detect_lock.release()
+                predictions = self.detect(color_image)
 
                 numberOfPeople = 0
-                if not predicted_data.empty():
 
-                    pred_bbox = predicted_data.get()
-                    numberOfPeople = len(pred_bbox)
+                numberOfPeople = len(predictions)
 
-                    bboxes = []
-                    vectors = []
+                bboxes = []
+                vectors = []
+                arr = []
 
-                    if numberOfPeople >= 1:
-                        for bbox in pred_bbox:
+                if numberOfPeople >= 2:
 
-                            (sx, sy, ex, ey) = bbox
-                            bboxes.append(bbox)
-                            w = sx + (ex - sx) / 2
-                            h = sy + (ey - sy) / 2
+                    for bbox in pred_bbox:
 
-                            vectors.append(get3d(int(w), int(h), aligned_depth_frame))
+                        (sx, sy, ex, ey) = bbox
+                        bboxes.append(bbox)
+                        w = sx + (ex - sx) / 2
+                        h = sy + (ey - sy) / 2
 
-                            boundingBoxes.put((bboxes, vectors))
+                        vectors.append(get3d(int(w), int(h), aligned_depth_frame))
+
+                        arr.append((bboxes, vectors))
+
                 self.signals.people.emit(numberOfPeople)
+
+                image, violation = drawBox(color_image, pred_bbox, self.minDistance)
+
+                self.signals.violation.emit(violation)
+
+                processed_frames.put(image)
 
             except Exception as e:
                 print("Error is :", str(e))
