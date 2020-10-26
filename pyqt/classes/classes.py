@@ -180,8 +180,6 @@ class realsenseThread(QThread):
 
                         detect_lock.release()
 
-
-
                 numberOfPeople = 0
                 if not predicted_data.empty():
 
@@ -302,19 +300,6 @@ class PreProcess(QThread):
                 )
                 # frame = imutils.resize(rgb_image, width=700)
                 preProcessed_frames.put(blob)
-
-
-class getVectors(QThread):
-    def __init__(self):
-        super(getVectors, self).__init__()
-
-    @pyqtSlot()
-    def run(self):
-        global predicted_data, boundingBoxes
-
-        while True:
-
-          
 
 
 class WorkerSignals(QObject):
