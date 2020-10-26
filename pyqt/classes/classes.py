@@ -360,7 +360,7 @@ class detectionThread(QThread):
                     detections = net.Detect(rgb_img)
                     display.Render(rgb_img)
 
-                    print(detections[3])
+                    print(detections[0:])
 
                     # results = detect_people(blob, net)
                     # predicted_data.put(detections)
