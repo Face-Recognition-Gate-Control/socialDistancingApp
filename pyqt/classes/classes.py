@@ -367,8 +367,9 @@ class detectionThread(QThread):
                     # )
                     detections = net.Detect(rgb_img)
                     display.Render(rgb_img)
-                    string = self.listToString(detections)
-                    print(string)
+
+                    for detection in detections:
+                        print(detection)
 
                     # results = detect_people(blob, net)
                     # predicted_data.put(detections)
