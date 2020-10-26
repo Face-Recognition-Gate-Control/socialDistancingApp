@@ -53,11 +53,12 @@ class MainWindow(QMainWindow):
         self.showImage = Show(self.signals)
         self.showImage.signals.changePixmap.connect(self.setImage)
 
-        self.pre_process = PreProcess()
+        self.get_vectors = getVectors()
         self.post_process = PostProcess(self.signals)
         self.post_process.signals.violation.connect(self.violation)
         # start threads
         # self.pre_process.start()
+        self.get_vectors.star(self.signals)
         self.post_process.start()
         self.detect.start()
         self.showImage.start()
