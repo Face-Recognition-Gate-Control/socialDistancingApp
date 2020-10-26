@@ -353,7 +353,7 @@ class detectionThread(QThread):
             )
 
             results.append(bbox)
-        print(results)
+
         return results
 
     @pyqtSlot()
