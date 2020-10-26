@@ -233,7 +233,7 @@ class realsenseThread(QThread):
 
                     color_image, violation = drawBox(color_image, pred_bbox, self.minDistance)
 
-                self.signals.violation.emit(violation)
+                    self.signals.violation.emit(violation)
 
                 processed_frames.put(color_image)
 
