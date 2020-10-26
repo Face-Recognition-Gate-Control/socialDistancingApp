@@ -2,12 +2,14 @@ import pyrealsense2 as rs
 import math
 import detect.config_caffe as config
 import cv2
-def drawBox(image, predicitons,min_dist):
+
+
+def drawBox(image, predicitons, min_dist):
     violation = set()
-    
+
     if len(predicitons[1]) >= 2:
 
-        violation = euclideanDistance(predicitons[1],min_dist)
+        violation = euclideanDistance(predicitons[1], min_dist)
 
     for (i, (box)) in enumerate(predicitons[0]):
 
@@ -24,29 +26,16 @@ def drawBox(image, predicitons,min_dist):
 
         cv2.circle(image, (int(w), int(h)), 5, color, 1)
 
-    return image,violation
+    return image, violation
 
 
-
-
-    
 def get3d(x, y, frames):
 
-    align_to = rs.stream.color
-    align = rs.align(align_to)
-
-    # Align the depth frame to color frame
-    aligned_frames = align.process(frames)
-
-    # Get aligned frames
-    aligned_depth_frame = aligned_frames.get_depth_frame()
-    aligned_depth_intrin = (
-        aligned_depth_frame.profile.as_video_stream_profile().intrinsics
-    )
+    aligned_depth_intrin = frames.profile.as_video_stream_profile().intrinsics
 
     depth_pixel = [x, y]
     # In meters
-    dist_to_center = aligned_depth_frame.get_distance(x, y)
+    dist_to_center = frames.get_distance(x, y)
     pose = rs.rs2_deproject_pixel_to_point(
         aligned_depth_intrin, depth_pixel, dist_to_center
     )
@@ -62,7 +51,7 @@ def get3d(x, y, frames):
     return response_dict
 
 
-def euclideanDistance(points,min_dist):
+def euclideanDistance(points, min_dist):
 
     violate = set()
 
@@ -75,8 +64,7 @@ def euclideanDistance(points,min_dist):
                 + (points[i]["y"] - points[j]["y"]) ** 2
                 + (points[i]["z"] - points[j]["z"]) ** 2
             )
-            
-            
+
             if dist < min_dist:
 
                 violate.add(i)

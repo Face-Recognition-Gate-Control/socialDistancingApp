@@ -58,7 +58,7 @@ class MainWindow(QMainWindow):
         self.post_process.signals.violation.connect(self.violation)
         # start threads
         # self.pre_process.start()
-        self.get_vectors.start()
+
         self.post_process.start()
         self.detect.start()
         self.showImage.start()
