@@ -214,11 +214,11 @@ class realsenseThread(QThread):
 
                 bboxes = []
                 vectors = []
-                arr = []
+                pred_bbox = []
 
                 if numberOfPeople >= 2:
 
-                    for bbox in pred_bbox:
+                    for bbox in predictions:
 
                         (sx, sy, ex, ey) = bbox
                         bboxes.append(bbox)
@@ -227,7 +227,7 @@ class realsenseThread(QThread):
 
                         vectors.append(get3d(int(w), int(h), aligned_depth_frame))
 
-                        arr.append((bboxes, vectors))
+                        pred_bbox.append((bboxes, vectors))
 
                 self.signals.people.emit(numberOfPeople)
 
