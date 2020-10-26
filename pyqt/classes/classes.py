@@ -185,7 +185,7 @@ class realsenseThread(QThread):
 
                     pred_bbox = predicted_data.get()
                     numberOfPeople = len(pred_bbox)
-                    self.signals.people.emit(numberOfPeople)
+
                     bboxes = []
                     vectors = []
 
@@ -200,7 +200,7 @@ class realsenseThread(QThread):
                             vectors.append(get3d(int(w), int(h), frames))
 
                             boundingBoxes.put((bboxes, vectors))
-
+                self.signals.people.emit(numberOfPeople)
             except Exception as e:
                 print("Error is :", str(e))
 
@@ -223,7 +223,7 @@ class Show(QThread):
 
     @pyqtSlot()
     def run(self):
-        global processed_frames, depthFrames
+        global original_frames, depthFrames
         print("starting show thread")
         while True:
 
@@ -232,7 +232,7 @@ class Show(QThread):
                 if self.selection:
                     image = depthFrames.get(timeout=0.01)
                 else:
-                    image = processed_frames.get(timeout=0.01)
+                    image = original_frames.get(timeout=0.01)
 
                 # https://stackoverflow.com/a/55468544/6622587
                 rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -266,16 +266,16 @@ class PostProcess(QThread):
 
             rgb_image = original_frames.get()
 
-            # if not boundingBoxes.empty():
+            if not boundingBoxes.empty():
 
-            #     pred_bbox = boundingBoxes.get()
+                pred_bbox = boundingBoxes.get()
 
-            #     image, violation = drawBox(rgb_image, pred_bbox, self.minDistance)
+                image, violation = drawBox(rgb_image, pred_bbox, self.minDistance)
 
-            #     self.signals.violation.emit(violation)
-            #     processed_frames.put(image)
-            # else:
-            processed_frames.put(rgb_image)
+                self.signals.violation.emit(violation)
+                processed_frames.put(image)
+            else:
+                processed_frames.put(rgb_image)
 
 
 class PreProcess(QThread):
