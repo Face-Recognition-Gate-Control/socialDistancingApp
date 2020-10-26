@@ -223,7 +223,7 @@ class Show(QThread):
 
     @pyqtSlot()
     def run(self):
-        global original_frames, depthFrames
+        global processed_frames, depthFrames
         print("starting show thread")
         while True:
 
@@ -232,7 +232,7 @@ class Show(QThread):
                 if self.selection:
                     image = depthFrames.get(timeout=0.01)
                 else:
-                    image = original_frames.get(timeout=0.01)
+                    image = processed_frames.get(timeout=0.01)
 
                 # https://stackoverflow.com/a/55468544/6622587
                 rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
