@@ -383,7 +383,7 @@ class detectionThread(QThread):
 
                 detect_lock.release()
                 bboxes = self.getBBox(detections)
-
+                print(len(bboxes))
                 if len(bboxes) > 0:
                     predicted_data.put(bboxes)
 
