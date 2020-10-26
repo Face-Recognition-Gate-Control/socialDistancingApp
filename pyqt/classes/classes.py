@@ -341,6 +341,7 @@ class detectionThread(QThread):
 
     def getBBox(self, detections):
         results = []
+
         for detection in detections:
             bbox = (
                 int(detection.Left),
@@ -377,7 +378,9 @@ class detectionThread(QThread):
 
                     bboxes = self.getBBox(detections)
 
-                    predicted_data.put(bboxes)
+                    if len(bboxes) > 0:
+
+                        predicted_data.put(bboxes)
             except Exception as e:
                 print(str(e))
                 self.threadActive = False
