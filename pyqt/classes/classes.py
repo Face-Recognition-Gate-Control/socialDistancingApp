@@ -211,7 +211,7 @@ class realsenseThread(QThread):
                 numberOfPeople = 0
 
                 numberOfPeople = len(predictions)
-
+                print(len(predictions))
                 bboxes = []
                 vectors = []
                 pred_bbox = [[], []]
@@ -230,8 +230,6 @@ class realsenseThread(QThread):
                         pred_bbox.append((bboxes, vectors))
 
                 self.signals.people.emit(numberOfPeople)
-
-                print(pred_bbox[0])
 
                 image, violation = drawBox(color_image, pred_bbox, self.minDistance)
 
