@@ -374,6 +374,11 @@ class detectionThread(QThread):
 
                     color_image = color_image2
                     rgb_img = self.preProcess(color_image)
+                    detections = net.Detect(rgb_img)
+
+                    bboxes = self.getBBox(detections)
+                    if len(bboxes) > 0:
+                        predicted_data.put(bboxes)
 
             except Exception as e:
                 print(str(e))
@@ -381,12 +386,6 @@ class detectionThread(QThread):
             finally:
 
                 detect_lock.release()
-
-                detections = net.Detect(rgb_img)
-
-                bboxes = self.getBBox(detections)
-                if len(bboxes) > 0:
-                    predicted_data.put(bboxes)
 
 
 class Worker(QRunnable):
