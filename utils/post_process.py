@@ -7,6 +7,8 @@ import cv2
 def drawBox(image, predicitons, min_dist):
     violation = set()
 
+    print(predicitons)
+
     if len(predicitons[1]) >= 2:
 
         violation = euclideanDistance(predicitons[1], min_dist)
