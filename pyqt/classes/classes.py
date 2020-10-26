@@ -231,7 +231,7 @@ class realsenseThread(QThread):
 
                 self.signals.people.emit(numberOfPeople)
 
-                print(pred_bbox)
+                print(pred_bbox[0])
 
                 image, violation = drawBox(color_image, pred_bbox, self.minDistance)
 
