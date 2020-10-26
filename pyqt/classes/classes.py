@@ -231,11 +231,11 @@ class realsenseThread(QThread):
 
                 self.signals.people.emit(numberOfPeople)
 
-                image, violation = drawBox(color_image, pred_bbox, self.minDistance)
+                    color_image, violation = drawBox(color_image, pred_bbox, self.minDistance)
 
                 self.signals.violation.emit(violation)
 
-                processed_frames.put(image)
+                processed_frames.put(color_image)
 
             except Exception as e:
                 print("Error is :", str(e))
