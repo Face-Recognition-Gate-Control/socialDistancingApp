@@ -7,7 +7,7 @@ import cv2
 def drawBox(image, predicitons, min_dist):
     violation = set()
 
-    print(predicitons)
+    print(predicitons[0])
 
     if len(predicitons[1]) >= 2:
 
