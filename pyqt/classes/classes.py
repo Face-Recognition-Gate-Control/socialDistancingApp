@@ -319,7 +319,7 @@ class detectionThread(QThread):
     def updateSignal(self, value):
         self.min_Distance = int(value)
 
-    def preProcess(self, image):
+    def preProcess(self, color_image):
 
         bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=True)
         # convert from BGR -> RGB
