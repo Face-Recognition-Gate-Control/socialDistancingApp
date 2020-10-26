@@ -189,7 +189,7 @@ class realsenseThread(QThread):
                     bboxes = []
                     vectors = []
 
-                    if numberOfPeople >= 2:
+                    if numberOfPeople >= 1:
                         for bbox in pred_bbox:
 
                             (sx, sy, ex, ey) = bbox
@@ -200,7 +200,7 @@ class realsenseThread(QThread):
                             vectors.append(get3d(int(w), int(h), frames))
 
                             boundingBoxes.put((bboxes, vectors))
-                self.signals.people.emit(numberOfPeople)
+            self.signals.people.emit(numberOfPeople)
             except Exception as e:
                 print("Error is :", str(e))
 
@@ -374,9 +374,6 @@ class detectionThread(QThread):
                     color_image = color_image2
                     rgb_img = self.preProcess(color_image)
 
-                    detections = net.Detect(rgb_img)
-
-                    bboxes = self.getBBox(detections)
 
                     if len(bboxes) > 0:
                         predicted_data.put(bboxes)
@@ -386,6 +383,10 @@ class detectionThread(QThread):
             finally:
 
                 detect_lock.release()
+                
+                detections = net.Detect(rgb_img)
+
+                bboxes = self.getBBox(detections)
 
 
 class Worker(QRunnable):
