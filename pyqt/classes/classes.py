@@ -401,7 +401,6 @@ class detectionThread(QThread):
 
                 if(len(color_image2)>0): 
 
-                
                     color_image = color_image2
                     bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=True)
                     # convert from BGR -> RGB
@@ -419,10 +418,6 @@ class detectionThread(QThread):
                     print(detections)
 
                     #results = detect_people(blob, net)
-
-
-                
-
                     #predicted_data.put(detections)
             except Exception as e:
                 print(str(e))
