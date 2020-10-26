@@ -207,7 +207,7 @@ class realsenseThread(QThread):
                 )
 
                 predictions = self.detect(color_image)
-
+                print(predictions)
                 numberOfPeople = 0
 
                 numberOfPeople = len(predictions)
