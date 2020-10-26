@@ -345,7 +345,7 @@ class detectionThread(QThread):
             bbox = (
                 int(detection.Left),
                 int(detection.Top),
-                int(detection.Left),
+                int(detection.Right),
                 int(detection.Bottom),
             )
 
