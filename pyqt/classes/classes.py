@@ -329,7 +329,7 @@ class detectionThread(QThread):
         # frame = imutils.resize(rgb_image, width=700)
         return blob
 
-    def listToString(s):
+    def listToString(self, s):
 
         # initialize an empty string
         str1 = " "
