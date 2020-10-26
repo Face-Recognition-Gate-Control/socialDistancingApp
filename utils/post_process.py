@@ -17,6 +17,8 @@ def drawBox(image, predicitons, min_dist):
         # initialize the color of the annotation
         (startX, startY, endX, endY) = box
 
+        print(startX)
+
         color = (255, 0, 0)
         if i in violation:
             color = (0, 0, 255)
@@ -24,7 +26,7 @@ def drawBox(image, predicitons, min_dist):
         w = startX + (endX - startX) / 2
         h = startY + (endY - startY) / 2
 
-        cv2.circle(image, (int(w), int(h)), 5, color, 1)
+        cv2.circle(image, (int(w), int(h)), 10, color, 1)
 
     return image, violation
 
