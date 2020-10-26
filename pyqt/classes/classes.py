@@ -329,6 +329,14 @@ class detectionThread(QThread):
         # frame = imutils.resize(rgb_image, width=700)
         return blob
 
+    def listToString(s):
+
+        # initialize an empty string
+        str1 = " "
+
+        # return string
+        return str1.join(s)
+
     @pyqtSlot()
     def run(self):
         global color_image2, predicted_data
@@ -359,8 +367,8 @@ class detectionThread(QThread):
                     # )
                     detections = net.Detect(rgb_img)
                     display.Render(rgb_img)
-
-                    print("\n".join(detections))
+                    string = self.listToString(detections)
+                    print(string)
 
                     # results = detect_people(blob, net)
                     # predicted_data.put(detections)
