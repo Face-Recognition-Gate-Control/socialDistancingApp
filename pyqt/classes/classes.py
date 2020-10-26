@@ -219,6 +219,7 @@ class realsenseThread(QThread):
                 if numberOfPeople >= 1:
 
                     for bbox in predictions:
+                        print(bbox)
 
                         (sx, sy, ex, ey) = bbox
                         bboxes.append(bbox)
