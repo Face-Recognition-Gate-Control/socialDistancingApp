@@ -408,7 +408,7 @@ class detectionThread(QThread):
                 # results = detect_people(
                 #     color_image, net, ln, personIdx=LABELS.index("person")
                 # )
-                    detections = net.Detect(img)
+                    detections = net.Detect(color_image)
                     print(detections)
 
                     #results = detect_people(blob, net)
