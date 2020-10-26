@@ -40,11 +40,13 @@ def get3d(x, y, frames):
     # Get aligned frames
     aligned_depth_frame = aligned_frames.get_depth_frame()
 
-    aligned_depth_intrin = frames.profile.as_video_stream_profile().intrinsics
+    aligned_depth_intrin = (
+        aligned_depth_frame.profile.as_video_stream_profile().intrinsics
+    )
 
     depth_pixel = [x, y]
     # In meters
-    dist_to_center = frames.get_distance(x, y)
+    dist_to_center = aligned_depth_frame.get_distance(x, y)
     pose = rs.rs2_deproject_pixel_to_point(
         aligned_depth_intrin, depth_pixel, dist_to_center
     )
