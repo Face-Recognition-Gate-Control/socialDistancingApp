@@ -180,6 +180,7 @@ class realsenseThread(QThread):
 
                         detect_lock.release()
 
+                numberOfPeople = 0
                 if not predicted_data.empty():
 
                     pred_bbox = predicted_data.get()
@@ -265,16 +266,16 @@ class PostProcess(QThread):
 
             rgb_image = original_frames.get()
 
-            if not boundingBoxes.empty():
-                print("hello")
-                pred_bbox = boundingBoxes.get()
+            # if not boundingBoxes.empty():
 
-                image, violation = drawBox(rgb_image, pred_bbox, self.minDistance)
+            #     pred_bbox = boundingBoxes.get()
 
-                self.signals.violation.emit(violation)
-                processed_frames.put(image)
-            else:
-                processed_frames.put(rgb_image)
+            #     image, violation = drawBox(rgb_image, pred_bbox, self.minDistance)
+
+            #     self.signals.violation.emit(violation)
+            #     processed_frames.put(image)
+            # else:
+            processed_frames.put(rgb_image)
 
 
 class PreProcess(QThread):
