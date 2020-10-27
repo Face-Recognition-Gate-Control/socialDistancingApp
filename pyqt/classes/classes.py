@@ -51,7 +51,7 @@ class webcamThread(QThread):
                     convertToQtFormat = QImage(
                         rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888
                     )
-                    p = convertToQtFormat.scaled(1280, 720, Qt.KeepAspectRatio)
+                    p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
                     self.signals.changePixmap.emit(p)
 
                 else:
