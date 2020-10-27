@@ -7,15 +7,12 @@ import cv2
 def drawBox(image, predicitons, min_dist):
     violation = set()
 
-    print(predicitons[0])
-
     if len(predicitons[1]) >= 2:
 
         violation = euclideanDistance(predicitons[1], min_dist)
 
     for (i, (box)) in enumerate(predicitons[0]):
 
-        print(box)
         # extract the bounding box and centroid coordinates, then
         # initialize the color of the annotation
         (startX, startY, endX, endY) = box
