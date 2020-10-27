@@ -208,7 +208,7 @@ class realsenseThread(QThread):
                 )
 
                 if self.selection:
-                    image = depthFrames.get(timeout=0.01)
+                    depthFrames.put(colorized_depth)
                     continue
 
                 predictions = self.detect(color_image)
