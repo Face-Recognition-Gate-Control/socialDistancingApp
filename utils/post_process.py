@@ -9,7 +9,7 @@ def drawBox(image, predicitons, min_dist):
 
     overlay = image.copy()
     output = image.copy()
-    alpha = 0.4
+    alpha = 0.35
 
     if len(predicitons[1]) >= 2:
 
@@ -21,9 +21,9 @@ def drawBox(image, predicitons, min_dist):
         # initialize the color of the annotation
         (startX, startY, endX, endY) = box
 
-        color = (255, 0, 0)
+        color = (50, 205, 50)
         if i in violation:
-            color = (0, 0, 255)
+            color = (255, 99, 71)
         cv2.rectangle(overlay, (startX, startY), (endX, endY), color, -1)
         w = startX + (endX - startX) / 2
         h = startY + (endY - startY) / 2
