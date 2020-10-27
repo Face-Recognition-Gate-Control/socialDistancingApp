@@ -214,7 +214,6 @@ class realsenseThread(QThread):
 
                 bboxes = []
                 vectors = []
-                pred_bbox = []
 
                 if numberOfPeople >= 1:
 
@@ -227,7 +226,7 @@ class realsenseThread(QThread):
 
                         vectors.append(get3d(int(w), int(h), frames))
 
-                    pred_bbox.append((bboxes, vectors))
+                    pred_bbox = (bboxes, vectors)
 
                 self.signals.people.emit(numberOfPeople)
 
