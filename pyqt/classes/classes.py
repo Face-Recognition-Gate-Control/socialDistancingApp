@@ -224,7 +224,7 @@ class realsenseThread(QThread):
                         w = sx + (ex - sx) / 2
                         h = sy + (ey - sy) / 2
 
-                        vectors.append(get3d(int(w), int(h), frames))
+                        vectors.append(get3d(int(w), int(h), aligned_depth_frame))
 
                     pred_bbox = (bboxes, vectors)
 
@@ -232,7 +232,6 @@ class realsenseThread(QThread):
 
                 if pred_bbox:
 
-                    print(pred_bbox)
                     color_image, violation = drawBox(
                         color_image, pred_bbox, self.minDistance
                     )
