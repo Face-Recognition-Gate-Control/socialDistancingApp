@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1292</width>
+    <width>1286</width>
     <height>720</height>
    </rect>
   </property>
@@ -30,31 +30,6 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <widget class="QSlider" name="distance">
-       <property name="geometry">
-        <rect>
-         <x>60</x>
-         <y>660</y>
-         <width>160</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="maximum">
-        <number>5</number>
-       </property>
-       <property name="singleStep">
-        <number>1</number>
-       </property>
-       <property name="value">
-        <number>1</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="tickPosition">
-        <enum>QSlider::TicksAbove</enum>
-       </property>
-      </widget>
       <widget class="QPushButton" name="camera">
        <property name="geometry">
         <rect>
@@ -81,66 +56,17 @@
         <string/>
        </property>
       </widget>
-      <widget class="QLabel" name="distance_value">
-       <property name="geometry">
-        <rect>
-         <x>120</x>
-         <y>630</y>
-         <width>47</width>
-         <height>13</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>1</string>
-       </property>
-      </widget>
       <widget class="QLabel" name="label">
        <property name="geometry">
         <rect>
-         <x>440</x>
+         <x>460</x>
          <y>0</y>
          <width>311</width>
          <height>71</height>
         </rect>
        </property>
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:22pt; font-weight:600;&quot;&gt;Social Detection&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_2">
-       <property name="geometry">
-        <rect>
-         <x>940</x>
-         <y>590</y>
-         <width>171</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>14</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Number of people</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="people">
-       <property name="geometry">
-        <rect>
-         <x>1000</x>
-         <y>620</y>
-         <width>21</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>22</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>0</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:22pt; font-weight:600;&quot;&gt;Social Distancing&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
       <widget class="QRadioButton" name="radioButton">
@@ -156,32 +82,96 @@
         <string>Depth frame</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_3">
+      <widget class="QWidget" name="verticalLayoutWidget">
        <property name="geometry">
         <rect>
-         <x>130</x>
-         <y>630</y>
-         <width>47</width>
-         <height>13</height>
+         <x>1010</x>
+         <y>590</y>
+         <width>211</width>
+         <height>81</height>
         </rect>
        </property>
-       <property name="text">
-        <string>meter</string>
-       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="topMargin">
+         <number>9</number>
+        </property>
+        <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+         <widget class="QLabel" name="label_2">
+          <property name="font">
+           <font>
+            <pointsize>14</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Number of people</string>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+         <widget class="QLabel" name="people">
+          <property name="font">
+           <font>
+            <pointsize>22</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
-      <widget class="QLabel" name="label_4">
+      <widget class="QWidget" name="verticalLayoutWidget_2">
        <property name="geometry">
         <rect>
-         <x>110</x>
-         <y>600</y>
-         <width>91</width>
-         <height>16</height>
+         <x>30</x>
+         <y>590</y>
+         <width>184</width>
+         <height>77</height>
         </rect>
        </property>
-       <property name="text">
-        <string>Minimum distance</string>
-       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Minimum distance meter&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignHCenter">
+         <widget class="QLabel" name="distance_value">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="distance">
+          <property name="maximum">
+           <number>5</number>
+          </property>
+          <property name="singleStep">
+           <number>1</number>
+          </property>
+          <property name="value">
+           <number>1</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="tickPosition">
+           <enum>QSlider::TicksAbove</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
+      <zorder>camera</zorder>
+      <zorder>cameraStream</zorder>
+      <zorder>radioButton</zorder>
+      <zorder>label</zorder>
+      <zorder>verticalLayoutWidget</zorder>
+      <zorder>verticalLayoutWidget_2</zorder>
      </widget>
     </item>
    </layout>
