@@ -207,6 +207,10 @@ class realsenseThread(QThread):
                     colorizer.colorize(aligned_depth_frame).get_data()
                 )
 
+                if self.selection:
+                    image = depthFrames.get(timeout=0.01)
+                    continue
+
                 predictions = self.detect(color_image)
 
                 numberOfPeople = 0
@@ -216,7 +220,7 @@ class realsenseThread(QThread):
                 bboxes = []
                 vectors = []
 
-                if numberOfPeople >= 1:
+                if numberOfPeople >= 0:
 
                     for bbox in predictions:
 
