@@ -7,6 +7,10 @@ import cv2
 def drawBox(image, predicitons, min_dist):
     violation = set()
 
+    overlay = image.copy()
+    output = image.copy()
+    alpha = 0.4
+
     if len(predicitons[1]) >= 2:
 
         violation = euclideanDistance(predicitons[1], min_dist)
@@ -20,13 +24,14 @@ def drawBox(image, predicitons, min_dist):
         color = (255, 0, 0)
         if i in violation:
             color = (0, 0, 255)
-        cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
+        cv2.rectangle(overlay, (startX, startY), (endX, endY), color, -1)
         w = startX + (endX - startX) / 2
         h = startY + (endY - startY) / 2
 
-        cv2.circle(image, (int(w), int(h)), 10, color, 1)
+        cv2.circle(overlay, (int(w), int(h)), 10, color, -1)
+        cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
 
-    return image, violation
+    return output, violation
 
 
 def get3d(x, y, aligned_depth_frame):
