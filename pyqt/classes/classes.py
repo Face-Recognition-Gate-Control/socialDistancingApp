@@ -214,7 +214,7 @@ class realsenseThread(QThread):
 
                 bboxes = []
                 vectors = []
-                pred_bbox = [[], []]
+                pred_bbox = [([], [])]
 
                 if numberOfPeople >= 1:
 
