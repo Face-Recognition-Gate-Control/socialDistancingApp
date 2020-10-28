@@ -38,6 +38,7 @@ class realsenseThread(QThread):
         self.signals.min_distance.connect(self.updateSignal2)
         self.selection = False
         self.minDistance = 1
+         self.threadpool = QThreadPool()
 
     def updateSignal(self, value):
         self.selection = value
@@ -150,6 +151,18 @@ class realsenseThread(QThread):
 
         return bboxes
 
+    def alignImage(self,frames):
+
+         # # align images
+        align = rs.align(rs.stream.color)
+
+        frameset = align.process(frames)
+
+        # # Update color and depth frames:
+        aligned_depth_frame = frameset.get_depth_frame()
+
+
+
     def startStreaming(self):
         global depthFrames, original_frames, predicted_data, boundingBoxes, color_image2
 
@@ -170,13 +183,10 @@ class realsenseThread(QThread):
                 color_image = color_frame.get_data()
                 color_image = np.asanyarray(color_image)
 
-                # # align images
-                align = rs.align(rs.stream.color)
+               
 
-                # frameset = align.process(frames)
-
-                # # Update color and depth frames:
-                # aligned_depth_frame = frameset.get_depth_frame()
+                worker = Worker(self.alignImage(frames))
+                self.threadpool.start(worker)
 
                 # colorized_depth = np.asanyarray(
                 #     colorizer.colorize(aligned_depth_frame).get_data()
