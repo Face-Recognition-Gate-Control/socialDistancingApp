@@ -4,7 +4,7 @@ import pyrealsense2 as rs
 import json
 
 
-def rgbtocuda(image):
+def rgbtocuda(color_image):
 
     bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=True)
     # convert from BGR -> RGB
@@ -25,12 +25,9 @@ def test():
 
             frames = pipeline.wait_for_frames()
             color_frame = frames.get_color_frame()
-            depth_frame = frames.get_depth_frame()
 
             if not depth_frame or not color_frame:
                 continue
-            frames = pipeline.wait_for_frames()
-            color_frame = frames.get_color_frame()
             img = rgbtocuda(color_frame)
             detections = net.Detect(img)
             display.Render(img)
