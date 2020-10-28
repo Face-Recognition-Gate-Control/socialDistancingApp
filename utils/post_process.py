@@ -56,7 +56,7 @@ def get3d(x, y, depth_frame):
 
     # depth_pixel = [x, y]
     # # In meters
-    point = rs.rs2_deproject_pixel_to_point(color_intrin, [x, y], dist)
+    point = rs.rs2_deproject_pixel_to_point(color_intrin, [x, y], udist)
     # dist_to_center = aligned_depth_frame.get_distance(x, y)
 
     # The (x,y,z) coordinate system of the camera is accordingly
