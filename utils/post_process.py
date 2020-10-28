@@ -72,9 +72,10 @@ def get3d(x, y, depth_frame):
 def meanDepth(frame, x, y):
     deptharr = []
     for i in range(20):
-        deptharr.append(frame.get_distance(x + i, y + i))
+        deptharr.append(frame.get_distance((x + i), (y + i)))
 
-    return cv2.mean(deptharr)
+    dist, _, _, _ = cv2.mean(deptharr)
+    return dist
 
 
 def euclideanDistance(points, min_dist):
