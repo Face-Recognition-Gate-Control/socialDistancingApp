@@ -73,7 +73,6 @@ def get3d(x, y, depth_frame):
 def meanDepth(frame, x, y):
     distList = []
     for i in range(20):
-        print(i)
         distList.append(frame.get_distance((x + i), (y + i)))
 
     distArr = np.array(distList)
