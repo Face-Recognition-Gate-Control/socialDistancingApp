@@ -169,6 +169,9 @@ class realsenseThread(QThread):
         # # Update color and depth frames:
         aligned_depth_frame = frameset.get_depth_frame()
 
+    def warning_complete(self):
+        print("complete")
+
     def startStreaming(self):
         global depthFrames, original_frames, predicted_data, boundingBoxes, color_image2
 
@@ -190,6 +193,7 @@ class realsenseThread(QThread):
                 color_image = np.asanyarray(color_image)
 
                 worker = Worker(self.alignImage(frames))
+                worker.signals.finished.connect(self.warning_complete)
                 self.threadpool.start(worker)
 
                 # colorized_depth = np.asanyarray(
