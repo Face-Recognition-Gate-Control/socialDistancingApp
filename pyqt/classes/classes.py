@@ -175,6 +175,7 @@ class realsenseThread(QThread):
     def startStreaming(self):
         global depthFrames, original_frames, predicted_data, boundingBoxes, color_image2
 
+        align = rs.align(rs.stream.color)
         self.threadActive = True
 
         print("starting stream")
@@ -188,13 +189,14 @@ class realsenseThread(QThread):
 
                 if not color_frame or not depth_frame:
                     continue
+                frameset = align.process(frameset)
+
+                # Update color and depth frames:
+                aligned_depth_frame = frameset.get_depth_frame()
+
                 colorizer = rs.colorizer()
                 color_image = color_frame.get_data()
                 color_image = np.asanyarray(color_image)
-
-                # colorized_depth = np.asanyarray(
-                #     colorizer.colorize(aligned_depth_frame).get_data()
-                # )
 
                 if self.selection:
                     depthFrames.put(color_image)
@@ -218,7 +220,7 @@ class realsenseThread(QThread):
                         w = sx + (ex - sx) / 2
                         h = sy + (ey - sy) / 2
 
-                        vectors.append(get3d(int(w), int(h), depth_frame, color_frame))
+                        vectors.append(get3d(int(w), int(h), aligned_depth_frame))
 
                     pred_bbox = (bboxes, vectors)
 

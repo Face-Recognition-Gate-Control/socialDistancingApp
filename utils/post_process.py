@@ -35,14 +35,18 @@ def drawBox(image, predicitons, min_dist):
     return output, violation
 
 
-def get3d(x, y, depth_frame, color_frame):
+def get3d(
+    x,
+    y,
+    depth_frame,
+):
 
     # align_to = rs.stream.color
     # align = rs.align(align_to)
 
     # # Align the depth frame to color frame
     # aligned_frames = align.process(frames)
-    color_intrin = color_frame.profile.as_video_stream_profile().intrinsics
+    color_intrin = depth_frame.profile.as_video_stream_profile().intrinsics
     # # Get aligned frames
     # aligned_depth_frame = aligned_frames.get_depth_frame()
 
