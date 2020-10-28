@@ -35,7 +35,7 @@ def drawBox(image, predicitons, min_dist):
     return output, violation
 
 
-def test(bboxes):
+def distancePixel(bboxes):
 
     if len(bboxes) >= 2:
 

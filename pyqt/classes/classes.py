@@ -234,7 +234,7 @@ class realsenseThread(QThread):
 
                 if pred_bbox:
 
-                    (test)
+                    distancePixel(test)
 
                     color_image, violation = drawBox(
                         color_image, pred_bbox, self.minDistance
