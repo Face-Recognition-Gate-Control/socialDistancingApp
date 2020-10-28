@@ -167,6 +167,9 @@ class realsenseThread(QThread):
 
         self.threadActive = True
 
+        align_to = rs.stream.color
+        align = rs.align(align_to)
+
         print("starting stream")
         while self.threadActive:
 
@@ -186,6 +189,7 @@ class realsenseThread(QThread):
                 # Validate that both frames are valid
                 if not aligned_depth_frame or not color_frame:
                     continue
+
                 color_image = np.asanyarray(color_frame.get_data())
 
                 # colorized_depth = np.asanyarray(
