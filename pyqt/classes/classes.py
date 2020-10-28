@@ -88,7 +88,9 @@ class realsenseThread(QThread):
     def run(self):
 
         self.net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.55)
-
+        self.display = jetson.utils.videoOutput(
+            "display://0"
+        )  # 'my_video.mp4' for file
         # load config file made
         # do adjustment in realsense depth quality tool
         jsonObj = json.load(open("configrealsense.json"))
@@ -170,6 +172,7 @@ class realsenseThread(QThread):
         rgb_img = self.preProcess(color_image)
 
         detections = self.net.Detect(rgb_img)
+        self.display.Render(rgb_img)
 
         bboxes = self.getBBox(detections)
 
@@ -405,7 +408,7 @@ class detectionThread(QThread):
         global color_image2, predicted_data
 
         net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.6)
-        display = jetson.utils.videoOutput("display://0")  # 'my_video.mp4' for file
+
         self.threadActive = True
         while self.threadActive:
 
@@ -417,7 +420,6 @@ class detectionThread(QThread):
                     color_image = color_image2
                     rgb_img = self.preProcess(color_image)
                     detections = net.Detect(rgb_img)
-                    display.Render(rgb_img)
 
                     bboxes = self.getBBox(detections)
                     if len(bboxes) > 0:
