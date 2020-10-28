@@ -145,12 +145,13 @@ def euclideanDistance(points, min_dist):
         for j in range(i + 1, len(points)):
 
             if points[i]["z"] == 0 or points[j]["z"] == 0:
-                print("hei")
-            dist = math.sqrt(
-                (points[i]["x"] - points[j]["x"]) ** 2
-                + (points[i]["y"] - points[j]["y"]) ** 2
-                + (points[i]["z"] - points[j]["z"]) ** 2
-            )
+                dist = calculate_distance_of_two_points_of_boxes(points[i], points[j])
+            else:
+                dist = math.sqrt(
+                    (points[i]["x"] - points[j]["x"]) ** 2
+                    + (points[i]["y"] - points[j]["y"]) ** 2
+                    + (points[i]["z"] - points[j]["z"]) ** 2
+                )
 
             if dist < min_dist:
 
