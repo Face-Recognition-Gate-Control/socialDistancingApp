@@ -48,7 +48,11 @@ def get3d(x, y, depth_frame):
     # aligned_depth_intrin = (
     #     aligned_depth_frame.profile.as_video_stream_profile().intrinsics
     # )
+
+    dist = meanDepth(depth_frame, x, y)
+    print("meandist", dist)
     udist = depth_frame.get_distance(x, y)
+    print("dist", udist)
     # depth_pixel = [x, y]
     # # In meters
     point = rs.rs2_deproject_pixel_to_point(color_intrin, [x, y], udist)
@@ -63,6 +67,14 @@ def get3d(x, y, depth_frame):
     response_dict = {"x": point[0], "y": point[1], "z": point[2]}
 
     return response_dict
+
+
+def meanDepth(frame, x, y):
+    deptharr = []
+    for i in range(20):
+        deptharr.append(frame.get_distance(x + i, y + i))
+
+    return cv2.mean(deptharr)
 
 
 def euclideanDistance(points, min_dist):
