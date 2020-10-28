@@ -75,8 +75,7 @@ def meanDepth(frame, x, y):
         print(i)
         deptharr.append(frame.get_distance((x + i), (y + i)))
 
-    dist, _, _, _ = cv2.mean(deptharr)
-    return dist
+    print(deptharr)
 
 
 def euclideanDistance(points, min_dist):
