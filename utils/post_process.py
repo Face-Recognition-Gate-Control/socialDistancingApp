@@ -58,6 +58,8 @@ def get3d(x, y, depth_frame):
 
     z = depth_frame.get_distance(x, y)
 
+    print(z)
+
     # The (x,y,z) coordinate system of the camera is accordingly
     # Origin is at the centre of the camera
     # Positive x axis is towards right
