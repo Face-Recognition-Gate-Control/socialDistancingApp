@@ -41,22 +41,18 @@ def get3d(x, y, depth_frame):
 
     # # Align the depth frame to color frame
     # aligned_frames = align.process(frames)
-
+    color_intrin = depth_frame.profile.as_video_stream_profile().intrinsics
     # # Get aligned frames
     # aligned_depth_frame = aligned_frames.get_depth_frame()
 
     # aligned_depth_intrin = (
     #     aligned_depth_frame.profile.as_video_stream_profile().intrinsics
     # )
-
+    udist = depth_frame.get_distance(x, y)
     # depth_pixel = [x, y]
     # # In meters
+    point = rs.rs2_deproject_pixel_to_point(color_intrin, [x, y], udist)
     # dist_to_center = aligned_depth_frame.get_distance(x, y)
-    # pose = rs.rs2_deproject_pixel_to_point(
-    #     aligned_depth_intrin, depth_pixel, dist_to_center
-    # )
-
-    z = depth_frame.get_distance(x, y)
 
     # The (x,y,z) coordinate system of the camera is accordingly
     # Origin is at the centre of the camera
@@ -64,7 +60,7 @@ def get3d(x, y, depth_frame):
     # Positive y axis is towards down
     # Positive z axis is into the 2d xy plane
 
-    response_dict = {"x": x, "y": y, "z": z}
+    response_dict = {"x": point[0], "y": point[1], "z": point[2]}
 
     return response_dict
 
@@ -82,9 +78,7 @@ def euclideanDistance(points, min_dist):
                 + (points[i]["y"] - points[j]["y"]) ** 2
                 + (points[i]["z"] - points[j]["z"]) ** 2
             )
-
             print(dist)
-
             if dist < min_dist:
 
                 violate.add(i)
