@@ -19,6 +19,7 @@ advnc_mode.load_json(json_string)
 depth_scale = cfg.get_device().first_depth_sensor().get_depth_scale()
 
 def rgbtocuda(image):
+
     bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=True)
     # convert from BGR -> RGB
     rgb_img = jetson.utils.cudaAllocMapped(
@@ -30,6 +31,7 @@ def rgbtocuda(image):
     return rgb_img
 
 while display.IsStreaming():
+    
     frames = self.pipeline.wait_for_frames()
     color_frame = frames.get_color_frame()
 	img = rgbtocuda(color_frame)
