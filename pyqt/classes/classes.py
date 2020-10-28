@@ -218,9 +218,7 @@ class realsenseThread(QThread):
 
                     self.signals.violation.emit(violation)
 
-                p = self.rgbtoQimage(color_image)
-
-                self.signals.changePixmap.emit(p)
+                processed_frames.put(color_image)
 
             except Exception as e:
                 print("Error is :", str(e))

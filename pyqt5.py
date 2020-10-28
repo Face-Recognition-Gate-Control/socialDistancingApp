@@ -49,9 +49,9 @@ class MainWindow(QMainWindow):
         self.image.signals.people.connect(self.setValue)
 
         self.showImage = Show(self.signals)
-        self.image.signals.changePixmap.connect(self.setImage)
+        self.showImage.signals.changePixmap.connect(self.setImage)
 
-        # self.showImage.start()
+        self.showImage.start()
 
     def playSound(self):
 
