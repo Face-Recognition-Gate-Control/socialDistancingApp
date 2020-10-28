@@ -2,6 +2,7 @@ import pyrealsense2 as rs
 import math
 import detect.config_caffe as config
 import cv2
+import numpy as np
 
 
 def drawBox(image, predicitons, min_dist):
@@ -70,12 +71,15 @@ def get3d(x, y, depth_frame):
 
 
 def meanDepth(frame, x, y):
-    deptharr = []
+    distList = []
     for i in range(20):
         print(i)
-        deptharr.append(frame.get_distance((x + i), (y + i)))
+        distList.append(frame.get_distance((x + i), (y + i)))
 
-    print(deptharr)
+    distArr = np.array(distList)
+    dist = np.mean(distArr)
+
+    print(dist)
 
 
 def euclideanDistance(points, min_dist):
