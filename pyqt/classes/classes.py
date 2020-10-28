@@ -176,6 +176,7 @@ class realsenseThread(QThread):
         global depthFrames, original_frames, predicted_data, boundingBoxes, color_image2
 
         align = rs.align(rs.stream.color)
+        colorizer = rs.colorizer()
         self.threadActive = True
 
         print("starting stream")
@@ -193,13 +194,15 @@ class realsenseThread(QThread):
 
                 # Update color and depth frames:
                 aligned_depth_frame = frameset.get_depth_frame()
+                colorized_depth = np.asanyarray(
+                    colorizer.colorize(aligned_depth_frame).get_data()
+                )
 
-                colorizer = rs.colorizer()
                 color_image = color_frame.get_data()
                 color_image = np.asanyarray(color_image)
 
                 if self.selection:
-                    depthFrames.put(color_image)
+                    depthFrames.put(colorized_depth)
                     continue
 
                 predictions = self.detect(color_image)
