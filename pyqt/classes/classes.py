@@ -183,8 +183,8 @@ class realsenseThread(QThread):
             try:
 
                 self.frames = self.pipeline.wait_for_frames()
-                color_frame = frames.get_color_frame()
-                depth_frame = frames.get_depth_frame()
+                color_frame = self.frames.get_color_frame()
+                depth_frame = self.frames.get_depth_frame()
 
                 if not color_frame or not depth_frame:
                     continue
