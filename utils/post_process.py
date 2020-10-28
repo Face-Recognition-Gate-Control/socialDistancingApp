@@ -83,6 +83,8 @@ def euclideanDistance(points, min_dist):
                 + (points[i]["z"] - points[j]["z"]) ** 2
             )
 
+            print(dist)
+
             if dist < min_dist:
 
                 violate.add(i)
