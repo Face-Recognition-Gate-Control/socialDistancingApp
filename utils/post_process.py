@@ -35,9 +35,9 @@ def drawBox(image, predicitons, min_dist):
     return output, violation
 
 
-def distancePixel(bboxes):
+def distancePixel(points):
 
-    if len(bboxes) >= 2:
+    if len(points) >= 2:
 
         violate = set()
 
