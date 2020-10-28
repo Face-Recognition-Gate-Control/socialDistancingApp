@@ -50,9 +50,7 @@ class realsenseThread(QThread):
     def run(self):
 
         self.net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
-        self.display = jetson.utils.videoOutput(
-            "display://0"
-        )  # 'my_video.mp4' for file
+
         # load config file made
         # do adjustment in realsense depth quality tool
         jsonObj = json.load(open("configrealsense.json"))
