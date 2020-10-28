@@ -28,7 +28,9 @@ def test():
 
             if not color_frame:
                 continue
-            img = rgbtocuda(color_frame)
+            color_image = color_frame.get_data()
+            color_image = np.asanyarray(color_image)
+            img = rgbtocuda(color_image)
             detections = net.Detect(img)
             display.Render(img)
             display.SetStatus(
