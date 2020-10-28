@@ -127,6 +127,19 @@ class realsenseThread(QThread):
 
         return rgb_img
 
+    def rgbtoQimage(self, image):
+
+        # https://stackoverflow.com/a/55468544/6622587
+        rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        h, w, ch = rgbImage.shape
+        bytesPerLine = ch * w
+        convertToQtFormat = QImage(
+            rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888
+        )
+        p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+
+        return p
+
     def detect(self, color_image):
 
         rgb_img = self.preProcess(color_image)
@@ -205,7 +218,9 @@ class realsenseThread(QThread):
 
                     self.signals.violation.emit(violation)
 
-                processed_frames.put(color_image)
+                p = self.rgbtoQimage(color_image)
+
+                self.signals.changePixmap.emit(p)
 
             except Exception as e:
                 print("Error is :", str(e))
@@ -240,18 +255,15 @@ class Show(QThread):
                 else:
                     image = processed_frames.get()
 
-                cv2.imshow("test", image)
-                cv2.waitKey(0)
-
-                # # https://stackoverflow.com/a/55468544/6622587
-                # rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                # h, w, ch = rgbImage.shape
-                # bytesPerLine = ch * w
-                # convertToQtFormat = QImage(
-                #     rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888
-                # )
-                # p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
-                # self.signals.changePixmap.emit(p)
+                # https://stackoverflow.com/a/55468544/6622587
+                rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                h, w, ch = rgbImage.shape
+                bytesPerLine = ch * w
+                convertToQtFormat = QImage(
+                    rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888
+                )
+                p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+                self.signals.changePixmap.emit(p)
 
             except Exception as e:
                 print(str(e))
