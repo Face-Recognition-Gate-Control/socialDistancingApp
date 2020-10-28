@@ -226,7 +226,7 @@ class realsenseThread(QThread):
                         bboxes.append(bbox)
                         x, y = centroid
                         vectors.append(get3d(int(x), int(y), depth_frame))
-                        test.append(x, y, heightofBox)
+                        test.append((x, y, heightofBox))
 
                     pred_bbox = (bboxes, vectors)
 
