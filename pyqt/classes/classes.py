@@ -122,7 +122,9 @@ class realsenseThread(QThread):
 
             height = detection.Height
 
-            results.append((bbox, height))
+            centroid = detection.Center
+
+            results.append((bbox, height, centroid))
 
         return results
 
@@ -215,23 +217,24 @@ class realsenseThread(QThread):
 
                 bboxes = []
                 vectors = []
+                test = []
 
                 if numberOfPeople >= 0:
 
-                    for bbox, height in predictions:
+                    for bbox, heightofBox, centroid in predictions:
 
-                        (sx, sy, ex, ey) = bbox
                         bboxes.append(bbox)
-                        w = sx + (ex - sx) / 2
-                        h = sy + (ey - sy) / 2
-
-                        vectors.append(get3d(int(w), int(h), depth_frame))
+                        x, y = centroid
+                        vectors.append(get3d(int(x), int(y), depth_frame))
+                        test.append(x, y, heightofBox)
 
                     pred_bbox = (bboxes, vectors)
 
                 self.signals.people.emit(numberOfPeople)
 
                 if pred_bbox:
+
+                    (test)
 
                     color_image, violation = drawBox(
                         color_image, pred_bbox, self.minDistance

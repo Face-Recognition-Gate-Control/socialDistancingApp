@@ -35,7 +35,28 @@ def drawBox(image, predicitons, min_dist):
     return output, violation
 
 
-def calculate_distance_of_two_points_of_boxes(self, first_point, second_point):
+def test(bboxes):
+
+    if len(bboxes) >= 2:
+
+        violate = set()
+
+        for i in range(0, len(points)):
+
+            for j in range(i + 1, len(points)):
+
+                dist = calculate_distance_of_two_points_of_boxes(points[i], points[j])
+
+                print(dist)
+                if dist < min_dist:
+
+                    violate.add(i)
+                    violate.add(j)
+
+        return violate
+
+
+def calculate_distance_of_two_points_of_boxes(first_point, second_point):
 
     """
     This function calculates a distance l for two input corresponding points of two detected bounding boxes.
