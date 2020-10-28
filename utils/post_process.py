@@ -50,9 +50,9 @@ def get3d(x, y, depth_frame):
     # )
 
     dist = meanDepth(depth_frame, x, y)
-    print("meandist", dist)
+    print(dist)
     udist = depth_frame.get_distance(x, y)
-    print("dist", udist)
+
     # depth_pixel = [x, y]
     # # In meters
     point = rs.rs2_deproject_pixel_to_point(color_intrin, [x, y], udist)
@@ -72,6 +72,7 @@ def get3d(x, y, depth_frame):
 def meanDepth(frame, x, y):
     deptharr = []
     for i in range(20):
+        print(i)
         deptharr.append(frame.get_distance((x + i), (y + i)))
 
     dist, _, _, _ = cv2.mean(deptharr)
