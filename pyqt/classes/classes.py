@@ -404,7 +404,7 @@ class detectionThread(QThread):
     def run(self):
         global color_image2, predicted_data
 
-        net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.6)
+        net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.7)
 
         self.threadActive = True
         while self.threadActive:
