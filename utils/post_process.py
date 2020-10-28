@@ -34,7 +34,7 @@ def drawBox(image, predicitons, min_dist):
     return output, violation
 
 
-def get3d(x, y, aligned_depth_frame):
+def get3d(x, y, depth_frame):
 
     # align_to = rs.stream.color
     # align = rs.align(align_to)
@@ -45,16 +45,18 @@ def get3d(x, y, aligned_depth_frame):
     # # Get aligned frames
     # aligned_depth_frame = aligned_frames.get_depth_frame()
 
-    aligned_depth_intrin = (
-        aligned_depth_frame.profile.as_video_stream_profile().intrinsics
-    )
+    # aligned_depth_intrin = (
+    #     aligned_depth_frame.profile.as_video_stream_profile().intrinsics
+    # )
 
-    depth_pixel = [x, y]
-    # In meters
-    dist_to_center = aligned_depth_frame.get_distance(x, y)
-    pose = rs.rs2_deproject_pixel_to_point(
-        aligned_depth_intrin, depth_pixel, dist_to_center
-    )
+    # depth_pixel = [x, y]
+    # # In meters
+    # dist_to_center = aligned_depth_frame.get_distance(x, y)
+    # pose = rs.rs2_deproject_pixel_to_point(
+    #     aligned_depth_intrin, depth_pixel, dist_to_center
+    # )
+
+    z = depth_frame.get_distance(x, y)
 
     # The (x,y,z) coordinate system of the camera is accordingly
     # Origin is at the centre of the camera
@@ -62,7 +64,7 @@ def get3d(x, y, aligned_depth_frame):
     # Positive y axis is towards down
     # Positive z axis is into the 2d xy plane
 
-    response_dict = {"x": pose[0], "y": pose[1], "z": pose[2]}
+    response_dict = {"x": x, "y": y, "z": z}
 
     return response_dict
 
