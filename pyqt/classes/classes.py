@@ -159,16 +159,6 @@ class realsenseThread(QThread):
 
         return bboxes
 
-    def alignImage(self, frames):
-
-        # # align images
-        align = rs.align(rs.stream.color)
-
-        frameset = align.process(frames)
-
-        # # Update color and depth frames:
-        aligned_depth_frame = frameset.get_depth_frame()
-
     def warning_complete(self):
         print("complete")
 
