@@ -218,7 +218,7 @@ class realsenseThread(QThread):
                         w = sx + (ex - sx) / 2
                         h = sy + (ey - sy) / 2
 
-                        vectors.append(get3d(int(w), int(h), depth_frame))
+                        vectors.append(get3d(int(w), int(h), depth_frame, color_frame))
 
                     pred_bbox = (bboxes, vectors)
 
