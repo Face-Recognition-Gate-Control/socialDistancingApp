@@ -1,8 +1,13 @@
-Flask==1.1.2
-Flask-SocketIO==4.3.1
-greenlet==0.4.17
-imutils==0.5.3
-numpy==1.19.2
-opencv-python==4.4.0.44
-pyrealsense2==2.39.0.2342
 
+Cython==0.29.21
+imutils==0.5.3
+jedi==0.17.2
+Jinja2==2.11.2
+numpy==1.18.5
+opencv-python==4.4.0.44
+Pillow==8.0.1
+playsound==1.2.2
+PyQt5==5.15.1
+PyQt5-sip==12.8.1
+pyqt5-tools==5.15.1.1.7.5
+pyrealsense2==2.39.0.2342

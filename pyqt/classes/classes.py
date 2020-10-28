@@ -87,7 +87,7 @@ class realsenseThread(QThread):
     @pyqtSlot()
     def run(self):
 
-        self.net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.7)
+        self.net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.55)
 
         # load config file made
         # do adjustment in realsense depth quality tool

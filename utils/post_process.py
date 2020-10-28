@@ -23,7 +23,7 @@ def drawBox(image, predicitons, min_dist):
 
         color = (50, 205, 50)
         if i in violation:
-            color = (255, 99, 71)
+            color = (255, 99, 255)
         cv2.rectangle(overlay, (startX, startY), (endX, endY), color, -1)
         w = startX + (endX - startX) / 2
         h = startY + (endY - startY) / 2
