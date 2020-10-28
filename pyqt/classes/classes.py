@@ -159,12 +159,12 @@ class realsenseThread(QThread):
 
         return bboxes
 
-    def alignImage(self, frames):
+    def alignImage(self):
 
         # # align images
         align = rs.align(rs.stream.color)
 
-        frameset = align.process(frames)
+        frameset = align.process(self.frames)
 
         # # Update color and depth frames:
         aligned_depth_frame = frameset.get_depth_frame()
@@ -192,7 +192,7 @@ class realsenseThread(QThread):
                 color_image = color_frame.get_data()
                 color_image = np.asanyarray(color_image)
 
-                worker = Worker(self.alignImage(frames))
+                worker = Worker(self.alignImage())
                 worker.signals.finished.connect(self.warning_complete)
                 self.threadpool.start(worker)
 
