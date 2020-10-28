@@ -171,41 +171,41 @@ class realsenseThread(QThread):
                     colorizer.colorize(aligned_depth_frame).get_data()
                 )
 
-                # if self.selection:
-                #     depthFrames.put(colorized_depth)
-                #     continue
+                if self.selection:
+                    depthFrames.put(colorized_depth)
+                    continue
 
-                # predictions = self.detect(color_image)
+                predictions = self.detect(color_image)
 
-                # numberOfPeople = 0
+                numberOfPeople = 0
 
-                # numberOfPeople = len(predictions)
+                numberOfPeople = len(predictions)
 
-                # bboxes = []
-                # vectors = []
+                bboxes = []
+                vectors = []
 
-                # if numberOfPeople >= 2:
+                if numberOfPeople >= 2:
 
-                #     for bbox in predictions:
+                    for bbox in predictions:
 
-                #         (sx, sy, ex, ey) = bbox
-                #         bboxes.append(bbox)
-                #         w = sx + (ex - sx) / 2
-                #         h = sy + (ey - sy) / 2
+                        (sx, sy, ex, ey) = bbox
+                        bboxes.append(bbox)
+                        w = sx + (ex - sx) / 2
+                        h = sy + (ey - sy) / 2
 
-                #         vectors.append(get3d(int(w), int(h), aligned_depth_frame))
+                        vectors.append(get3d(int(w), int(h), aligned_depth_frame))
 
-                #     pred_bbox = (bboxes, vectors)
+                    pred_bbox = (bboxes, vectors)
 
-                # self.signals.people.emit(numberOfPeople)
+                self.signals.people.emit(numberOfPeople)
 
-                # if pred_bbox:
+                if pred_bbox:
 
-                #     color_image, violation = drawBox(
-                #         color_image, pred_bbox, self.minDistance
-                #     )
+                    color_image, violation = drawBox(
+                        color_image, pred_bbox, self.minDistance
+                    )
 
-                #     self.signals.violation.emit(violation)
+                    self.signals.violation.emit(violation)
 
                 processed_frames.put(color_image)
 
@@ -242,15 +242,17 @@ class Show(QThread):
                 else:
                     image = processed_frames.get()
 
-                # https://stackoverflow.com/a/55468544/6622587
-                rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                h, w, ch = rgbImage.shape
-                bytesPerLine = ch * w
-                convertToQtFormat = QImage(
-                    rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888
-                )
-                p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
-                self.signals.changePixmap.emit(p)
+                cv2.imshow("test", image)
+
+                # # https://stackoverflow.com/a/55468544/6622587
+                # rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                # h, w, ch = rgbImage.shape
+                # bytesPerLine = ch * w
+                # convertToQtFormat = QImage(
+                #     rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888
+                # )
+                # p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+                # self.signals.changePixmap.emit(p)
 
             except Exception as e:
                 print(str(e))
