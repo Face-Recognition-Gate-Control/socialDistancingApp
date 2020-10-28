@@ -105,6 +105,7 @@ def get3d(
     # )
 
     dist = meanDepth(depth_frame, x, y)
+    print(dist)
 
     udist = depth_frame.get_distance(x, y)
 
