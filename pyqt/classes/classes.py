@@ -87,7 +87,7 @@ class realsenseThread(QThread):
     @pyqtSlot()
     def run(self):
 
-        self.net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.55)
+        self.net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
         self.display = jetson.utils.videoOutput(
             "display://0"
         )  # 'my_video.mp4' for file
