@@ -105,7 +105,6 @@ def get3d(
     # )
 
     dist = meanDepth(depth_frame, x, y)
-    print(dist)
 
     udist = depth_frame.get_distance(x, y)
 
@@ -145,6 +144,8 @@ def euclideanDistance(points, min_dist):
 
         for j in range(i + 1, len(points)):
 
+            if(points[i]['z']==0 orpoints[j]['z']==0 ):
+                print('hei')
             dist = math.sqrt(
                 (points[i]["x"] - points[j]["x"]) ** 2
                 + (points[i]["y"] - points[j]["y"]) ** 2
