@@ -35,35 +35,33 @@ def drawBox(image, predicitons, min_dist):
     return output, violation
 
 
+def calculate_distance_of_two_points_of_boxes(self, first_point, second_point):
 
-  def calculate_distance_of_two_points_of_boxes(self, first_point, second_point):
+    """
+    This function calculates a distance l for two input corresponding points of two detected bounding boxes.
+    it is assumed that each person is H = 170 cm tall in real scene to map the distances in the image (in pixels) to
+    physical distance measures (in meters).
+    params:
+    first_point: (x, y, h)-tuple, where x,y is the location of a point (center or each of 4 corners of a bounding box)
+    and h is the height of the bounding box.
+    second_point: same tuple as first_point for the corresponding point of other box
+    returns:
+    l:  Estimated physical distance (in centimeters) between first_point and second_point.
+    """
 
-        """
-        This function calculates a distance l for two input corresponding points of two detected bounding boxes.
-        it is assumed that each person is H = 170 cm tall in real scene to map the distances in the image (in pixels) to
-        physical distance measures (in meters).
-        params:
-        first_point: (x, y, h)-tuple, where x,y is the location of a point (center or each of 4 corners of a bounding box)
-        and h is the height of the bounding box.
-        second_point: same tuple as first_point for the corresponding point of other box
-        returns:
-        l:  Estimated physical distance (in centimeters) between first_point and second_point.
-        """
+    # estimate corresponding points distance
+    [xc1, yc1, h1] = first_point
+    [xc2, yc2, h2] = second_point
 
-        # estimate corresponding points distance
-        [xc1, yc1, h1] = first_point
-        [xc2, yc2, h2] = second_point
+    dx = xc2 - xc1
+    dy = yc2 - yc1
 
-        dx = xc2 - xc1
-        dy = yc2 - yc1
+    lx = dx * 170 * (1 / h1 + 1 / h2) / 2
+    ly = dy * 170 * (1 / h1 + 1 / h2) / 2
 
-        lx = dx * 170 * (1 / h1 + 1 / h2) / 2
-        ly = dy * 170 * (1 / h1 + 1 / h2) / 2
+    l = math.sqrt(lx ** 2 + ly ** 2)
 
-        l = math.sqrt(lx ** 2 + ly ** 2)
-
-        return l
-
+    return l
 
 
 def get3d(
