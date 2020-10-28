@@ -171,16 +171,16 @@ class realsenseThread(QThread):
                 color_image = np.asanyarray(color_image)
 
                 # # align images
-                # align = rs.align(rs.stream.color)
+                align = rs.align(rs.stream.color)
 
-                # frameset = align.process(frames)
+                frameset = align.process(frames)
 
                 # # Update color and depth frames:
-                # aligned_depth_frame = frameset.get_depth_frame()
+                aligned_depth_frame = frameset.get_depth_frame()
 
-                # colorized_depth = np.asanyarray(
-                #     colorizer.colorize(aligned_depth_frame).get_data()
-                # )
+                colorized_depth = np.asanyarray(
+                    colorizer.colorize(aligned_depth_frame).get_data()
+                )
 
                 # if self.selection:
                 #     depthFrames.put(colorized_depth)
