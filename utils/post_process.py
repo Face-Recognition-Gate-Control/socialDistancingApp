@@ -51,12 +51,12 @@ def get3d(x, y, depth_frame):
     # )
 
     dist = meanDepth(depth_frame, x, y)
-    print(dist)
+
     udist = depth_frame.get_distance(x, y)
 
     # depth_pixel = [x, y]
     # # In meters
-    point = rs.rs2_deproject_pixel_to_point(color_intrin, [x, y], udist)
+    point = rs.rs2_deproject_pixel_to_point(color_intrin, [x, y], dist)
     # dist_to_center = aligned_depth_frame.get_distance(x, y)
 
     # The (x,y,z) coordinate system of the camera is accordingly
@@ -79,7 +79,7 @@ def meanDepth(frame, x, y):
     distArr = np.array(distList)
     dist = np.mean(distArr)
 
-    print(dist)
+    return dist
 
 
 def euclideanDistance(points, min_dist):
