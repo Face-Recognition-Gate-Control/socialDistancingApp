@@ -8,9 +8,9 @@ display = jetson.utils.videoOutput("display://0") # 'my_video.mp4' for file
 jsonObj = json.load(open("configrealsense.json"))
 json_string = str(jsonObj).replace("'", '"')
 
-self.pipeline = rs.pipeline()
+pipeline = rs.pipeline()
 rsconfig = rs.config()
-cfg = self.pipeline.start(rsconfig)
+cfg = pipeline.start(rsconfig)
 dev = cfg.get_device()
 advnc_mode = rs.rs400_advanced_mode(dev)
 advnc_mode.load_json(json_string)
@@ -31,8 +31,8 @@ def rgbtocuda(image):
     return rgb_img
 
 while display.IsStreaming():
-    
-    frames = self.pipeline.wait_for_frames()
+
+    frames = pipeline.wait_for_frames()
     color_frame = frames.get_color_frame()
 	img = rgbtocuda(color_frame)
 	detections = net.Detect(img)
