@@ -120,7 +120,7 @@ class realsenseThread(QThread):
                 int(detection.Bottom),
             )
 
-            height = detection.Heigth
+            height = detection.Height
 
             results.append(bbox, height)
 
