@@ -171,41 +171,41 @@ class realsenseThread(QThread):
                     colorizer.colorize(aligned_depth_frame).get_data()
                 )
 
-                if self.selection:
-                    depthFrames.put(colorized_depth)
-                    continue
+                # if self.selection:
+                #     depthFrames.put(colorized_depth)
+                #     continue
 
-                predictions = self.detect(color_image)
+                # predictions = self.detect(color_image)
 
-                numberOfPeople = 0
+                # numberOfPeople = 0
 
-                numberOfPeople = len(predictions)
+                # numberOfPeople = len(predictions)
 
-                bboxes = []
-                vectors = []
+                # bboxes = []
+                # vectors = []
 
-                if numberOfPeople >= 0:
+                # if numberOfPeople >= 2:
 
-                    for bbox in predictions:
+                #     for bbox in predictions:
 
-                        (sx, sy, ex, ey) = bbox
-                        bboxes.append(bbox)
-                        w = sx + (ex - sx) / 2
-                        h = sy + (ey - sy) / 2
+                #         (sx, sy, ex, ey) = bbox
+                #         bboxes.append(bbox)
+                #         w = sx + (ex - sx) / 2
+                #         h = sy + (ey - sy) / 2
 
-                        vectors.append(get3d(int(w), int(h), aligned_depth_frame))
+                #         vectors.append(get3d(int(w), int(h), aligned_depth_frame))
 
-                    pred_bbox = (bboxes, vectors)
+                #     pred_bbox = (bboxes, vectors)
 
-                self.signals.people.emit(numberOfPeople)
+                # self.signals.people.emit(numberOfPeople)
 
-                if pred_bbox:
+                # if pred_bbox:
 
-                    color_image, violation = drawBox(
-                        color_image, pred_bbox, self.minDistance
-                    )
+                #     color_image, violation = drawBox(
+                #         color_image, pred_bbox, self.minDistance
+                #     )
 
-                    self.signals.violation.emit(violation)
+                #     self.signals.violation.emit(violation)
 
                 processed_frames.put(color_image)
 
