@@ -30,44 +30,6 @@ color_image2 = []
 bbox_lock = Lock
 
 
-class webcamThread(QThread):
-    def __init__(self, signals):
-        super(webcamThread, self).__init__()
-        self.signals = WorkerSignals()
-
-    @pyqtSlot()
-    def run(self):
-        global original_frames
-        cap = cv2.VideoCapture(0)
-        self.threadActive = True
-        while self.threadActive:
-            try:
-                ret, frame = cap.read()
-                if ret:
-                    # https://stackoverflow.com/a/55468544/6622587
-                    rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                    h, w, ch = rgbImage.shape
-                    bytesPerLine = ch * w
-                    convertToQtFormat = QImage(
-                        rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888
-                    )
-                    p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
-                    self.signals.changePixmap.emit(p)
-
-                else:
-                    self.stop()
-            except Exception as e:
-
-                print("release")
-                cap.release()
-                self.threadActive = False
-
-        cap.release()
-
-    def stop(self):
-        self.threadActive = False
-
-
 class realsenseThread(QThread):
     def __init__(self, signals):
         super(realsenseThread, self).__init__()
@@ -276,9 +238,9 @@ class Show(QThread):
             try:
 
                 if self.selection:
-                    image = depthFrames.get(timeout=0.01)
+                    image = depthFrames.get()
                 else:
-                    image = processed_frames.get(timeout=0.01)
+                    image = processed_frames.get()
 
                 # https://stackoverflow.com/a/55468544/6622587
                 rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -294,59 +256,6 @@ class Show(QThread):
                 print(str(e))
 
 
-class PostProcess(QThread):
-    def __init__(self, signals):
-        super(PostProcess, self).__init__()
-        self.signals = signals
-        self.signals.min_distance.connect(self.updateSignal)
-        self.minDistance = 1
-
-    def updateSignal(self, value):
-
-        self.minDistance = value
-
-    @pyqtSlot()
-    def run(self):
-        global original_frames, boundingBoxes, processed_frames
-        while True:
-
-            rgb_image = original_frames.get()
-
-            if not boundingBoxes.empty():
-
-                pred_bbox = boundingBoxes.get()
-
-                image, violation = drawBox(rgb_image, pred_bbox, self.minDistance)
-
-                self.signals.violation.emit(violation)
-                processed_frames.put(image)
-            else:
-                processed_frames.put(rgb_image)
-
-
-class PreProcess(QThread):
-    def __init__(self):
-        super(PreProcess, self).__init__()
-
-    @pyqtSlot()
-    def run(self):
-        global detect_frames, preProcessed_frames
-
-        while True:
-
-            if not detect_frames.empty():
-
-                rgb_image = detect_frames.get()
-
-                frame_resized = cv2.resize(rgb_image, (300, 300))
-
-                blob = cv2.dnn.blobFromImage(
-                    frame_resized, 0.007843, (300, 300), (127.5, 127.5, 127.5), False
-                )
-                # frame = imutils.resize(rgb_image, width=700)
-                preProcessed_frames.put(blob)
-
-
 class WorkerSignals(QObject):
 
     changePixmap = pyqtSignal(QImage)
@@ -355,81 +264,6 @@ class WorkerSignals(QObject):
     min_distance = pyqtSignal(int)
     violation = pyqtSignal(set)
     finished = pyqtSignal()
-
-
-class detectionThread(QThread):
-    def __init__(self, signals):
-        super(detectionThread, self).__init__()
-        self.signals = signals
-        self.signals.min_distance.connect(self.updateSignal)
-        self.min_Distance = 1
-
-    def updateSignal(self, value):
-        self.min_Distance = int(value)
-
-    def preProcess(self, color_image):
-
-        bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=True)
-        # convert from BGR -> RGB
-        rgb_img = jetson.utils.cudaAllocMapped(
-            width=bgr_img.width, height=bgr_img.height, format="rgb8"
-        )
-
-        jetson.utils.cudaConvertColor(bgr_img, rgb_img)
-
-        return rgb_img
-
-    def listToString(self, s):
-
-        # initialize an empty string
-        str1 = " "
-
-        # return string
-        return str1.join(s)
-
-    def getBBox(self, detections):
-        results = []
-
-        for detection in detections:
-            bbox = (
-                int(detection.Left),
-                int(detection.Top),
-                int(detection.Right),
-                int(detection.Bottom),
-            )
-
-            results.append(bbox)
-
-        return results
-
-    @pyqtSlot()
-    def run(self):
-        global color_image2, predicted_data
-
-        net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.6)
-
-        self.threadActive = True
-        while self.threadActive:
-
-            detect_lock.acquire()
-            try:
-
-                if len(color_image2) > 0:
-
-                    color_image = color_image2
-                    rgb_img = self.preProcess(color_image)
-                    detections = net.Detect(rgb_img)
-
-                    bboxes = self.getBBox(detections)
-                    if len(bboxes) > 0:
-                        predicted_data.put(bboxes)
-
-            except Exception as e:
-                print(str(e))
-                self.threadActive = False
-            finally:
-
-                detect_lock.release()
 
 
 class Worker(QRunnable):

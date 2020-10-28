@@ -48,18 +48,9 @@ class MainWindow(QMainWindow):
         self.image = realsenseThread(self.signals)
         self.image.signals.people.connect(self.setValue)
 
-        # self.detect = detectionThread(self.signals)
-
         self.showImage = Show(self.signals)
         self.showImage.signals.changePixmap.connect(self.setImage)
 
-        # self.post_process = PostProcess(self.signals)
-        # self.post_process.signals.violation.connect(self.violation)
-        # # start threads
-        # # self.pre_process.start()
-
-        # self.post_process.start()
-        # self.detect.start()
         self.showImage.start()
 
     def playSound(self):
