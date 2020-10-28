@@ -46,9 +46,9 @@ def distancePixel(points):
             for j in range(i + 1, len(points)):
 
                 dist = calculate_distance_of_two_points_of_boxes(points[i], points[j])
-
+                dist = dist / 100
                 print(dist)
-                if dist < min_dist:
+                if dist < 1:
 
                     violate.add(i)
                     violate.add(j)
