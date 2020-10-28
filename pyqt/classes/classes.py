@@ -1,4 +1,12 @@
-from PyQt5.QtCore import QObject, QRunnable, pyqtSlot, pyqtSignal, Qt, QThread
+from PyQt5.QtCore import (
+    QObject,
+    QRunnable,
+    pyqtSlot,
+    pyqtSignal,
+    Qt,
+    QThread,
+    QThreadPool,
+)
 from PyQt5.QtGui import QImage
 import cv2
 import threading
