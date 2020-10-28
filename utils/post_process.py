@@ -72,7 +72,8 @@ def get3d(x, y, depth_frame):
 
 def meanDepth(frame, x, y):
     distList = []
-    for i in range(20):''
+    for i in range(20):
+
         distList.append(frame.get_distance((x + i), (y + i)))
 
     distArr = np.array(distList)
@@ -94,7 +95,7 @@ def euclideanDistance(points, min_dist):
                 + (points[i]["y"] - points[j]["y"]) ** 2
                 + (points[i]["z"] - points[j]["z"]) ** 2
             )
-           
+
             if dist < min_dist:
 
                 violate.add(i)
