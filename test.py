@@ -3,18 +3,17 @@ import jetson.utils
 import pyrealsense2 as rs
 
 
-
-
 def rgbtocuda(image):
 
     bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=True)
     # convert from BGR -> RGB
-    rgb_img = jetson.utils.cudaAllocMapped(width=bgr_img.width, height=bgr_img.height, format="rgb8")
+    rgb_img = jetson.utils.cudaAllocMapped(
+        width=bgr_img.width, height=bgr_img.height, format="rgb8"
+    )
 
     jetson.utils.cudaConvertColor(bgr_img, rgb_img)
 
     return rgb_img
-
 
 
 def test():
@@ -34,15 +33,17 @@ def test():
             img = rgbtocuda(color_frame)
             detections = net.Detect(img)
             display.Render(img)
-            display.SetStatus("Object Detection | Network {:.0f} FPS".format(net.GetNetworkFPS()))
+            display.SetStatus(
+                "Object Detection | Network {:.0f} FPS".format(net.GetNetworkFPS())
+            )
 
-
+        except Exception as e:
+            print(e)
 
 
 def startApp():
 
-    
-    camera =False
+    camera = False
     # tries to connect to realsense camera
 
     while not camera:
@@ -54,12 +55,6 @@ def startApp():
             advnc_mode = rs.rs400_advanced_mode(dev)
             advnc_mode.load_json(json_string)
 
-           
-
-           
-
-           
-
         except Exception as e:
             print(e)
             print("no device connected")
@@ -69,19 +64,15 @@ def startApp():
             camera = True
             test()
 
-         
-
-           
-
 
 # check to see if this is the main thread of execution
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
-    camera = jetson.utils.videoSource("csi://0")      # '/dev/video0' for V4L2
-    display = jetson.utils.videoOutput("display://0") # 'my_video.mp4' for file
+    camera = jetson.utils.videoSource("csi://0")  # '/dev/video0' for V4L2
+    display = jetson.utils.videoOutput("display://0")  # 'my_video.mp4' for file
 
-     # load config file made
+    # load config file made
     # do adjustment in realsense depth quality tool
     jsonObj = json.load(open("configrealsense.json"))
     json_string = str(jsonObj).replace("'", '"')
