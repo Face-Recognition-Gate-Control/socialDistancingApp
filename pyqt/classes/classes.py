@@ -172,7 +172,6 @@ class realsenseThread(QThread):
         rgb_img = self.preProcess(color_image)
 
         detections = self.net.Detect(rgb_img)
-        self.display.Render(rgb_img)
 
         bboxes = self.getBBox(detections)
 
