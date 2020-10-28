@@ -162,61 +162,61 @@ class realsenseThread(QThread):
 
                 frames = self.pipeline.wait_for_frames()
                 color_frame = frames.get_color_frame()
-                depth_frame = frames.get_depth_frame()
+                # depth_frame = frames.get_depth_frame()
 
-                if not depth_frame or not color_frame:
+                if not color_frame:
                     continue
                 colorizer = rs.colorizer()
                 color_image = color_frame.get_data()
                 color_image = np.asanyarray(color_image)
 
-                # align images
-                align = rs.align(rs.stream.color)
+                # # align images
+                # align = rs.align(rs.stream.color)
 
-                frameset = align.process(frames)
+                # frameset = align.process(frames)
 
-                # Update color and depth frames:
-                aligned_depth_frame = frameset.get_depth_frame()
+                # # Update color and depth frames:
+                # aligned_depth_frame = frameset.get_depth_frame()
 
-                colorized_depth = np.asanyarray(
-                    colorizer.colorize(aligned_depth_frame).get_data()
-                )
+                # colorized_depth = np.asanyarray(
+                #     colorizer.colorize(aligned_depth_frame).get_data()
+                # )
 
-                if self.selection:
-                    depthFrames.put(colorized_depth)
-                    continue
+                # if self.selection:
+                #     depthFrames.put(colorized_depth)
+                #     continue
 
-                predictions = self.detect(color_image)
+                # predictions = self.detect(color_image)
 
-                numberOfPeople = 0
+                # numberOfPeople = 0
 
-                numberOfPeople = len(predictions)
+                # numberOfPeople = len(predictions)
 
-                bboxes = []
-                vectors = []
+                # bboxes = []
+                # vectors = []
 
-                if numberOfPeople >= 0:
+                # if numberOfPeople >= 0:
 
-                    for bbox in predictions:
+                #     for bbox in predictions:
 
-                        (sx, sy, ex, ey) = bbox
-                        bboxes.append(bbox)
-                        w = sx + (ex - sx) / 2
-                        h = sy + (ey - sy) / 2
+                #         (sx, sy, ex, ey) = bbox
+                #         bboxes.append(bbox)
+                #         w = sx + (ex - sx) / 2
+                #         h = sy + (ey - sy) / 2
 
-                        vectors.append(get3d(int(w), int(h), aligned_depth_frame))
+                #         vectors.append(get3d(int(w), int(h), aligned_depth_frame))
 
-                    pred_bbox = (bboxes, vectors)
+                #     pred_bbox = (bboxes, vectors)
 
-                self.signals.people.emit(numberOfPeople)
+                # self.signals.people.emit(numberOfPeople)
 
-                if pred_bbox:
+                # if pred_bbox:
 
-                    color_image, violation = drawBox(
-                        color_image, pred_bbox, self.minDistance
-                    )
+                #     color_image, violation = drawBox(
+                #         color_image, pred_bbox, self.minDistance
+                #     )
 
-                    self.signals.violation.emit(violation)
+                #     self.signals.violation.emit(violation)
 
                 processed_frames.put(color_image)
 
