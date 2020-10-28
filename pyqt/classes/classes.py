@@ -120,7 +120,9 @@ class realsenseThread(QThread):
                 int(detection.Bottom),
             )
 
-            results.append(bbox)
+            height = detection.Heigth
+
+            results.append(bbox, height)
 
         return results
 
@@ -216,7 +218,7 @@ class realsenseThread(QThread):
 
                 if numberOfPeople >= 0:
 
-                    for bbox in predictions:
+                    for bbox, height in predictions:
 
                         (sx, sy, ex, ey) = bbox
                         bboxes.append(bbox)
