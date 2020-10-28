@@ -176,7 +176,7 @@ class realsenseThread(QThread):
                 frameset = align.process(frames)
 
                 # # Update color and depth frames:
-                aligned_depth_frame = frameset.get_depth_frame()
+                # aligned_depth_frame = frameset.get_depth_frame()
 
                 # colorized_depth = np.asanyarray(
                 #     colorizer.colorize(aligned_depth_frame).get_data()
