@@ -241,6 +241,7 @@ class Show(QThread):
                     image = processed_frames.get()
 
                 cv2.imshow("test", image)
+                cv2.waitKey(0)
 
                 # # https://stackoverflow.com/a/55468544/6622587
                 # rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
