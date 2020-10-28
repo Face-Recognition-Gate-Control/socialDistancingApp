@@ -2,6 +2,7 @@ import jetson.inference
 import jetson.utils
 import pyrealsense2 as rs
 import json
+import numpy as np
 
 
 def rgbtocuda(color_image):
