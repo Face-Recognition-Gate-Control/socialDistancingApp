@@ -173,7 +173,7 @@ class realsenseThread(QThread):
                 # # align images
                 align = rs.align(rs.stream.color)
 
-                frameset = align.process(frames)
+                # frameset = align.process(frames)
 
                 # # Update color and depth frames:
                 # aligned_depth_frame = frameset.get_depth_frame()
