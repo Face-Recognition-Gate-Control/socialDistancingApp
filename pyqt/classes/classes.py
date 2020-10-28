@@ -189,7 +189,7 @@ class realsenseThread(QThread):
 
                 if not color_frame or not depth_frame:
                     continue
-                frameset = align.process(frameset)
+                frameset = align.process(frames)
 
                 # Update color and depth frames:
                 aligned_depth_frame = frameset.get_depth_frame()
