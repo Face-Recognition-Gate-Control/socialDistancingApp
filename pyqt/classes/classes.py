@@ -173,6 +173,7 @@ class realsenseThread(QThread):
             gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
             # Detect faces
             face = self.face_cascade.detectMultiScale(gray, 1.1, 4)
+            print(face)
             if face:
                 print("face")
 
