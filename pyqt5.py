@@ -44,6 +44,7 @@ class MainWindow(QMainWindow):
         self.ui.distance.valueChanged.connect(self.updateDistance)
         self.ui.radioButton.toggled.connect(lambda: self.btnstate(self.ui.radioButton))
         self.threadpool = QThreadPool()
+        self.violation = 0
 
         self.image = realsenseThread(self.signals)
         self.image.signals.people.connect(self.setValue)
@@ -86,6 +87,8 @@ class MainWindow(QMainWindow):
     def violation(self, value):
 
         if len(value) > 0 and not self.sound:
+            self.violation += 1
+            self.ui.status.setText(str(self.violation))
             self.sound = True
             self.playSound()
 

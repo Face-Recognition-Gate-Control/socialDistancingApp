@@ -24,6 +24,7 @@ import simpleaudio as sa
 import time
 import jetson.inference
 import jetson.utils
+from imutils.object_detection import non_max_suppression
 
 
 # initilize the queues for sharing recources between processes
@@ -111,7 +112,7 @@ class realsenseThread(QThread):
                 self.startStreaming()
 
     def getBBox(self, detections):
-        results = []
+        predBox = []
 
         for detection in detections:
             bbox = (
@@ -125,7 +126,11 @@ class realsenseThread(QThread):
 
             centroid = detection.Center
 
-            results.append((bbox, area, centroid))
+            predBox.append((bbox, area, centroid))
+
+        arr = np.array(predBox)
+
+        results = non_max_suppression(arr, probs=None, overlapThresh=0.65)
 
         return results
 
