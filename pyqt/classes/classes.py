@@ -176,7 +176,7 @@ class realsenseThread(QThread):
             faces = self.facenet.Detect(testimg)
             bbox = self.getBBox(faces)
 
-            for roi, _, _ in faces:
+            for roi, _, _ in bbox:
 
                 (dsx, dsy, dex, dey) = roi
 
