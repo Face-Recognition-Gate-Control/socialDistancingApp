@@ -247,7 +247,7 @@ class realsenseThread(QThread):
                 if not color_frame or not depth_frame:
                     continue
 
-                depth_frame = self.alignImage(frames)
+                # depth_frame = self.alignImage(frames)
                 # colorized_depth = np.asanyarray(
                 #     colorizer.colorize(aligned_depth_frame).get_data()
                 # )
