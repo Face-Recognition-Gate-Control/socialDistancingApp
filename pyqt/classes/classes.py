@@ -130,7 +130,7 @@ class realsenseThread(QThread):
 
         # results = non_max_suppression(arr, probs=None, overlapThresh=0.65)
 
-        return predbox
+        return predBox
 
     def preProcess(self, color_image):
 
