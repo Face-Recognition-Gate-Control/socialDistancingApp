@@ -193,7 +193,7 @@ class realsenseThread(QThread):
 
         return color_image
 
-    def sladFaces(self, image, blocks=3):
+    def sladFaces(self, image, factor=3.0):
 
         # automatically determine the size of the blurring kernel based
         # on the spatial dimensions of the input image
