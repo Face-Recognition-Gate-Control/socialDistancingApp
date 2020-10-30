@@ -128,11 +128,11 @@ class realsenseThread(QThread):
 
             predBox.append((bbox, area, centroid))
 
-        arr = np.array(predBox)
+        arr = np.array(predBox[1])
 
         results = non_max_suppression(arr, probs=None, overlapThresh=0.65)
 
-        return results
+        return predbox
 
     def preProcess(self, color_image):
 
