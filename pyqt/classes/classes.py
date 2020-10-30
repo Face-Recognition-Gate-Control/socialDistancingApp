@@ -181,7 +181,7 @@ class realsenseThread(QThread):
 
             for roi, area, _ in bbox:
                 (h, w) = area
-                print(area)
+
                 (dsx, dsy, dex, dey) = roi
 
                 sx = dsx + sx
