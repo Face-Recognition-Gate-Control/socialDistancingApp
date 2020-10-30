@@ -60,6 +60,7 @@ class realsenseThread(QThread):
 
         self.people_net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
         self.face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+        self.facenet = jetson.inference.detectNet("facenet")
         # load config file made
         # do adjustment in realsense depth quality tool
         jsonObj = json.load(open("configrealsense.json"))
@@ -171,6 +172,8 @@ class realsenseThread(QThread):
             (sx, sy, ex, ey) = people
             cropped = color_image[sy:ey, sx:ex]
             gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
+            test = self.facenet.Detect(cropped)
+            print(test)
             # Detect faces
             faces = self.face_cascade.detectMultiScale(gray, 1.1, 4)
             for roi in faces:
