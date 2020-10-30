@@ -173,25 +173,12 @@ class realsenseThread(QThread):
             cropped = color_image[sy:ey, sx:ex]
             gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
             testimg = self.preProcess(cropped)
-            test = self.facenet.Detect(testimg)
-            for detection in test:
-                bbox = (
-                    int(detection.Left),
-                    int(detection.Top),
-                    int(detection.Right),
-                    int(detection.Bottom),
-                )
-                print(bbox)
+            faces = self.facenet.Detect(testimg)
+            bbox = self.getBBox(faces)
 
-            # Detect faces
-            faces = self.face_cascade.detectMultiScale(gray, 1.1, 4)
-            for roi in faces:
+            for roi, _, _ in faces:
 
-                (x, y, w, h) = roi
-                dsx = x
-                dsy = y
-                dex = x + w
-                dey = y + h
+                (dsx, dsy, dex, dey) = roi
 
                 sx = dsx + sx
                 sy = dsy + sy
