@@ -121,7 +121,7 @@ class realsenseThread(QThread):
                 int(detection.Bottom),
             )
 
-            height = detection.Height
+            area = (detection.Height, detection.Width)
 
             centroid = detection.Center
 
@@ -176,8 +176,8 @@ class realsenseThread(QThread):
             faces = self.facenet.Detect(testimg)
             bbox = self.getBBox(faces)
 
-            for roi, _, _ in bbox:
-
+            for roi, area, _ in bbox:
+                (h, w) = area
                 (dsx, dsy, dex, dey) = roi
 
                 sx = dsx + sx
@@ -269,12 +269,12 @@ class realsenseThread(QThread):
 
                 if numberOfPeople >= 0:
 
-                    for bbox, heightofBox, centroid in predictions:
-
+                    for bbox, area, centroid in predictions:
+                        (h, w) = area
                         bboxes.append(bbox)
                         x, y = centroid
                         vectors.append(get3d(int(x), int(y), depth_frame))
-                        test.append((x, y, heightofBox))
+                        test.append((x, y, h))
 
                     pred_bbox = (bboxes, vectors)
 
