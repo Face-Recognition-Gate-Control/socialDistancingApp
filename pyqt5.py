@@ -87,6 +87,7 @@ class MainWindow(QMainWindow):
     def violation(self, value):
 
         if len(value) > 0 and not self.sound:
+            print("hei")
             self.violation += 1
             self.ui.status.setText(str(self.violation))
             self.sound = True
