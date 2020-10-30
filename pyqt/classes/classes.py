@@ -174,24 +174,24 @@ class realsenseThread(QThread):
             # Detect faces
             face = self.face_cascade.detectMultiScale(gray, 1.1, 4)
             print(face[0])
-            if face[0]:
-                print("face")
 
-                (x, y, w, h) = face
-                dsx = x
-                dsy = y
-                dex = x + w
-                dey = y + h
+            print("face")
 
-                sx = dsx + sx
-                sy = dsy + sy
-                ex = dex + ex
-                ey = dey + ey
-                face = color_image[sy:ey, sx, ex]
+            (x, y, w, h) = face
+            dsx = x
+            dsy = y
+            dex = x + w
+            dey = y + h
 
-                face = self.sladFaces(face)
+            sx = dsx + sx
+            sy = dsy + sy
+            ex = dex + ex
+            ey = dey + ey
+            face = color_image[sy:ey, sx, ex]
 
-                color_image[sy:ey, sx, ex] = face
+            face = self.sladFaces(face)
+
+            color_image[sy:ey, sx, ex] = face
 
         return color_image
 
