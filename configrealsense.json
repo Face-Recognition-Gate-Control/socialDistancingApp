@@ -1,4 +1,7 @@
-{
+{   
+    "controls-color-white-balance-auto": "True",
+    "controls-color-autoexposure-auto": "True",
+    "controls-autoexposure-auto": "True",
     "param-disableraucolor": 0,
     "param-disablesadcolor": 0,
     "param-disablesadnormalize": 0,
