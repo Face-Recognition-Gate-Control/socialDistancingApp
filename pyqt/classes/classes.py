@@ -174,6 +174,15 @@ class realsenseThread(QThread):
             gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
             testimg = self.preProcess(cropped)
             test = self.facenet.Detect(testimg)
+            for detection in test:
+                bbox = (
+                    int(detection.Left),
+                    int(detection.Top),
+                    int(detection.Right),
+                    int(detection.Bottom),
+                )
+                print(bbox)
+
             print(test)
             # Detect faces
             faces = self.face_cascade.detectMultiScale(gray, 1.1, 4)
