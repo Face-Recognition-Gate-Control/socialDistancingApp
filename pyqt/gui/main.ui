@@ -166,12 +166,40 @@
         </item>
        </layout>
       </widget>
+      <widget class="QLabel" name="label_3">
+       <property name="geometry">
+        <rect>
+         <x>680</x>
+         <y>800</y>
+         <width>111</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:22pt;&quot;&gt;STATUS:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="status">
+       <property name="geometry">
+        <rect>
+         <x>810</x>
+         <y>830</y>
+         <width>47</width>
+         <height>13</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
       <zorder>camera</zorder>
       <zorder>cameraStream</zorder>
       <zorder>radioButton</zorder>
       <zorder>label</zorder>
       <zorder>verticalLayoutWidget</zorder>
       <zorder>verticalLayoutWidget_2</zorder>
+      <zorder>label_3</zorder>
+      <zorder>status</zorder>
      </widget>
     </item>
    </layout>

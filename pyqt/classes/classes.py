@@ -58,8 +58,8 @@ class realsenseThread(QThread):
     @pyqtSlot()
     def run(self):
 
-        self.net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.6)
-
+        self.people_net = jetson.inference.detectNet("pednet")
+        self.face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
         # load config file made
         # do adjustment in realsense depth quality tool
         jsonObj = json.load(open("configrealsense.json"))
@@ -153,15 +153,67 @@ class realsenseThread(QThread):
 
         return p
 
-    def detect(self, color_image):
+    def detectPeople(self, color_image):
 
+        # 600x1024 res ssd
         rgb_img = self.preProcess(color_image)
 
-        detections = self.net.Detect(rgb_img)
+        detections = self.people_net.Detect(rgb_img)
 
         bboxes = self.getBBox(detections)
 
         return bboxes
+
+    def detectFaces(self, peoples, color_image):
+        face_detections = []
+        for people, _, _ in peoples:
+            (sx, sy, ex, ey) = people
+            cropped = color_image[sy:ey, sx:ex]
+            gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
+            # Detect faces
+            face = face_cascade.detectMultiScale(gray, 1.1, 4)
+            if face:
+
+                (x, y, w, h) = face
+                dsx = x
+                dsy = y
+                dex = x + w
+                dey = y + h
+
+                sx = dsx + sx
+                sy = dsy + sy
+                ex = dex + ex
+                ey = dey + ey
+                face = color_image[sy:ey, sx, ex]
+
+                face = self.sladFaces(face)
+
+                color_image[sy:ey, sx, ex] = face
+
+        return color_image
+
+    def sladFaces(self, image, blocks=3):
+        # divide the input image into NxN blocks
+        (h, w) = image.shape[:2]
+        xSteps = np.linspace(0, w, blocks + 1, dtype="int")
+        ySteps = np.linspace(0, h, blocks + 1, dtype="int")
+        # loop over the blocks in both the x and y direction
+        for i in range(1, len(ySteps)):
+            for j in range(1, len(xSteps)):
+                # compute the starting and ending (x, y)-coordinates
+                # for the current block
+                startX = xSteps[j - 1]
+                startY = ySteps[i - 1]
+                endX = xSteps[j]
+                endY = ySteps[i]
+                # extract the ROI using NumPy array slicing, compute the
+                # mean of the ROI, and then draw a rectangle with the
+                # mean RGB values over the ROI in the original image
+                roi = image[startY:endY, startX:endX]
+                (B, G, R) = [int(x) for x in cv2.mean(roi)[:3]]
+                cv2.rectangle(image, (startX, startY), (endX, endY), (B, G, R), -1)
+
+        return image
 
     def alignImage(self, frames):
 
@@ -209,7 +261,9 @@ class realsenseThread(QThread):
                     depthFrames.put(colorized_depth)
                     continue
 
-                predictions = self.detect(color_image)
+                predictions = self.detectPeople(color_image)
+
+                faces = self.detectFaces(predictions, color_image)
 
                 numberOfPeople = 0
 
@@ -262,6 +316,19 @@ class Show(QThread):
 
         self.selection = value
 
+    def rgbtoQimage(self, image):
+
+        # https://stackoverflow.com/a/55468544/6622587
+        rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        h, w, ch = rgbImage.shape
+        bytesPerLine = ch * w
+        convertToQtFormat = QImage(
+            rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888
+        )
+        p = convertToQtFormat.scaled(1280, 720, Qt.KeepAspectRatio)
+
+        return p
+
     @pyqtSlot()
     def run(self):
         global processed_frames, depthFrames
@@ -275,14 +342,7 @@ class Show(QThread):
                 else:
                     image = processed_frames.get()
 
-                # https://stackoverflow.com/a/55468544/6622587
-                rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                h, w, ch = rgbImage.shape
-                bytesPerLine = ch * w
-                convertToQtFormat = QImage(
-                    rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888
-                )
-                p = convertToQtFormat.scaled(1280, 720, Qt.KeepAspectRatio)
+                p = self.rgbtoQimage(image)
                 self.signals.changePixmap.emit(p)
 
             except Exception as e:

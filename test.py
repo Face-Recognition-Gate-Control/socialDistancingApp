@@ -70,7 +70,7 @@ def startApp():
 # check to see if this is the main thread of execution
 if __name__ == "__main__":
 
-    net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
+    net = jetson.inference.detectNet("pednet", threshold=0.5)
     camera = jetson.utils.videoSource("csi://0")  # '/dev/video0' for V4L2
     display = jetson.utils.videoOutput("display://0")  # 'my_video.mp4' for file
 
