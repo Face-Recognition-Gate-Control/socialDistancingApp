@@ -170,7 +170,7 @@ class realsenseThread(QThread):
         for people, _, _ in peoples:
             (sx, sy, ex, ey) = people
             cropped = color_image[sy:ey, sx:ex]
-            cv2.imshow("face", croped)
+            cv2.imshow("face", cropped)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
             gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
