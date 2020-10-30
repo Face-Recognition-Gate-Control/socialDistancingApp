@@ -170,7 +170,7 @@ class realsenseThread(QThread):
 
         for people, _, _ in peoples:
             (sx, sy, ex, ey) = people
-            cropped = color_image[sy : ey / 2, sx:ex]
+            cropped = color_image[sy : int(ey / 2), sx:ex]
             gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
             testimg = self.preProcess(cropped)
             faces = self.facenet.Detect(testimg)
