@@ -177,7 +177,7 @@ class realsenseThread(QThread):
 
             print("face")
 
-            (x, y, w, h) = face
+            (x, y, w, h) = face[0]
             dsx = x
             dsy = y
             dex = x + w
