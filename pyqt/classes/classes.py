@@ -187,7 +187,7 @@ class realsenseThread(QThread):
             sy = dsy + sy
             ex = dex + ex
             ey = dey + ey
-            face = color_image[sy:ey, sx:ex]
+            face = color_image[sy:dey, sx:dex]
 
             face = self.sladFaces(face)
 
