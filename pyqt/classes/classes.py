@@ -168,9 +168,12 @@ class realsenseThread(QThread):
     def detectFaces(self, peoples, color_image):
         face_detections = []
 
-        for people, _, _ in peoples:
+        for people, area, _ in peoples:
+            (h, w) = area
             (sx, sy, ex, ey) = people
-            cropped = color_image[sy : int(ey / 2), sx:ex]
+            # half height of bbox
+            half = int(h / 2)
+            cropped = color_image[sy : sy + half, sx:ex]
             gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
             testimg = self.preProcess(cropped)
             faces = self.facenet.Detect(testimg)
