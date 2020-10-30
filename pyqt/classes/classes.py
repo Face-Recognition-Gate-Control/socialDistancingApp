@@ -125,7 +125,7 @@ class realsenseThread(QThread):
 
             centroid = detection.Center
 
-            results.append((bbox, height, centroid))
+            results.append((bbox, area, centroid))
 
         return results
 
