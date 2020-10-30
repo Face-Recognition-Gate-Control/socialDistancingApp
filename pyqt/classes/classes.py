@@ -58,7 +58,7 @@ class realsenseThread(QThread):
     @pyqtSlot()
     def run(self):
 
-        self.people_net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
+        self.people_net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.45)
         self.face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
         self.facenet = jetson.inference.detectNet("facenet", threshold=0.2)
         # load config file made
