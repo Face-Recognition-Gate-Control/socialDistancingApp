@@ -58,7 +58,7 @@ class realsenseThread(QThread):
     @pyqtSlot()
     def run(self):
 
-        self.people_net = jetson.inference.detectNet("pednet")
+        self.people_net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
         self.face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
         # load config file made
         # do adjustment in realsense depth quality tool
