@@ -166,6 +166,7 @@ class realsenseThread(QThread):
 
     def detectFaces(self, peoples, color_image):
         face_detections = []
+
         for people, _, _ in peoples:
             (sx, sy, ex, ey) = people
             cropped = color_image[sy:ey, sx:ex]
@@ -263,7 +264,9 @@ class realsenseThread(QThread):
 
                 predictions = self.detectPeople(color_image)
 
-                faces = self.detectFaces(predictions, color_image)
+                if len(predictions) > 0:
+
+                    faces = self.detectFaces(predictions, color_image)
 
                 numberOfPeople = 0
 
