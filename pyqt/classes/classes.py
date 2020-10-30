@@ -183,7 +183,6 @@ class realsenseThread(QThread):
                 )
                 print(bbox)
 
-            print(test)
             # Detect faces
             faces = self.face_cascade.detectMultiScale(gray, 1.1, 4)
             for roi in faces:
