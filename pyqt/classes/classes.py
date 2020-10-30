@@ -121,7 +121,7 @@ class realsenseThread(QThread):
                 int(detection.Bottom),
             )
 
-            area = (detection.Height, detection.Width)
+            area = (int(detection.Height), int(detection.Width))
 
             centroid = detection.Center
 
