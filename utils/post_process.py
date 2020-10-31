@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 
 
-def drawBox(image, predicitons, min_dist, test):
+def drawBox(image, predicitons, min_dist):
     violation = set()
 
     overlay = image.copy()
@@ -14,7 +14,7 @@ def drawBox(image, predicitons, min_dist, test):
 
     if len(predicitons[1]) >= 2:
 
-        violation = euclideanDistance(predicitons[1], min_dist, test)
+        violation = euclideanDistance(predicitons[1], min_dist, predicitons[2])
 
     for (i, (box)) in enumerate(predicitons[0]):
 

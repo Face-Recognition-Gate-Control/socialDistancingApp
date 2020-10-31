@@ -228,6 +228,23 @@ class realsenseThread(QThread):
     def warning_complete(self):
         print("complete")
 
+    def getVectorsAndBbox(self, predictions):
+        bboxes = []
+        vectors = []
+        test = []
+
+        for bbox, area, centroid in predictions:
+
+            (h, w) = area
+            bboxes.append(bbox)
+            x, y = centroid
+            vectors.append(get3d(int(x), int(y), depth_frame))
+            test.append((x, y, h))
+
+        pred_bbox = (bboxes, vectors, test)
+
+        return pred_bbox
+
     def startStreaming(self):
         global depthFrames, original_frames, predicted_data, boundingBoxes, color_image2
 
@@ -267,27 +284,14 @@ class realsenseThread(QThread):
 
                 numberOfPeople = len(predictions)
 
-                bboxes = []
-                vectors = []
-                test = []
-
-                if numberOfPeople >= 0:
-
-                    for bbox, area, centroid in predictions:
-                        (h, w) = area
-                        bboxes.append(bbox)
-                        x, y = centroid
-                        vectors.append(get3d(int(x), int(y), depth_frame))
-                        test.append((x, y, h))
-
-                    pred_bbox = (bboxes, vectors)
+                pred_bbox = self.getVectorsAndBbox()
 
                 self.signals.people.emit(numberOfPeople)
 
                 if pred_bbox:
 
                     color_image, violation = drawBox(
-                        color_image, pred_bbox, self.minDistance, test
+                        color_image, pred_bbox, self.minDistance
                     )
 
                     self.signals.violation.emit(violation)
