@@ -66,13 +66,14 @@ class Detect:
             cropped = color_image[sy : sy + half, sx:ex]
             gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
             testimg = self.preProcess(cropped)
-            faces = self.facenet.Detect(testimg)
-            bbox = self.getBBox(faces)
-            sladdedImage = self.sladFaces(bbox, color_image)
+            face = self.facenet.Detect(testimg)
+            bbox = self.getBBox(face)
+
+            sladdedImage = self.sladFaces(bbox, color_image, (sx, sy, ex, ey))
 
         return sladdedImage
 
-    def sladFaces(self, bbox, color_image):
+    def sladFaces(self, bbox, color_imagem, (sx, sy, ex, ey)):
         print(bbox)
         for roi, area, _ in bbox:
             (h, w) = area
