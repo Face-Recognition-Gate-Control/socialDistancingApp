@@ -7,13 +7,10 @@ import torch
 from core.detection.face_recognizer import FaceRecognizer
 
 
-PATH_TO_FACE_DETECTION_MODEL = "models/RFB-640/face_model.pth"
-
-
 class Detect:
     def __init__(self):
 
-        self.face_detector = FaceRecognizer(PATH_TO_FACE_DETECTION_MODEL)
+        self.face_detector = FaceRecognizer()
 
         self.people_net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
         self.facenet = jetson.inference.detectNet("facenet", threshold=0.2)
