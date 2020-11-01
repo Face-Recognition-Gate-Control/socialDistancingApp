@@ -66,6 +66,8 @@ class Detect:
     def detectFaces(self, peoples, color_image):
         face_detections = []
 
+        sladdedImage = color_image
+
         for people, area, _ in peoples:
             (h, w) = area
             (sx, sy, ex, ey) = people
