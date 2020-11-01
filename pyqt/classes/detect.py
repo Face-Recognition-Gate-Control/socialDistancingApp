@@ -87,8 +87,8 @@ class Detect:
         (sx, sy, ex, ey) = personBox
         faceBoxes = faceBoxes.tolist()
         for facebox in faceBoxes:
-            print(facebox[0])
-            (dsx, dsy, dex, dey) = facebox
+           
+            (int(dsx), int(dsy), int(dex), int(dey)) = facebox
 
             h = dey - dsy
             w = dex - dsx
