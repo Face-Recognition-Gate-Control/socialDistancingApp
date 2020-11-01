@@ -1,27 +1,30 @@
 # from .vision.ssd.mb_tiny_RFB_fd import create_Mb_Tiny_RFB_fd, create_Mb_Tiny_RFB_fd_predictor
 # from .vision.ssd.config.fd_config import define_img_size
-from .vision.ssd.mb_tiny_RFB_fd import create_Mb_Tiny_RFB_fd, create_Mb_Tiny_RFB_fd_predictor
+from .vision.ssd.mb_tiny_RFB_fd import (
+    create_Mb_Tiny_RFB_fd,
+    create_Mb_Tiny_RFB_fd_predictor,
+)
 from .vision.ssd.config.fd_config import define_img_size
 import torch
 
 
+PATH_TO_FACE_DETECTION_MODEL = "./models/RFB-640/face_model.pth"
 
-PATH_TO_FACE_DETECTION_MODEL = "./static/models/RFB-640/face_model.pth"
 
-class FaceRecognizer():
+class FaceRecognizer:
     """
     This class represents the a light-weight face detection model
     designed for edge computing devices
     """
 
-    INPUT_IMAGE_SIZE = 640    # default cv2-size
-    NUMB_OF_RESULTS = 1       # keep 'x' results
-    PROB_THRESHOLD = 0.8      # sens 0 - 1 (1=highest)
+    INPUT_IMAGE_SIZE = 640  # default cv2-size
+    NUMB_OF_RESULTS = 1  # keep 'x' results
+    PROB_THRESHOLD = 0.8  # sens 0 - 1 (1=highest)
     # only consider the candidates with the highest scores.
     CANDIDATE_SIZE = 500
 
     def __init__(self, default_size=640):
-        """Initializes an instance of the face-prediction model with 
+        """Initializes an instance of the face-prediction model with
         given set of configurations based upon the network structure and model type
 
         Args:
@@ -42,11 +45,12 @@ class FaceRecognizer():
             [nn.Module]: [neural network layer structure]
         """
         # TODO: move to somewhere else
-        is_testing = True   # evaluation mode
-        num_classes = 2     # background and face
+        is_testing = True  # evaluation mode
+        num_classes = 2  # background and face
 
         network = create_Mb_Tiny_RFB_fd(
-            num_classes=num_classes, is_test=is_testing, device=self.torch_device)
+            num_classes=num_classes, is_test=is_testing, device=self.torch_device
+        )
         network.load(self.model_path)
         return network
 
@@ -57,7 +61,11 @@ class FaceRecognizer():
         Returns:
             [Predictor]: [a wrapper for the buit nn.Module structure]
         """
-        return create_Mb_Tiny_RFB_fd_predictor(net=self.net, candidate_size=FaceRecognizer.CANDIDATE_SIZE, device=self.torch_device)
+        return create_Mb_Tiny_RFB_fd_predictor(
+            net=self.net,
+            candidate_size=FaceRecognizer.CANDIDATE_SIZE,
+            device=self.torch_device,
+        )
 
     def predict_faces(self, frame):
         """receives a frame from the webcam,
@@ -70,7 +78,10 @@ class FaceRecognizer():
             [Tensor]: [list of prediction coords]
         """
         boxes, labels, probs = self.predictor.predict(
-            image=frame, top_k=FaceRecognizer.NUMB_OF_RESULTS, prob_threshold=FaceRecognizer.PROB_THRESHOLD)
+            image=frame,
+            top_k=FaceRecognizer.NUMB_OF_RESULTS,
+            prob_threshold=FaceRecognizer.PROB_THRESHOLD,
+        )
         return boxes
 
     @staticmethod
@@ -82,8 +93,8 @@ class FaceRecognizer():
             [str]: [the name of allocated device]
         """
         if torch.cuda.is_available():
-            return torch.device('cuda:0')
-        return torch.device('cpu')
+            return torch.device("cuda:0")
+        return torch.device("cpu")
 
     @staticmethod
     def _set_network_image_size(image_size):
@@ -95,7 +106,6 @@ class FaceRecognizer():
         define_img_size(image_size)
 
 
-
 if __name__ == "__main__":
-    
+
     print(create_Mb_Tiny_RFB_fd_predictor)
