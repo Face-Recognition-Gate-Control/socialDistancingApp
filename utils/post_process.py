@@ -1,6 +1,6 @@
 import pyrealsense2 as rs
 import math
-import detect.config_caffe as config
+import core.detection.config_caffe as config
 import cv2
 import numpy as np
 
