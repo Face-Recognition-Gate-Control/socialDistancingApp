@@ -87,8 +87,8 @@ class Detect:
         (sx, sy, ex, ey) = personBox
         faceBoxes = faceBoxes.tolist()
         for facebox in faceBoxes:
-           
-            (int(dsx), int(dsy), int(dex), int(dey)) = facebox
+
+            (dsx, dsy, dex, dey) = facebox
 
             h = dey - dsy
             w = dex - dsx
@@ -96,11 +96,11 @@ class Detect:
             sy = dsy + sy
             ex = dex + ex
             ey = dey + ey
-            face = color_image[sy : (sy + h), sx : (sx + w)]
+            face = color_image[int(sy) : int((sy + h)), int(sx) : int((sx + w))]
 
             face = self.sladFace(face)
 
-            color_image[sy : (sy + h), sx : (sx + w)] = face
+            color_image[int(sy) : int((sy + h)), int(sx) : int((sx + w))] = face
 
         return color_image
 
