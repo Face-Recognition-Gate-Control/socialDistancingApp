@@ -68,7 +68,7 @@ class Detect:
             testimg = self.preProcess(cropped)
             faces = self.facenet.Detect(testimg)
             bbox = self.getBBox(faces)
-            sladdedImage = self.sladFaces(color_image)
+            sladdedImage = self.sladFaces(bbox, color_image)
 
         return sladdedImage
 
