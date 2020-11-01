@@ -22,8 +22,8 @@ from utils.post_process import *
 import imutils
 import simpleaudio as sa
 import time
-import jetson.inference
-import jetson.utils
+from pyqt.classes.detect import *
+
 from imutils.object_detection import non_max_suppression
 
 
@@ -48,6 +48,7 @@ class realsenseThread(QThread):
         self.selection = False
         self.minDistance = 1
         self.threadpool = QThreadPool()
+        self.detector = Detect()
 
     def updateSignal(self, value):
         self.selection = value
@@ -59,12 +60,9 @@ class realsenseThread(QThread):
     @pyqtSlot()
     def run(self):
 
-        self.people_net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
-        self.face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-        self.facenet = jetson.inference.detectNet("facenet", threshold=0.2)
         # load config file made
         # do adjustment in realsense depth quality tool
-        jsonObj = json.load(open("configrealsense.json"))
+        jsonObj = json.load(open("realsense_config/configrealsense.json"))
         json_string = str(jsonObj).replace("'", '"')
 
         self.pipeline = rs.pipeline()
@@ -128,21 +126,10 @@ class realsenseThread(QThread):
 
             predBox.append((bbox, area, centroid))
 
+        arr = np.array(predBox[0])
         # results = non_max_suppression(arr, probs=None, overlapThresh=0.65)
 
         return predBox
-
-    def preProcess(self, color_image):
-
-        bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=True)
-        # convert from BGR -> RGB
-        rgb_img = jetson.utils.cudaAllocMapped(
-            width=bgr_img.width, height=bgr_img.height, format="rgb8"
-        )
-
-        jetson.utils.cudaConvertColor(bgr_img, rgb_img)
-
-        return rgb_img
 
     def rgbtoQimage(self, image):
 
@@ -156,65 +143,6 @@ class realsenseThread(QThread):
         p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
 
         return p
-
-    def detectPeople(self, color_image):
-
-        # 600x1024 res ssd
-        rgb_img = self.preProcess(color_image)
-
-        detections = self.people_net.Detect(rgb_img)
-
-        bboxes = self.getBBox(detections)
-
-        return bboxes
-
-    def detectFaces(self, peoples, color_image):
-        face_detections = []
-
-        for people, area, _ in peoples:
-            (h, w) = area
-            (sx, sy, ex, ey) = people
-            # half height of bbox
-            half = int(h / 2)
-            cropped = color_image[sy : sy + half, sx:ex]
-            gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
-            testimg = self.preProcess(cropped)
-            faces = self.facenet.Detect(testimg)
-            bbox = self.getBBox(faces)
-
-            for roi, area, _ in bbox:
-                (h, w) = area
-
-                (dsx, dsy, dex, dey) = roi
-
-                sx = dsx + sx
-                sy = dsy + sy
-                ex = dex + ex
-                ey = dey + ey
-                face = color_image[sy : (sy + h), sx : (sx + w)]
-
-                face = self.sladFaces(face)
-
-                color_image[sy : (sy + h), sx : (sx + w)] = face
-
-        return color_image
-
-    def sladFaces(self, image, factor=3.0):
-
-        # automatically determine the size of the blurring kernel based
-        # on the spatial dimensions of the input image
-        (h, w) = image.shape[:2]
-        kW = int(w / factor)
-        kH = int(h / factor)
-        # ensure the width of the kernel is odd
-        if kW % 2 == 0:
-            kW -= 1
-        # ensure the height of the kernel is odd
-        if kH % 2 == 0:
-            kH -= 1
-        # apply a Gaussian blur to the input image using our computed
-        # kernel size
-        return cv2.GaussianBlur(image, (kW, kH), 0)
 
     def alignImage(self, frames):
 
@@ -276,15 +204,15 @@ class realsenseThread(QThread):
                     depthFrames.put(colorized_depth)
                     continue
 
-                predictions = self.detectPeople(color_image)
+                predictions = self.detector.detectPeople(color_image)
 
-                faces = self.detectFaces(predictions, color_image)
+                faces = self.detector.detectFaces(predictions, color_image)
 
                 numberOfPeople = 0
 
                 numberOfPeople = len(predictions)
 
-                pred_bbox = self.getVectorsAndBbox()
+                pred_bbox = self.getVectorsAndBbox(predictions)
 
                 self.signals.people.emit(numberOfPeople)
 

@@ -49,7 +49,6 @@ class MainWindow(QMainWindow):
         self.image = realsenseThread(self.signals)
         self.image.signals.people.connect(self.setValue)
         self.image.signals.violation.connect(self.violation)
-
         self.showImage = Show(self.signals)
         self.showImage.signals.changePixmap.connect(self.setImage)
 
