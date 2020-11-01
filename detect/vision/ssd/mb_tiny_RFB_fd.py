@@ -1,9 +1,9 @@
 from torch.nn import Conv2d, Sequential, ModuleList, ReLU
 
-from detection.vision.nn.mb_tiny_RFB import Mb_Tiny_RFB
-from detection.vision.ssd.config import fd_config as config
-from detection.vision.ssd.predictor import Predictor
-from detection.vision.ssd.ssd import SSD
+from detect.vision.nn.mb_tiny_RFB import Mb_Tiny_RFB
+from detect.vision.ssd.config import fd_config as config
+from detect.vision.ssd.predictor import Predictor
+from detect.vision.ssd.ssd import SSD
 
 
 def SeperableConv2d(in_channels, out_channels, kernel_size=1, stride=1, padding=0):
