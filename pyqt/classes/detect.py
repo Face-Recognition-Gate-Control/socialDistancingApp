@@ -73,6 +73,8 @@ class Detect:
             cropped = color_image[sy : sy + half, sx:ex]
             gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
             testimg = self.preProcess(cropped)
+            face1 = self.face_detector.predict_faces(testimg)
+            print(face1)
             face = self.facenet.Detect(testimg)
             bbox = self.getBBox(face)
 
