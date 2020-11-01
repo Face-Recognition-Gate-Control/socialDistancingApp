@@ -69,12 +69,12 @@ class Detect:
             face = self.facenet.Detect(testimg)
             bbox = self.getBBox(face)
 
-            sladdedImage = self.sladFaces(bbox, color_image, (sx, sy, ex, ey))
+            sladdedImage = self.sladFaces(bbox, color_image, people)
 
         return sladdedImage
 
-    def sladFaces(self, bbox, color_imagem, (sx, sy, ex, ey)):
-        print(bbox)
+    def sladFaces(self, bbox, color_image, people):
+        (sx, sy, ex, ey) = people
         for roi, area, _ in bbox:
             (h, w) = area
 
