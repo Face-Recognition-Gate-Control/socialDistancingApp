@@ -57,7 +57,7 @@ class Detect:
 
     def detectFaces(self, peoples, color_image):
         face_detections = []
-
+        print(peoples)
         for people, area, _ in peoples:
             (h, w) = area
             (sx, sy, ex, ey) = people
