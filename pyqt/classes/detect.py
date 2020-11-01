@@ -65,25 +65,44 @@ class Detect:
 
         sladdedImage = color_image
 
-        for people, area, _ in peoples:
+        for person, area, _ in peoples:
             (h, w) = area
-            (sx, sy, ex, ey) = people
+            (sx, sy, ex, ey) = person
             # half height of bbox
             half = int(h / 2)
             cropped = color_image[sy : sy + half, sx:ex]
             gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
             testimg = self.preProcess(cropped)
-            face1 = self.face_detector.predict_faces(cropped)
-            print(face1)
-            face = self.facenet.Detect(testimg)
-            bbox = self.getBBox(face)
+            faceBox = self.face_detector.predict_faces(cropped)
+            sladdedImage = self.sladFaces2(faceBox, color_image, person)
 
-            sladdedImage = self.sladFaces(bbox, color_image, people)
+            # face = self.facenet.Detect(testimg)
+            # bbox = self.getBBox(face)
+
+            # sladdedImage = self.sladFaces(bbox, color_image, person)
 
         return sladdedImage
 
-    def sladFaces(self, bbox, color_image, people):
-        (sx, sy, ex, ey) = people
+    def sladFaces2(self, faceBoxes, color_image, personBox):
+        (sx, sy, ex, ey) = personBox
+        for facebox in faceBoxes:
+            (dsx, dsy, dex, dey) = facebox
+            h = dey - dsy
+            w = dex - dsx
+            sx = dsx + sx
+            sy = dsy + sy
+            ex = dex + ex
+            ey = dey + ey
+            face = color_image[sy : (sy + h), sx : (sx + w)]
+
+            face = self.sladFace(face)
+
+            color_image[sy : (sy + h), sx : (sx + w)] = face
+
+        return color_image
+
+    def sladFaces(self, bbox, color_image, personBox):
+        (sx, sy, ex, ey) = personBox
         for roi, area, _ in bbox:
             (h, w) = area
 
