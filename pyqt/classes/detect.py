@@ -85,7 +85,7 @@ class Detect:
             ey = dey + ey
             face = color_image[sy : (sy + h), sx : (sx + w)]
 
-            face = self.sladFaces(face)
+            face = self.sladFace(face)
 
             color_image[sy : (sy + h), sx : (sx + w)] = face
 
