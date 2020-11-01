@@ -73,7 +73,7 @@ class Detect:
         return sladdedImage
 
     def sladFaces(self, bbox, color_image):
-
+        print(bbox)
         for roi, area, _ in bbox:
             (h, w) = area
 
