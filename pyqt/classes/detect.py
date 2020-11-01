@@ -86,11 +86,11 @@ class Detect:
     def sladFaces2(self, faceBoxes, color_image, personBox):
         (sx, sy, ex, ey) = personBox
         for facebox in faceBoxes:
-
+            print(facebox)
             (dsx, dsy, dex, dey) = facebox
 
-            h = int(dey) - int(dsy)
-            w = int(dex) - int(dsx)
+            h = dey - dsy
+            w = dex - dsx
             sx = dsx + sx
             sy = dsy + sy
             ex = dex + ex
