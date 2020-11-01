@@ -134,7 +134,7 @@ class realsenseThread(QThread):
     def warning_complete(self):
         print("complete")
 
-    def getVectorsAndBbox(self, predictions):
+    def getVectorsAndBbox(self, predictions, depth_frame):
         bboxes = []
         vectors = []
         test = []
@@ -190,7 +190,7 @@ class realsenseThread(QThread):
 
                 numberOfPeople = len(predictions)
 
-                pred_bbox = self.getVectorsAndBbox(predictions)
+                pred_bbox = self.getVectorsAndBbox(predictions, depth_frame)
 
                 self.signals.people.emit(numberOfPeople)
 
