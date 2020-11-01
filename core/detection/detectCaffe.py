@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from detect import config_caffe as config
+from core.detection import config_caffe as config
 from imutils.object_detection import non_max_suppression
 
 
@@ -55,8 +55,6 @@ def detect_people(frame, net):
             "tvmonitor",
         ]
     )
-
-    
 
     # pass the blob through the network and obtain the detections and
     # predictions
