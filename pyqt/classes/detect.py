@@ -50,14 +50,14 @@ class Detect:
 
             predBox.append((bbox, area, centroid))
 
-        arr = np.array(predBox[0])
+        # arr = np.array(predBox[0])
         # results = non_max_suppression(arr, probs=None, overlapThresh=0.65)
 
         return predBox
 
     def detectFaces(self, peoples, color_image):
         face_detections = []
-        print(peoples)
+
         for people, area, _ in peoples:
             (h, w) = area
             (sx, sy, ex, ey) = people
