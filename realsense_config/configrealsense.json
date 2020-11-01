@@ -48,6 +48,6 @@
    
     "stream-depth-format": "Z16",
     "stream-fps": "30",
-    "stream-height": "480",
-    "stream-width": "640"
+    "stream-height": "720",
+    "stream-width": "1280"
 }
