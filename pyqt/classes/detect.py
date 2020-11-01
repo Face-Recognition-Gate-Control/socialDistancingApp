@@ -1,6 +1,7 @@
 import jetson.inference
 import jetson.utils
 import numpy as np
+import cv2
 
 
 class Detect:
