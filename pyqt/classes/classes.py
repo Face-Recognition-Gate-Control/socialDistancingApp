@@ -13,11 +13,11 @@ import threading
 from threading import Lock
 import pyrealsense2 as rs
 import os
-from detect import config_caffe as config
+from core.detection import config_caffe as config
 import json
 import numpy as np
 from multiprocessing import Queue
-from detect.detectCaffe import detect_people
+from core.detection.detectCaffe import detect_people
 from utils.post_process import *
 import imutils
 import simpleaudio as sa
