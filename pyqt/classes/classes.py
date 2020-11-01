@@ -183,9 +183,8 @@ class realsenseThread(QThread):
                     continue
 
                 predictions = self.detector.detectPeople(color_image)
-                print(predictions)
 
-                faces = self.detector.detectFaces(predictions, color_image)
+                # faces = self.detector.detectFaces(predictions, color_image)
 
                 numberOfPeople = 0
 
