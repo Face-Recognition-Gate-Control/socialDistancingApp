@@ -32,6 +32,28 @@ class Detect:
 
         return bboxes
 
+    def getBBox(self, detections):
+        predBox = []
+
+        for detection in detections:
+            bbox = (
+                int(detection.Left),
+                int(detection.Top),
+                int(detection.Right),
+                int(detection.Bottom),
+            )
+
+            area = (int(detection.Height), int(detection.Width))
+
+            centroid = detection.Center
+
+            predBox.append((bbox, area, centroid))
+
+        arr = np.array(predBox[0])
+        # results = non_max_suppression(arr, probs=None, overlapThresh=0.65)
+
+        return predBox
+
     def detectFaces(self, peoples, color_image):
         face_detections = []
 
