@@ -12,7 +12,7 @@ PATH_TO_FACE_DETECTION_MODEL = "./models/RFB-640/face_model.pth"
 class Detect:
     def __init__(self):
 
-        self.face_detector = FaceRecognizer(PATH_TO_FACE_DETECTION_MODEL)
+        # self.face_detector = FaceRecognizer(PATH_TO_FACE_DETECTION_MODEL)
 
         self.people_net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
         self.facenet = jetson.inference.detectNet("facenet", threshold=0.2)
@@ -73,7 +73,7 @@ class Detect:
             cropped = color_image[sy : sy + half, sx:ex]
             gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
             testimg = self.preProcess(cropped)
-            face1 = self.face_detector.predict_faces(testimg)
+            # face1 = self.face_detector.predict_faces(testimg)
             print(face1)
             face = self.facenet.Detect(testimg)
             bbox = self.getBBox(face)
