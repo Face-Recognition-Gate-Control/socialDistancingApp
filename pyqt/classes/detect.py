@@ -3,7 +3,8 @@ import jetson.utils
 import numpy as np
 import cv2
 import torch
-from core.detection.face_recognizer import FaceRecognizer
+
+# from core.detection.face_recognizer import FaceRecognizer
 
 
 PATH_TO_FACE_DETECTION_MODEL = "./models/RFB-640/face_model.pth"
