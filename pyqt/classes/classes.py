@@ -23,6 +23,7 @@ import imutils
 import simpleaudio as sa
 import time
 from pyqt.classes.detect import *
+from core.detection.realsenseCamera import RealsenseCamera
 
 from imutils.object_detection import non_max_suppression
 
@@ -49,6 +50,7 @@ class realsenseThread(QThread):
         self.minDistance = 1
         self.threadpool = QThreadPool()
         self.detector = Detect()
+        self.camera = RealsenseCamera()
 
     def updateSignal(self, value):
         self.selection = value
@@ -60,54 +62,10 @@ class realsenseThread(QThread):
     @pyqtSlot()
     def run(self):
 
-        # load config file made
-        # do adjustment in realsense depth quality tool
-        jsonObj = json.load(open("realsense_config/configrealsense.json"))
-        json_string = str(jsonObj).replace("'", '"')
+        while not self.camera.camera:
+            self.camera.connect()
 
-        self.pipeline = rs.pipeline()
-        rsconfig = rs.config()
-
-        freq = int(jsonObj["stream-fps"])
-        print("W: ", int(jsonObj["stream-width"]))
-        print("H: ", int(jsonObj["stream-height"]))
-        print("FPS: ", int(jsonObj["stream-fps"]))
-        rsconfig.enable_stream(
-            rs.stream.depth,
-            int(jsonObj["stream-width"]),
-            int(jsonObj["stream-height"]),
-            rs.format.z16,
-            int(jsonObj["stream-fps"]),
-        )
-        rsconfig.enable_stream(
-            rs.stream.color,
-            int(jsonObj["stream-width"]),
-            int(jsonObj["stream-height"]),
-            rs.format.bgr8,
-            int(jsonObj["stream-fps"]),
-        )
-        camera = False
-
-        while not camera:
-            try:
-                print("connecting to realsense")
-                cfg = self.pipeline.start(rsconfig)
-                dev = cfg.get_device()
-                advnc_mode = rs.rs400_advanced_mode(dev)
-                advnc_mode.load_json(json_string)
-
-                # get depthscale from camera. converting distance to meter
-                depth_scale = cfg.get_device().first_depth_sensor().get_depth_scale()
-
-            except Exception as e:
-
-                print(str(e))
-                print("no device connected")
-
-            finally:
-                print("connected")
-                camera = True
-                self.startStreaming()
+        self.startStreaming()
 
     def rgbtoQimage(self, image):
 
@@ -152,10 +110,8 @@ class realsenseThread(QThread):
         return pred_bbox
 
     def startStreaming(self):
-        global depthFrames, original_frames, predicted_data, boundingBoxes, color_image2
+        global depthFrames, original_frames
 
-        self.align = rs.align(rs.stream.color)
-        colorizer = rs.colorizer()
         self.threadActive = True
 
         print("starting stream")
@@ -163,7 +119,7 @@ class realsenseThread(QThread):
 
             try:
 
-                frames = self.pipeline.wait_for_frames()
+                frames = self.camera.getFrame()
                 color_frame = frames.get_color_frame()
                 depth_frame = frames.get_depth_frame()
 
