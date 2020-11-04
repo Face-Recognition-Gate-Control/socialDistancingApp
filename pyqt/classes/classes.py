@@ -10,7 +10,7 @@ from PyQt5.QtCore import (
 from PyQt5.QtGui import QImage
 import cv2
 import threading
-from threading import RLock
+from threading import Lock
 import pyrealsense2 as rs
 import os
 from core.detection import config_caffe as config
@@ -37,7 +37,7 @@ boundingBoxes = Queue(maxsize=0)
 processed_frames = Queue(maxsize=0)
 preProcessed_frames = Queue(maxsize=0)
 client_data = Queue(maxsize=0)
-image_lock = RLock()
+image_lock = Lock()
 color_image2 = []
 
 
