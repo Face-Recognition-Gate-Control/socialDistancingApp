@@ -128,17 +128,10 @@ class realsenseThread(QThread):
                 if not color_frame or not depth_frame:
                     continue
 
-                # depth_frame = self.alignImage(frames)
-                # colorized_depth = np.asanyarray(
-                #     colorizer.colorize(aligned_depth_frame).get_data()
-                # )
+                depth_frame = self.alignImage(frames)
 
                 color_image = color_frame.get_data()
                 color_image = np.asanyarray(color_image)
-
-                if self.selection:
-                    depthFrames.put(colorized_depth)
-                    continue
 
                 predictions = self.detector.detectPeople(color_image)
 
