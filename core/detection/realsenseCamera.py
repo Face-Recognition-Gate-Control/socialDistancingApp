@@ -3,12 +3,6 @@ import json
 
 
 class RealsenseCamera:
-
-    # load config file made
-    # do adjustment in realsense depth quality tool
-    jsonObj = json.load(open("realsense_config/configrealsense.json"))
-    json_string = str(jsonObj).replace("'", '"')
-
     def __init__(self):
         self.pipeline = rs.pipeline()
         self.rsconfig = rs.config
@@ -19,6 +13,10 @@ class RealsenseCamera:
 
         self.align = rs.align(rs.stream.color)
         self.colorizer = rs.colorizer()
+        # load config file made
+        # do adjustment in realsense depth quality tool
+        jsonObj = json.load(open("realsense_config/configrealsense.json"))
+        json_string = str(jsonObj).replace("'", '"')
 
         freq = int(jsonObj["stream-fps"])
         print("W: ", int(jsonObj["stream-width"]))
