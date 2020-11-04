@@ -202,8 +202,11 @@ class Show(QThread):
         global processed_frames, depthFrames, color_image2, image_lock
         print("starting show thread")
         while True:
+
             with image_lock:
+
                 try:
+
                     if color_image2 == []:
 
                         image = color_image2
