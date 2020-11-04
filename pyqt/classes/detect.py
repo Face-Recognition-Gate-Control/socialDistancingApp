@@ -13,7 +13,7 @@ class Detect:
 
         self.face_detector = FaceRecognizer()
 
-        self.people_net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.55)
+        self.people_net = jetson.inference.detectNet("ped-100", threshold=0.55)
         # self.facenet = jetson.inference.detectNet("facenet", threshold=0.2)
 
     def preProcess(self, color_image):
@@ -81,7 +81,7 @@ class Detect:
             half = int(h / 2)
             cropped = color_image[sy : sy + half, sx:ex]
             print(cropped.shape)
-            testimg = self.preProcess(cropped)
+            # testimg = self.preProcess(cropped)
             faceBox = self.face_detector.predict_faces(cropped)
             sladdedImage = self.sladFaces2(faceBox, color_image, person)
 
