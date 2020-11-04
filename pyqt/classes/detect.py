@@ -11,10 +11,10 @@ from core.detection.face_recognizer import FaceRecognizer
 class Detect:
     def __init__(self):
 
-        self.face_detector = FaceRecognizer()
+        # self.face_detector = FaceRecognizer()
 
         self.people_net = jetson.inference.detectNet("ped-100", threshold=0.55)
-        # self.facenet = jetson.inference.detectNet("facenet", threshold=0.2)
+        self.facenet = jetson.inference.detectNet("facenet", threshold=0.2)
 
     def preProcess(self, color_image):
 
@@ -80,15 +80,15 @@ class Detect:
             # half height of bbox
             half = int(h / 2)
             cropped = color_image[sy : sy + half, sx:ex]
-            print(cropped.shape)
-            # testimg = self.preProcess(cropped)
-            faceBox = self.face_detector.predict_faces(cropped)
-            sladdedImage = self.sladFaces2(faceBox, color_image, person)
 
-            # face = self.facenet.Detect(testimg)
-            # bbox = self.getBBox(face)
+            testimg = self.preProcess(cropped)
+            # faceBox = self.face_detector.predict_faces(cropped)
+            # sladdedImage = self.sladFaces2(faceBox, color_image, person)
 
-            # sladdedImage = self.sladFaces(bbox, color_image, person)
+            face = self.facenet.Detect(testimg)
+            bbox = self.getBBox(face)
+
+            sladdedImage = self.sladFaces(bbox, color_image, person)
 
         return sladdedImage
 
