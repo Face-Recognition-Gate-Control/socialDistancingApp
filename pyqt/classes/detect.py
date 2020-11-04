@@ -83,7 +83,7 @@ class Detect:
             # rezise = cv2.resize(cropped, (320, 320))
             cv2.imwrite("face.jpg", cropped)
 
-            testimg = self.preProcess(rezise)
+            testimg = self.preProcess(cropped)
             # faceBox = self.face_detector.predict_faces(cropped)
             # sladdedImage = self.sladFaces2(faceBox, color_image, person)
 
