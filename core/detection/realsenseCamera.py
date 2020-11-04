@@ -43,7 +43,7 @@ class RealsenseCamera:
         while not self.camera:
             try:
                 print("connecting to realsense")
-                cfg = self.pipeline.start(rsconfig)
+                cfg = self.pipeline.start(self.rsconfig)
                 dev = cfg.get_device()
                 advnc_mode = rs.rs400_advanced_mode(dev)
                 advnc_mode.load_json(json_string)
