@@ -204,10 +204,8 @@ class Show(QThread):
 
             try:
 
-                if self.selection:
-                    image = depthFrames.get()
-                else:
-                    image = processed_frames.get()
+                 image = processed_frames.get()
+                   
 
                 p = self.rgbtoQimage(image)
                 self.signals.changePixmap.emit(p)
