@@ -62,8 +62,7 @@ class Detect:
         test = non_max_suppression(arr, probs=None, overlapThresh=0.70)
 
         for i, (bbox, _, _) in enumerate(predBox):
-            bbox = test[i]
-
+            bbox = (0, 0, 0, 0)
         print(predBox)
         return predBox
 
