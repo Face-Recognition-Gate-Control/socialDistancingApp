@@ -14,17 +14,19 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1920, 1080)
+        MainWindow.resize(1280, 720)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.frame = QtWidgets.QFrame(self.centralwidget)
-        self.frame.setStyleSheet("QFrame {    \n"
-"    background-color: rgb(38,42,54);    \n"
-"    color: rgb(220, 220, 220);\n"
-"    border-radius: 10px;\n"
-"}")
+        self.frame.setStyleSheet(
+            "QFrame {    \n"
+            "    background-color: rgb(38,42,54);    \n"
+            "    color: rgb(220, 220, 220);\n"
+            "    border-radius: 10px;\n"
+            "}"
+        )
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
@@ -52,13 +54,17 @@ class Ui_MainWindow(object):
         font.setPointSize(14)
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
-        self.verticalLayout_2.addWidget(self.label_2, 0, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+        self.verticalLayout_2.addWidget(
+            self.label_2, 0, QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter
+        )
         self.people = QtWidgets.QLabel(self.verticalLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(22)
         self.people.setFont(font)
         self.people.setObjectName("people")
-        self.verticalLayout_2.addWidget(self.people, 0, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+        self.verticalLayout_2.addWidget(
+            self.people, 0, QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter
+        )
         self.verticalLayoutWidget_2 = QtWidgets.QWidget(self.frame)
         self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(100, 810, 184, 77))
         self.verticalLayoutWidget_2.setObjectName("verticalLayoutWidget_2")
@@ -104,10 +110,30 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.camera.setText(_translate("MainWindow", "start camera"))
-        self.label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:22pt; font-weight:600;\">Social Distancing</span></p></body></html>"))
+        self.label.setText(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p align="center"><span style=" font-size:22pt; font-weight:600;">Social Distancing</span></p></body></html>',
+            )
+        )
         self.radioButton.setText(_translate("MainWindow", "Depth frame"))
         self.label_2.setText(_translate("MainWindow", "Number of people"))
         self.people.setText(_translate("MainWindow", "0"))
-        self.label_4.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:11pt; font-weight:600;\">Minimum distance meter</span></p></body></html>"))
-        self.distance_value.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:11pt;\">1</span></p></body></html>"))
-        self.label_3.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:16pt;\">Number of violations</span></p></body></html>"))
+        self.label_4.setText(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p><span style=" font-size:11pt; font-weight:600;">Minimum distance meter</span></p></body></html>',
+            )
+        )
+        self.distance_value.setText(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p><span style=" font-size:11pt;">1</span></p></body></html>',
+            )
+        )
+        self.label_3.setText(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p><span style=" font-size:16pt;">Number of violations</span></p></body></html>',
+            )
+        )

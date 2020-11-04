@@ -24,7 +24,7 @@ import simpleaudio as sa
 import time
 from pyqt.classes.detect import *
 from core.detection.realsenseCamera import RealsenseCamera
-
+from server.pyClient import ClientPy
 from imutils.object_detection import non_max_suppression
 
 
@@ -35,6 +35,7 @@ predicted_data = Queue(maxsize=0)
 boundingBoxes = Queue(maxsize=0)
 processed_frames = Queue(maxsize=0)
 preProcessed_frames = Queue(maxsize=0)
+client_data = Queue(maxsize=0)
 detect_lock = Lock()
 color_image2 = []
 bbox_lock = Lock
@@ -51,6 +52,7 @@ class realsenseThread(QThread):
         self.threadpool = QThreadPool()
         self.detector = Detect()
         self.camera = RealsenseCamera()
+        self.client = ClientPy()
 
     def updateSignal(self, value):
         self.selection = value
