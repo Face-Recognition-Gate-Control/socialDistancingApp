@@ -14,7 +14,7 @@ def drawBox(image, predicitons, min_dist):
 
     if len(predicitons[1]) >= 2:
 
-        violation = euclideanDistance(predicitons[1], min_dist, predicitons[2])
+        violation = euclideanDistance(predicitons[1], min_dist, predicitons[2], image)
 
     for (i, (box)) in enumerate(predicitons[0]):
 
@@ -168,7 +168,7 @@ def meanDepth(frame, x, y):
     return dist
 
 
-def euclideanDistance(points, min_dist, backup_points):
+def euclideanDistance(points, min_dist, backup_points, image):
 
     violate = set()
 
@@ -187,9 +187,20 @@ def euclideanDistance(points, min_dist, backup_points):
                     + (points[i]["z"] - points[j]["z"]) ** 2
                 )
 
+            drawLine(
+                image,
+                (points[i]["x"], points[i]["y"]),
+                (points[j]["x"], points[j]["y"]),
+            )
+
             if dist < min_dist:
 
                 violate.add(i)
                 violate.add(j)
 
     return violate
+
+
+def drawLine(image, pt1, pt2):
+
+    cv2.line(image, pt1, pt2)
