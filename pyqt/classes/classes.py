@@ -204,8 +204,7 @@ class Show(QThread):
 
             try:
 
-                 image = processed_frames.get()
-                   
+                image = processed_frames.get()
 
                 p = self.rgbtoQimage(image)
                 self.signals.changePixmap.emit(p)
