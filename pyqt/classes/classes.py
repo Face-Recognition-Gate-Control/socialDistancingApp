@@ -142,7 +142,7 @@ class realsenseThread(QThread):
 
                 predictions = self.detector.detectPeople(color_image)
 
-                if predictions:
+                if len(predictions) > 0:
                     faces = self.detector.detectFaces(predictions, color_image)
 
                 numberOfPeople = 0
@@ -204,7 +204,7 @@ class Show(QThread):
         while True:
             with image_lock:
                 try:
-                    if color_image2:
+                    if color_image2 == []:
 
                         image = color_image2
 
