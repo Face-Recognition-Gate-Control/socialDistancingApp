@@ -19,7 +19,7 @@ class FaceRecognizer:
 
     INPUT_IMAGE_SIZE = 1280  # default cv2-size
     NUMB_OF_RESULTS = 1  # keep 'x' results
-    PROB_THRESHOLD = 0.6  # sens 0 - 1 (1=highest)
+    PROB_THRESHOLD = 0.5  # sens 0 - 1 (1=highest)
     # only consider the candidates with the highest scores.
     CANDIDATE_SIZE = 1500
 
