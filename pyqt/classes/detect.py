@@ -63,7 +63,7 @@ class Detect:
 
         for i, (bbox, _, _) in enumerate(predBox):
             bbox = (0, 0, 0, 0)
-        print(predBox')
+        print(predBox)
         return predBox
 
     def detectFaces(self, peoples, color_image):
