@@ -208,8 +208,8 @@ class Show(QThread):
 
                         image = color_image2
 
-                    p = self.rgbtoQimage(image)
-                    self.signals.changePixmap.emit(p)
+                        p = self.rgbtoQimage(image)
+                        self.signals.changePixmap.emit(p)
 
                 except Exception as e:
                     print(str(e))
