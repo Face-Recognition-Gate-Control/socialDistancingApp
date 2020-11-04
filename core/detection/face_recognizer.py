@@ -17,7 +17,7 @@ class FaceRecognizer:
     designed for edge computing devices
     """
 
-    INPUT_IMAGE_SIZE = 1280 - # default cv2-size
+    INPUT_IMAGE_SIZE = 1280  # default cv2-size
     NUMB_OF_RESULTS = 1  # keep 'x' results
     PROB_THRESHOLD = 0.7  # sens 0 - 1 (1=highest)
     # only consider the candidates with the highest scores.
