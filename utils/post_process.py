@@ -203,6 +203,20 @@ def euclideanDistance(points, min_dist, backup_points, image):
 
 
 def drawLine(image, pt1, pt2, dist):
+    # font
+    font = cv2.FONT_HERSHEY_SIMPLEX
+
+    # org
+    org = (50, 50)
+
+    # fontScale
+    fontScale = 1
+
+    # Blue color in BGR
+    color = (255, 0, 0)
+
+    # Line thickness of 2 px
+    thickness = 2
 
     cv2.line(image, pt1, pt2, (0, 0, 0))
-    cv2.putText(image, str(dist), pt1)
+    cv2.putText(image, str(dist), pt1, font, fontScale, color, thickness)
