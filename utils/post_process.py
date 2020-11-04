@@ -219,6 +219,7 @@ def drawLine(image, pt1, pt2, dist):
 
     # Line thickness of 2 px
     thickness = 5
+    x, y = pt1
 
     image = cv2.line(image, pt1, pt2, (0, 0, 0), thickness=5)
     image = cv2.putText(image, str(dist), pt1, font, fontScale, color, thickness)
