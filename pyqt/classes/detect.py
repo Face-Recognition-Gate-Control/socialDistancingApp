@@ -61,10 +61,13 @@ class Detect:
 
         test = non_max_suppression(arr, probs=None, overlapThresh=0.70)
 
-        for i, (bbox, _, _) in enumerate(predBox):
-            bbox = (0, 0, 0, 0)
-        print(predBox)
-        return predBox
+        newpredbox = []
+        for i, (bbox, area, centroid) in enumerate(predBox):
+            bbox = tuple(test[i])
+
+            newpredbox.append((bbox, area, centroid))
+
+        return newpredbox
 
     def detectFaces(self, peoples, color_image):
         face_detections = []
