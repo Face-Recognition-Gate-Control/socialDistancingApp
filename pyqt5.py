@@ -42,7 +42,7 @@ class MainWindow(QMainWindow):
         self.signals = WorkerSignals()
         self.ui.camera.clicked.connect(self.test)
         self.ui.distance.valueChanged.connect(self.updateDistance)
-        self.ui.radioButton.toggled.connect(lambda: self.btnstate(self.ui.radioButton))
+        # self.ui.radioButton.toggled.connect(lambda: self.btnstate(self.ui.radioButton))
         self.threadpool = QThreadPool()
         self.violations = 0
 
