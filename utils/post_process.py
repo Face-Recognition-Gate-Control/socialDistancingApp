@@ -204,5 +204,5 @@ def euclideanDistance(points, min_dist, backup_points, image):
 
 def drawLine(image, pt1, pt2, dist):
 
-    cv2.line(image, pt1, pt2)
+    cv2.line(image, pt1, pt2, (0, 0, 0))
     cv2.putText(image, str(dist), pt1)
