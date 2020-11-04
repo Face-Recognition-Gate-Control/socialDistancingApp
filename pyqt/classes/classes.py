@@ -166,7 +166,7 @@ class realsenseThread(QThread):
             except Exception as e:
                 print("Error is :", str(e))
 
-        self.pipeline.stop()
+        self.camera.stop()
 
     def stop(self):
         self.threadActive = False
