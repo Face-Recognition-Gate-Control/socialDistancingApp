@@ -81,6 +81,7 @@ class Detect:
             half = int(h / 2)
             cropped = color_image[sy : sy + half, sx:ex]
             rezise = cv2.resize(cropped, (320, 320))
+            cv2.imwrite("face.jpg", rezise)
 
             testimg = self.preProcess(rezise)
             # faceBox = self.face_detector.predict_faces(cropped)
