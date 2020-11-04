@@ -160,7 +160,7 @@ def get3d(
 
 def meanDepth(frame, x, y):
     distList = []
-    for i in range(20):
+    for i in range(50):
 
         distList.append(frame.get_distance((x + i), (y + i)))
 
