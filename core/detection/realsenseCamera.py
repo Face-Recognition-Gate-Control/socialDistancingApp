@@ -37,7 +37,7 @@ class RealsenseCamera:
             int(jsonObj["stream-fps"]),
         )
 
-    def connect():
+    def connect(self):
         self.camera = False
 
         while not self.camera:

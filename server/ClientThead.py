@@ -1,7 +1,9 @@
-import threading
-class ClientThread(threading.Thread):
+from threading import Thread
+
+
+class ClientThread(Thread):
     def __init__(self, clientAddress, clientsocket, stream):
-        threading.Thread.__init__(self)
+        Thread.__init__(self)
         self.csocket = clientsocket
         self.clientAddress = clientAddress
         self.stream = stream
@@ -21,7 +23,7 @@ class ClientThread(threading.Thread):
 
             try:
                 if not self.stream.empty():
-                   
+
                     self.frame = self.stream.get()
 
                     a = pickle.dumps(self.frame, 0)
