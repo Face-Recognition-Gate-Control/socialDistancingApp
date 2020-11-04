@@ -10,7 +10,7 @@ def drawBox(image, predicitons, min_dist):
 
     overlay = image.copy()
     output = image.copy()
-    alpha = 0.35
+    alpha = 0.25
 
     if len(predicitons[1]) >= 2:
 
