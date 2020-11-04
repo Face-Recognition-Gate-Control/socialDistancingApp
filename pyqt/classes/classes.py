@@ -10,7 +10,7 @@ from PyQt5.QtCore import (
 from PyQt5.QtGui import QImage
 import cv2
 import threading
-from threading import Lock
+from threading import RLock
 import pyrealsense2 as rs
 import os
 from core.detection import config_caffe as config
@@ -37,9 +37,8 @@ boundingBoxes = Queue(maxsize=0)
 processed_frames = Queue(maxsize=0)
 preProcessed_frames = Queue(maxsize=0)
 client_data = Queue(maxsize=0)
-detect_lock = Lock()
+image_lock = RLock()
 color_image2 = []
-bbox_lock = Lock
 
 
 class realsenseThread(QThread):
@@ -113,7 +112,7 @@ class realsenseThread(QThread):
         return pred_bbox
 
     def startStreaming(self):
-        global depthFrames, original_frames
+        global depthFrames, original_frames, color_image2
 
         self.threadActive = True
 
@@ -160,8 +159,9 @@ class realsenseThread(QThread):
                     )
 
                     self.signals.violation.emit(violation)
+                with image_lock:
 
-                processed_frames.put(color_image)
+                    color_image2 = color_image
 
             except Exception as e:
                 print("Error is :", str(e))
@@ -198,19 +198,19 @@ class Show(QThread):
 
     @pyqtSlot()
     def run(self):
-        global processed_frames, depthFrames
+        global processed_frames, depthFrames, color_image2, image_lock
         print("starting show thread")
         while True:
+            with image_lock:
+                try:
 
-            try:
+                    image = color_image2
 
-                image = processed_frames.get()
+                    p = self.rgbtoQimage(image)
+                    self.signals.changePixmap.emit(p)
 
-                p = self.rgbtoQimage(image)
-                self.signals.changePixmap.emit(p)
-
-            except Exception as e:
-                print(str(e))
+                except Exception as e:
+                    print(str(e))
 
 
 class WorkerSignals(QObject):
