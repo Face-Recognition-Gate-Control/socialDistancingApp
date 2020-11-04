@@ -207,7 +207,7 @@ class Show(QThread):
 
                 try:
 
-                    if color_image2 == []:
+                    if len(color_image2) > 0:
 
                         image = color_image2
 
