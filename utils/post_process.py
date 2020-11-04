@@ -15,7 +15,7 @@ def drawBox(image, predicitons, min_dist):
     if len(predicitons[1]) >= 2:
 
         violation, image = euclideanDistance(
-            predicitons[1], min_dist, predicitons[2], overlay
+            predicitons[1], min_dist, predicitons[2], output
         )
 
     for (i, (box)) in enumerate(predicitons[0]):
@@ -193,7 +193,7 @@ def euclideanDistance(points, min_dist, backup_points, image):
                 image,
                 (int(backup_points[i][0]), int(backup_points[i][1])),
                 (int(backup_points[j][0]), int(backup_points[j][1])),
-                dist,
+                round(dist, 2),
             )
 
             if dist < min_dist:
