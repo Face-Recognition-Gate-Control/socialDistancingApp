@@ -212,13 +212,13 @@ def drawLine(image, pt1, pt2, dist):
     org = (50, 50)
 
     # fontScale
-    fontScale = 1
+    fontScale = 10
 
     # Blue color in BGR
     color = (255, 0, 0)
 
     # Line thickness of 2 px
-    thickness = 2
+    thickness = 5
 
     image = cv2.line(image, pt1, pt2, (0, 0, 0))
     image = cv2.putText(image, str(int(dist)), pt1, font, fontScale, color, thickness)
