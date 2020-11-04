@@ -52,6 +52,7 @@ class realsenseThread(QThread):
         self.threadpool = QThreadPool()
         self.detector = Detect()
         self.camera = RealsenseCamera()
+        self.align = rs.align(rs.stream.color)
         # self.client = ClientPy()
 
     def updateSignal(self, value):
