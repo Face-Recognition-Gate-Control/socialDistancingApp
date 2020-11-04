@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
     # load config file made
     # do adjustment in realsense depth quality tool
-    jsonObj = json.load(open("configrealsense.json"))
+    jsonObj = json.load(open("realsense_config/configrealsense.json"))
     json_string = str(jsonObj).replace("'", '"')
 
     pipeline = rs.pipeline()
