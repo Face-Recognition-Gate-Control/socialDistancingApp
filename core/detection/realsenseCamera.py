@@ -22,14 +22,14 @@ class RealsenseCamera:
         print("W: ", int(jsonObj["stream-width"]))
         print("H: ", int(jsonObj["stream-height"]))
         print("FPS: ", int(jsonObj["stream-fps"]))
-        rsconfig.enable_stream(
+        self.rsconfig.enable_stream(
             rs.stream.depth,
             int(jsonObj["stream-width"]),
             int(jsonObj["stream-height"]),
             rs.format.z16,
             int(jsonObj["stream-fps"]),
         )
-        rsconfig.enable_stream(
+        self.rsconfig.enable_stream(
             rs.stream.color,
             int(jsonObj["stream-width"]),
             int(jsonObj["stream-height"]),
