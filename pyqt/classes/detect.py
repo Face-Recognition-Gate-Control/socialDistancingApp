@@ -59,7 +59,7 @@ class Detect:
         bboxes = [lis[0] for lis in predBox]
         arr = np.array(bboxes)
 
-        test = non_max_suppression(arr, probs=None, overlapThresh=0.65)
+        test = non_max_suppression(arr, probs=None, overlapThresh=0.70)
 
         for i, (bbox, _, _) in enumerate(predBox):
             bbox = test[i]
