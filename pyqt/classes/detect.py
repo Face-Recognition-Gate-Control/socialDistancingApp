@@ -57,9 +57,10 @@ class Detect:
             predBox.append((bbox, area, centroid))
 
         res = [lis[0] for lis in predBox]
-        # arr = np.array(res)
-        print(res)
-        # predBox[0:][0] = non_max_suppression(arr, probs=None, overlapThresh=0.65)
+        arr = np.array(res)
+
+        test = non_max_suppression(arr, probs=None, overlapThresh=0.65)
+        print(test)
 
         return predBox
 
