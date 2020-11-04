@@ -67,7 +67,6 @@ class Detect:
 
             newpredbox.append((bbox, area, centroid))
 
-        print(newpredbox)
         return newpredbox
 
     def detectFaces(self, peoples, color_image):
