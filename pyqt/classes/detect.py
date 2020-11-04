@@ -80,7 +80,7 @@ class Detect:
             # half height of bbox
             half = int(h / 2)
             cropped = color_image[sy : sy + half, sx:ex]
-            rezise = cv2.resize(cropped, (160, 160))
+            rezise = cv2.resize(cropped, (320, 320))
             cv2.imwrite("face.jpg", cropped)
 
             testimg = self.preProcess(rezise)
