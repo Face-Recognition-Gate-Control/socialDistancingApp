@@ -21,7 +21,7 @@ class FaceRecognizer:
     NUMB_OF_RESULTS = 1  # keep 'x' results
     PROB_THRESHOLD = 0.5  # sens 0 - 1 (1=highest)
     # only consider the candidates with the highest scores.
-    CANDIDATE_SIZE = 1500
+    CANDIDATE_SIZE = 200
 
     def __init__(self, default_size=640):
         """Initializes an instance of the face-prediction model with
