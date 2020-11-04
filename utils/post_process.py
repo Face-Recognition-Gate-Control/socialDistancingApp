@@ -191,6 +191,7 @@ def euclideanDistance(points, min_dist, backup_points, image):
                 image,
                 (points[i]["x"], points[i]["y"]),
                 (points[j]["x"], points[j]["y"]),
+                dist,
             )
 
             if dist < min_dist:
@@ -201,6 +202,7 @@ def euclideanDistance(points, min_dist, backup_points, image):
     return violate
 
 
-def drawLine(image, pt1, pt2):
+def drawLine(image, pt1, pt2, dist):
 
     cv2.line(image, pt1, pt2)
+    cv2.putText(image, str(dist), pt1)
