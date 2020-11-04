@@ -80,7 +80,7 @@ class Ui_MainWindow(object):
         self.label_3.setGeometry(QtCore.QRect(600, 580, 281, 71))
         self.label_3.setObjectName("label_3")
         self.status = QtWidgets.QLabel(self.frame)
-        self.status.setGeometry(QtCore.QRect(810, 830, 47, 13))
+        self.status.setGeometry(QtCore.QRect(820, 610, 47, 13))
         self.status.setText("")
         self.status.setObjectName("status")
         self.verticalLayout.addWidget(self.frame)
