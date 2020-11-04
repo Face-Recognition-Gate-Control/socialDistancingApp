@@ -3,6 +3,7 @@ import jetson.utils
 import numpy as np
 import cv2
 import torch
+from imutils.object_detection import non_max_suppression
 
 from core.detection.face_recognizer import FaceRecognizer
 
@@ -56,8 +57,8 @@ class Detect:
             predBox.append((bbox, area, centroid))
 
         res = [lis[0] for lis in predBox]
-        arr = np.array(res)
-        print(arr)
+        # arr = np.array(res)
+        print(res)
         # predBox[0:][0] = non_max_suppression(arr, probs=None, overlapThresh=0.65)
 
         return predBox
