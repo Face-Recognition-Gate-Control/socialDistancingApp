@@ -14,37 +14,32 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1280, 720)
+        MainWindow.resize(1200, 720)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.frame = QtWidgets.QFrame(self.centralwidget)
-        self.frame.setStyleSheet(
-            "QFrame {    \n"
-            "    background-color: rgb(38,42,54);    \n"
-            "    color: rgb(220, 220, 220);\n"
-            "    border-radius: 10px;\n"
-            "}"
-        )
+        self.frame.setStyleSheet("QFrame {    \n"
+"    background-color: rgb(38,42,54);    \n"
+"    color: rgb(220, 220, 220);\n"
+"    border-radius: 10px;\n"
+"}")
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.camera = QtWidgets.QPushButton(self.frame)
-        self.camera.setGeometry(QtCore.QRect(1610, 20, 75, 23))
+        self.camera.setGeometry(QtCore.QRect(1080, 20, 75, 23))
         self.camera.setObjectName("camera")
         self.cameraStream = QtWidgets.QLabel(self.frame)
-        self.cameraStream.setGeometry(QtCore.QRect(240, 60, 1280, 720))
+        self.cameraStream.setGeometry(QtCore.QRect(410, 80, 640, 480))
         self.cameraStream.setText("")
         self.cameraStream.setObjectName("cameraStream")
         self.label = QtWidgets.QLabel(self.frame)
-        self.label.setGeometry(QtCore.QRect(770, 0, 311, 71))
+        self.label.setGeometry(QtCore.QRect(570, 0, 311, 71))
         self.label.setObjectName("label")
-        self.radioButton = QtWidgets.QRadioButton(self.frame)
-        self.radioButton.setGeometry(QtCore.QRect(1480, 20, 82, 17))
-        self.radioButton.setObjectName("radioButton")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.frame)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(1520, 800, 211, 81))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(960, 580, 211, 81))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout_2.setContentsMargins(0, 9, 0, 0)
@@ -54,19 +49,15 @@ class Ui_MainWindow(object):
         font.setPointSize(14)
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
-        self.verticalLayout_2.addWidget(
-            self.label_2, 0, QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter
-        )
+        self.verticalLayout_2.addWidget(self.label_2, 0, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
         self.people = QtWidgets.QLabel(self.verticalLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(22)
         self.people.setFont(font)
         self.people.setObjectName("people")
-        self.verticalLayout_2.addWidget(
-            self.people, 0, QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter
-        )
+        self.verticalLayout_2.addWidget(self.people, 0, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
         self.verticalLayoutWidget_2 = QtWidgets.QWidget(self.frame)
-        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(100, 810, 184, 77))
+        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(340, 590, 190, 79))
         self.verticalLayoutWidget_2.setObjectName("verticalLayoutWidget_2")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_2)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -86,20 +77,12 @@ class Ui_MainWindow(object):
         self.distance.setObjectName("distance")
         self.verticalLayout_3.addWidget(self.distance)
         self.label_3 = QtWidgets.QLabel(self.frame)
-        self.label_3.setGeometry(QtCore.QRect(580, 800, 281, 71))
+        self.label_3.setGeometry(QtCore.QRect(600, 580, 281, 71))
         self.label_3.setObjectName("label_3")
         self.status = QtWidgets.QLabel(self.frame)
         self.status.setGeometry(QtCore.QRect(810, 830, 47, 13))
         self.status.setText("")
         self.status.setObjectName("status")
-        self.camera.raise_()
-        self.cameraStream.raise_()
-        self.radioButton.raise_()
-        self.label.raise_()
-        self.verticalLayoutWidget.raise_()
-        self.verticalLayoutWidget_2.raise_()
-        self.label_3.raise_()
-        self.status.raise_()
         self.verticalLayout.addWidget(self.frame)
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -110,30 +93,9 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.camera.setText(_translate("MainWindow", "start camera"))
-        self.label.setText(
-            _translate(
-                "MainWindow",
-                '<html><head/><body><p align="center"><span style=" font-size:22pt; font-weight:600;">Social Distancing</span></p></body></html>',
-            )
-        )
-        self.radioButton.setText(_translate("MainWindow", "Depth frame"))
+        self.label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:22pt; font-weight:600;\">Social Distancing</span></p></body></html>"))
         self.label_2.setText(_translate("MainWindow", "Number of people"))
         self.people.setText(_translate("MainWindow", "0"))
-        self.label_4.setText(
-            _translate(
-                "MainWindow",
-                '<html><head/><body><p><span style=" font-size:11pt; font-weight:600;">Minimum distance meter</span></p></body></html>',
-            )
-        )
-        self.distance_value.setText(
-            _translate(
-                "MainWindow",
-                '<html><head/><body><p><span style=" font-size:11pt;">1</span></p></body></html>',
-            )
-        )
-        self.label_3.setText(
-            _translate(
-                "MainWindow",
-                '<html><head/><body><p><span style=" font-size:16pt;">Number of violations</span></p></body></html>',
-            )
-        )
+        self.label_4.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:11pt; font-weight:600;\">Minimum distance meter</span></p></body></html>"))
+        self.distance_value.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:11pt;\">1</span></p></body></html>"))
+        self.label_3.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:16pt;\">Number of violations</span></p></body></html>"))

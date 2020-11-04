@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1920</width>
-    <height>1080</height>
+    <width>1200</width>
+    <height>720</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
       <widget class="QPushButton" name="camera">
        <property name="geometry">
         <rect>
-         <x>1610</x>
+         <x>1080</x>
          <y>20</y>
          <width>75</width>
          <height>23</height>
@@ -46,10 +46,10 @@
       <widget class="QLabel" name="cameraStream">
        <property name="geometry">
         <rect>
-         <x>323</x>
-         <y>70</y>
-         <width>1280</width>
-         <height>720</height>
+         <x>410</x>
+         <y>80</y>
+         <width>640</width>
+         <height>480</height>
         </rect>
        </property>
        <property name="text">
@@ -59,7 +59,7 @@
       <widget class="QLabel" name="label">
        <property name="geometry">
         <rect>
-         <x>770</x>
+         <x>570</x>
          <y>0</y>
          <width>311</width>
          <height>71</height>
@@ -69,24 +69,11 @@
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:22pt; font-weight:600;&quot;&gt;Social Distancing&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
-      <widget class="QRadioButton" name="radioButton">
-       <property name="geometry">
-        <rect>
-         <x>1480</x>
-         <y>20</y>
-         <width>82</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Depth frame</string>
-       </property>
-      </widget>
       <widget class="QWidget" name="verticalLayoutWidget">
        <property name="geometry">
         <rect>
-         <x>1520</x>
-         <y>800</y>
+         <x>960</x>
+         <y>580</y>
          <width>211</width>
          <height>81</height>
         </rect>
@@ -124,8 +111,8 @@
       <widget class="QWidget" name="verticalLayoutWidget_2">
        <property name="geometry">
         <rect>
-         <x>100</x>
-         <y>810</y>
+         <x>340</x>
+         <y>590</y>
          <width>190</width>
          <height>79</height>
         </rect>
@@ -169,8 +156,8 @@
       <widget class="QLabel" name="label_3">
        <property name="geometry">
         <rect>
-         <x>580</x>
-         <y>800</y>
+         <x>600</x>
+         <y>580</y>
          <width>281</width>
          <height>71</height>
         </rect>
@@ -192,14 +179,6 @@
         <string/>
        </property>
       </widget>
-      <zorder>camera</zorder>
-      <zorder>cameraStream</zorder>
-      <zorder>radioButton</zorder>
-      <zorder>label</zorder>
-      <zorder>verticalLayoutWidget</zorder>
-      <zorder>verticalLayoutWidget_2</zorder>
-      <zorder>label_3</zorder>
-      <zorder>status</zorder>
      </widget>
     </item>
    </layout>
