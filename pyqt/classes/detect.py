@@ -80,7 +80,7 @@ class Detect:
             # half height of bbox
             half = int(h / 2)
             cropped = color_image[sy : sy + half, sx:ex]
-            gray = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
+            print(cropped.shape)
             testimg = self.preProcess(cropped)
             faceBox = self.face_detector.predict_faces(cropped)
             sladdedImage = self.sladFaces2(faceBox, color_image, person)
