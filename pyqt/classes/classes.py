@@ -204,8 +204,9 @@ class Show(QThread):
         while True:
             with image_lock:
                 try:
+                    if color_image2:
 
-                    image = color_image2
+                        image = color_image2
 
                     p = self.rgbtoQimage(image)
                     self.signals.changePixmap.emit(p)
