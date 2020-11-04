@@ -5,7 +5,7 @@ import json
 class RealsenseCamera:
     def __init__(self):
         self.pipeline = rs.pipeline()
-        self.rsconfig = rs.config
+        self.rsconfig = rs.config()
         self.camera = False
         self.init()
 
