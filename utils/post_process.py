@@ -189,8 +189,8 @@ def euclideanDistance(points, min_dist, backup_points, image):
 
             drawLine(
                 image,
-                (backup_points[i]["x"], backup_points[i]["y"]),
-                (backup_points[j]["x"], backup_points[j]["y"]),
+                (backup_points[i][0], backup_points[i][1]),
+                (backup_points[j][0], backup_points[j][1]),
                 dist,
             )
 
