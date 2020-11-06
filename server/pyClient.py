@@ -3,6 +3,7 @@ import socket
 import time
 import pickle
 class ClientPy(Thread):
+
     def __init__(self,HOST,PORT,sendQueue):
         Thread.__init__(self)
         self.HOST = HOST
@@ -11,13 +12,13 @@ class ClientPy(Thread):
     
 
 
-    def run():
+    def run(self):
         
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((HOST,PORT))
 
         while True:
-            
+    
 	        data = self.queue.get()
             data = pickle.dumps(data)
             s.sendall(pickle.dumps(1))
