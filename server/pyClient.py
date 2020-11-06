@@ -7,6 +7,7 @@ class ClientPy(Thread):
         Thread.__init__(self)
         self.HOST = HOST
         self.PORT = PORT
+        self.queue = sendQueue
     
 
 
@@ -16,8 +17,8 @@ class ClientPy(Thread):
         s.connect((HOST,PORT))
 
         while True:
-
-	        data = sendQueue.get()
+            
+	        data = self.queue.get()
             data = pickle.dumps(data)
             s.sendall(pickle.dumps(1))
 	        s.sendall(data)
