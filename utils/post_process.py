@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 
 
-def drawBox(image, predicitons, min_dist):
+def drawBox(image, predicitons, min_dist, queue):
     violation = set()
 
     overlay = image.copy()
@@ -15,7 +15,7 @@ def drawBox(image, predicitons, min_dist):
     if len(predicitons[1]) >= 2:
 
         violation, image = euclideanDistance(
-            predicitons[1], min_dist, predicitons[2], output
+            predicitons[1], min_dist, predicitons[2], output, queue
         )
 
     for (i, (box)) in enumerate(predicitons[0]):
@@ -170,7 +170,7 @@ def meanDepth(frame, x, y):
     return dist
 
 
-def euclideanDistance(points, min_dist, backup_points, image):
+def euclideanDistance(points, min_dist, backup_points, image, queue):
 
     violate = set()
 
@@ -188,6 +188,8 @@ def euclideanDistance(points, min_dist, backup_points, image):
                     + (points[i]["y"] - points[j]["y"]) ** 2
                     + (points[i]["z"] - points[j]["z"]) ** 2
                 )
+
+                queue.put(({"x": points[i]["x"], "y": points[i]["y"]}))
 
             image = drawLine(
                 image,

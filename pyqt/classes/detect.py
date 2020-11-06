@@ -4,7 +4,6 @@ import numpy as np
 import cv2
 import torch
 from imutils.object_detection import non_max_suppression
-
 from core.detection.face_recognizer import FaceRecognizer
 
 

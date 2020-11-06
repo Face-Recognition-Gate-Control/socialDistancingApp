@@ -25,7 +25,7 @@ import time
 from pyqt.classes.detect import *
 from core.detection.realsenseCamera import RealsenseCamera
 
-# vfrom server.pyClient import ClientPy
+from server.pyClient import ClientPy
 from imutils.object_detection import non_max_suppression
 
 
@@ -39,6 +39,7 @@ preProcessed_frames = Queue(maxsize=0)
 client_data = Queue(maxsize=0)
 image_lock = Lock()
 color_image2 = []
+client_queue = Queue()
 
 
 class realsenseThread(QThread):
@@ -115,7 +116,10 @@ class realsenseThread(QThread):
     def startStreaming(self):
         global depthFrames, original_frames, color_image2
 
+       
         self.threadActive = True
+
+        client = ClientPy("10.0.0.50",8081,client_queue)
 
         print("starting stream")
         while self.threadActive:
@@ -150,7 +154,7 @@ class realsenseThread(QThread):
                 if pred_bbox:
 
                     color_image, violation = drawBox(
-                        color_image, pred_bbox, self.minDistance
+                        color_image, pred_bbox, self.minDistance,client_queue
                     )
 
                     self.signals.violation.emit(violation)

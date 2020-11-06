@@ -1,5 +1,7 @@
 from threading import Thread
 import socket
+import time
+import pickle
 class ClientPy(Thread):
     def __init__(self,HOST,PORT,sendQueue):
         Thread.__init__(self)
@@ -15,8 +17,13 @@ class ClientPy(Thread):
 
         while True:
 	        data = sendQueue.get()
-	        s.send(data)
-	        reply = s.recv(1024)
+            data = pickle.dumps(data)
+            s.sendall(pickle.dumps(1))
+	        s.sendall(data)
+            time.sleep(0.1)
 		    if reply == 'Terminate':
 			    break
 		    print reply
+        s.close()
+        
+
