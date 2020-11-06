@@ -16,14 +16,12 @@ class ClientPy(Thread):
         s.connect((HOST,PORT))
 
         while True:
+
 	        data = sendQueue.get()
             data = pickle.dumps(data)
             s.sendall(pickle.dumps(1))
 	        s.sendall(data)
             time.sleep(0.1)
-		    if reply == 'Terminate':
-			    break
-		    print reply
         s.close()
         
 
