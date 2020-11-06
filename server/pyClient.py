@@ -14,7 +14,7 @@ class ClientPy(threading.Thread):
     def run(self):
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((HOST, PORT))
+        s.connect((self.HOST, self.PORT))
 
         while True:
             if not self.queue.empty():
