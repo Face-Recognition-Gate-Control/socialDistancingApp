@@ -189,7 +189,12 @@ def euclideanDistance(points, min_dist, backup_points, image, queue):
                     + (points[i]["z"] - points[j]["z"]) ** 2
                 )
 
-                queue.put(({"x": math.floor(backup_points[i][0]), "y": math.floor(backup_points[i][1]})))
+                queue.put(
+                    {
+                        "x": math.floor(backup_points[i][0]),
+                        "y": math.floor(backup_points[i][1]),
+                    }
+                )
 
             image = drawLine(
                 image,
