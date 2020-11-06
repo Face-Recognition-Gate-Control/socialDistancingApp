@@ -116,10 +116,9 @@ class realsenseThread(QThread):
     def startStreaming(self):
         global depthFrames, original_frames, color_image2
 
-       
         self.threadActive = True
 
-        client = ClientPy("10.0.0.50",8081,client_queue)
+        client = ClientPy("10.0.0.50", 8081, client_queue)
 
         print("starting stream")
         while self.threadActive:
@@ -140,8 +139,8 @@ class realsenseThread(QThread):
 
                 predictions = self.detector.detectPeople(color_image)
 
-                if len(predictions) > 0:
-                    #faces = self.detector.detectFaces(predictions, color_image)
+                # if len(predictions) > 0:
+                # faces = self.detector.detectFaces(predictions, color_image)
 
                 numberOfPeople = 0
 
@@ -154,7 +153,7 @@ class realsenseThread(QThread):
                 if pred_bbox:
 
                     color_image, violation = drawBox(
-                        color_image, pred_bbox, self.minDistance,client_queue
+                        color_image, pred_bbox, self.minDistance, client_queue
                     )
 
                     self.signals.violation.emit(violation)
