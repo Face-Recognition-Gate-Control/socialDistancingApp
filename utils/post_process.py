@@ -14,7 +14,7 @@ def drawBox(image, predicitons, min_dist, queue):
 
     if len(predicitons[1]) >= 2:
 
-        violation, image = euclideanDistance(
+        violation = euclideanDistance(
             predicitons[1], min_dist, predicitons[2], output, queue
         )
 
@@ -196,20 +196,22 @@ def euclideanDistance(points, min_dist, backup_points, image, queue):
                     }
                 )
 
-            image = drawLine(
+           
+
+            if dist < min_dist:
+
+                drawLine(
                 image,
                 (int(backup_points[i][0]), int(backup_points[i][1])),
                 (int(backup_points[j][0]), int(backup_points[j][1])),
-                round(dist, 2),
-            )
-
-            if dist < min_dist:
+                round(dist, 2))
 
                 violate.add(i)
                 violate.add(j)
 
-    return violate, image
+    return violate
 
+def 
 
 def drawLine(image, pt1, pt2, dist):
     # font
