@@ -118,7 +118,7 @@ class realsenseThread(QThread):
 
         self.threadActive = True
 
-        client = ClientPy("10.0.0.50", 8081, self.commandQueue)
+        client = ClientPy("10.0.0.50", 8081, client_queue)
         client.setDaemon(True)
         client.start()
 
