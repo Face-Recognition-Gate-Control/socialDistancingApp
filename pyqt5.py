@@ -55,7 +55,7 @@ class MainWindow(QMainWindow):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_W:
-            print("up")
+            self.commandQueue.put("up")
 
     def playSound(self):
 
