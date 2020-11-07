@@ -155,7 +155,7 @@ class realsenseThread(QThread):
                 if pred_bbox:
 
                     color_image, violation = drawBox(
-                        color_image, pred_bbox, self.minDistance, client_queue
+                        color_image, pred_bbox, self.minDistance
                     )
 
                     self.signals.violation.emit(violation)
