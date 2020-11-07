@@ -21,6 +21,8 @@ class ClientPy(threading.Thread):
 
             except ConnectionRefusedError as e:
                 
+                
+                
 
             else:
                 print("connected")
@@ -28,10 +30,16 @@ class ClientPy(threading.Thread):
 
         while True:
 
-            if not self.queue.empty():
-                data = self.queue.get()
-                data = pickle.dumps(data)
-                s.sendall(pickle.dumps(1))
-                s.sendall(data)
-                time.sleep(0.1)
-        s.close()
+            try:
+
+                if not self.queue.empty():
+                    data = self.queue.get()
+                    data = pickle.dumps(data)
+                    s.sendall(pickle.dumps(1))
+                    s.sendall(data)
+                    time.sleep(0.1)
+            
+            except Exception as e:
+                print(e)
+
+            s.close()
