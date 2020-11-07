@@ -45,8 +45,8 @@ class MainWindow(QMainWindow):
         # self.ui.radioButton.toggled.connect(lambda: self.btnstate(self.ui.radioButton))
         self.threadpool = QThreadPool()
         self.violations = 0
-
-        self.image = realsenseThread(self.signals)
+        self.commandQueue = Queue()
+        self.image = realsenseThread(self.signals, self.commandQueue)
         self.image.signals.people.connect(self.setValue)
         self.image.signals.violation.connect(self.violation)
         self.showImage = Show(self.signals)
