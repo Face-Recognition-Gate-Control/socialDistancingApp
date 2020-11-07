@@ -196,22 +196,20 @@ def euclideanDistance(points, min_dist, backup_points, image, queue):
                     }
                 )
 
-           
-
             if dist < min_dist:
 
                 drawLine(
-                image,
-                (int(backup_points[i][0]), int(backup_points[i][1])),
-                (int(backup_points[j][0]), int(backup_points[j][1])),
-                round(dist, 2))
+                    image,
+                    (int(backup_points[i][0]), int(backup_points[i][1])),
+                    (int(backup_points[j][0]), int(backup_points[j][1])),
+                    round(dist, 2),
+                )
 
                 violate.add(i)
                 violate.add(j)
 
     return violate
 
-def 
 
 def drawLine(image, pt1, pt2, dist):
     # font
