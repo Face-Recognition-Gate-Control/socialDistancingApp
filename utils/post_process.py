@@ -168,7 +168,7 @@ def meanDepth(frame, x, y):
     return dist
 
 
-def euclideanDistance(points, min_dist, backup_points, image, queue):
+def euclideanDistance(points, min_dist, backup_points, image):
 
     violate = set()
 
