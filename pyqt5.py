@@ -54,7 +54,7 @@ class MainWindow(QMainWindow):
         self.showImage.start()
 
     def keyPressEvent(self, event):
-        print(event)
+        print("key pressed")
 
     def playSound(self):
 
