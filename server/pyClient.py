@@ -32,9 +32,8 @@ class ClientPy(threading.Thread):
 
                 if not self.queue.empty():
                     data = self.queue.get()
-                    print(data)
-
-                    # s.sendall(data.encode())
+                    data = str(data)
+                    s.sendall(data.encode())
 
             except Exception as e:
                 print(e)
