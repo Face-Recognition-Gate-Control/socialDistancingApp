@@ -20,9 +20,10 @@ class ClientPy(threading.Thread):
                 s.connect((self.HOST, self.PORT))
 
             except ConnectionRefusedError as e:
-                print(e)
+                
 
             else:
+                print("connected")
                 connected = True
 
         while True:
