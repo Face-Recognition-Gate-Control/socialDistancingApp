@@ -14,9 +14,7 @@ def drawBox(image, predicitons, min_dist):
 
     if len(predicitons[1]) >= 2:
 
-        violation = euclideanDistance(
-            predicitons[1], min_dist, predicitons[2], output, queue
-        )
+        violation = euclideanDistance(predicitons[1], min_dist, predicitons[2], output)
 
     for (i, (box)) in enumerate(predicitons[0]):
 
