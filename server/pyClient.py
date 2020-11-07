@@ -34,8 +34,8 @@ class ClientPy(threading.Thread):
                     data = self.queue.get()
 
                     s.sendall(pickle.dumps(1))
-                    s.sendall(data.encode())
                     time.sleep(0.1)
+                    s.sendall(data.encode())
 
             except Exception as e:
                 print(e)
