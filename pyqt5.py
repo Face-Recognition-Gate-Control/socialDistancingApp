@@ -46,20 +46,15 @@ class MainWindow(QMainWindow):
         self.threadpool = QThreadPool()
         self.violations = 0
 
-        self.ui.cameraStream.setMouseTracking(True)
-
         self.image = realsenseThread(self.signals)
         self.image.signals.people.connect(self.setValue)
         self.image.signals.violation.connect(self.violation)
         self.showImage = Show(self.signals)
         self.showImage.signals.changePixmap.connect(self.setImage)
-
         self.showImage.start()
 
-    def mouseMoveEvent(self, e):
-        x = e.x()
-        y = e.y()
-        print(x, y)
+    def keyPressEvent(self, event):
+        print(event)
 
     def playSound(self):
 
