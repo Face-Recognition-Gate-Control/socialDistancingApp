@@ -20,9 +20,7 @@ class ClientPy(threading.Thread):
                 s.connect((self.HOST, self.PORT))
 
             except ConnectionRefusedError as e:
-                
-                
-                
+                connected = False
 
             else:
                 print("connected")
@@ -38,7 +36,7 @@ class ClientPy(threading.Thread):
                     s.sendall(pickle.dumps(1))
                     s.sendall(data)
                     time.sleep(0.1)
-            
+
             except Exception as e:
                 print(e)
 
