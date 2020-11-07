@@ -38,4 +38,4 @@ class ClientPy(threading.Thread):
             except Exception as e:
                 print(e)
 
-            s.close()
+        s.close()
