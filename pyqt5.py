@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         self.threadpool = QThreadPool()
         self.violations = 0
         self.commandQueue = Queue()
-        self.image = realsenseThread(self.signals)
+        self.image = realsenseThread(self.signals, self.commandQueue)
         self.image.signals.people.connect(self.setValue)
         self.image.signals.violation.connect(self.violation)
         self.showImage = Show(self.signals)
@@ -56,6 +56,12 @@ class MainWindow(QMainWindow):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_W:
             self.commandQueue.put("up")
+        if event.key() == Qt.Key_S:
+            self.commandQueue.put("down")
+        if event.key() == Qt.Key_A:
+            self.commandQueue.put("left")
+        if event.key() == Qt.Key_D:
+            self.commandQueue.put("right")
 
     def playSound(self):
 

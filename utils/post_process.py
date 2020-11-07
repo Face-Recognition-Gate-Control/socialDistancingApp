@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 
 
-def drawBox(image, predicitons, min_dist, queue):
+def drawBox(image, predicitons, min_dist):
     violation = set()
 
     overlay = image.copy()
@@ -191,20 +191,20 @@ def euclideanDistance(points, min_dist, backup_points, image, queue):
 
             if dist < min_dist:
 
-                queue.put(
-                    {
-                        "x": (
-                            math.floor(backup_points[i][0])
-                            + math.floor(backup_points[j][0])
-                        )
-                        / 2,
-                        "y": (
-                            math.floor(backup_points[i][1])
-                            + math.floor(backup_points[j][1])
-                        )
-                        / 2,
-                    }
-                )
+                # queue.put(
+                #     {
+                #         "x": (
+                #             math.floor(backup_points[i][0])
+                #             + math.floor(backup_points[j][0])
+                #         )
+                #         / 2,
+                #         "y": (
+                #             math.floor(backup_points[i][1])
+                #             + math.floor(backup_points[j][1])
+                #         )
+                #         / 2,
+                #     }
+                # )
 
                 drawLine(
                     image,
