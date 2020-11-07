@@ -57,8 +57,9 @@ class MainWindow(QMainWindow):
         self.showImage.start()
 
     def mouseMoveEvent(self, e):
-
-        print(e)
+        x = e.x()
+        y = e.y()
+        print(x, y)
 
     def playSound(self):
 
