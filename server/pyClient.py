@@ -32,8 +32,7 @@ class ClientPy(threading.Thread):
 
                 if not self.queue.empty():
                     data = self.queue.get()
-                    print(data)
-                    data = pickle.dumps(data)
+                    data = data.encode()
                     s.sendall(bytes([4]))
                     s.sendall(data)
                     time.sleep(0.1)
