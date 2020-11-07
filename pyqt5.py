@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         self.threadpool = QThreadPool()
         self.violations = 0
         self.commandQueue = Queue()
-        self.image = realsenseThread(self.signals, self.commandQueue)
+        self.image = realsenseThread(self.signals)
         self.image.signals.people.connect(self.setValue)
         self.image.signals.violation.connect(self.violation)
         self.showImage = Show(self.signals)

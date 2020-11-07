@@ -43,7 +43,7 @@ client_queue = Queue()
 
 
 class realsenseThread(QThread):
-    def __init__(self, signals, commandQueue):
+    def __init__(self, signals):
         super(realsenseThread, self).__init__()
         self.signals = signals
         self.signals.frameSelection.connect(self.updateSignal)
@@ -54,7 +54,6 @@ class realsenseThread(QThread):
         self.detector = Detect()
         self.camera = RealsenseCamera()
         self.align = rs.align(rs.stream.color)
-        self.commandQueue = commandQueue
 
     def updateSignal(self, value):
         self.selection = value

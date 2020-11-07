@@ -31,6 +31,8 @@ def drawBox(image, predicitons, min_dist, queue):
         w = startX + (endX - startX) / 2
         h = startY + (endY - startY) / 2
 
+        queue.put({"x": int(w), "y": int(h)})
+
         cv2.circle(overlay, (int(w), int(h)), 10, color, -1)
         cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
 
@@ -189,12 +191,12 @@ def euclideanDistance(points, min_dist, backup_points, image, queue):
                     + (points[i]["z"] - points[j]["z"]) ** 2
                 )
 
-                queue.put(
-                    {
-                        "x": math.floor(backup_points[i][0]),
-                        "y": math.floor(backup_points[i][1]),
-                    }
-                )
+                # queue.put(
+                #     {
+                #         "x": math.floor(backup_points[i][0]),
+                #         "y": math.floor(backup_points[i][1]),
+                #     }
+                # )
 
             if dist < min_dist:
 
