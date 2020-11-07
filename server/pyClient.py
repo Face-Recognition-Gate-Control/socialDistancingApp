@@ -22,8 +22,7 @@ class ClientPy(threading.Thread):
             except ConnectionRefusedError as e:
                 print(e)
 
-            finally:
-
+            else:
                 connected = True
 
         while True:
