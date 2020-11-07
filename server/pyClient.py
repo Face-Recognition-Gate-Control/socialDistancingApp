@@ -12,11 +12,22 @@ class ClientPy(threading.Thread):
         self.queue = sendQueue
 
     def run(self):
+        connected = False
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((self.HOST, self.PORT))
+        while not connected:
+            try:
+                s.connect((self.HOST, self.PORT))
+
+            except ConnectionRefusedError as e:
+                print(e)
+
+            finally:
+
+                connected = True
 
         while True:
+
             if not self.queue.empty():
                 data = self.queue.get()
                 data = pickle.dumps(data)
