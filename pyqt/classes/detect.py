@@ -12,7 +12,7 @@ class Detect:
 
         self.face_detector = FaceRecognizer()
 
-        self.people_net = jetson.inference.detectNet("pednet", threshold=0.5)
+        self.people_net = jetson.inference.detectNet("pednet", threshold=0.7)
         # self.facenet = jetson.inference.detectNet("facenet", threshold=0.2)
 
     def preProcess(self, color_image):
