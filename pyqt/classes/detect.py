@@ -95,7 +95,7 @@ class Detect:
     def detectFaces(self, color_image):
         faces_boxes = self.face_detector.predict_faces(color_image)
 
-        for faces_boxe in faces_boxes:
+        for facebox in faces_boxes:
             (dsx, dsy, dex, dey) = facebox
             face = color_image[int(dsy) : int((dey)), int(dsx) : int((dex))]
             face = self.sladFace(face)
