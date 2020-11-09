@@ -12,7 +12,7 @@ class Detect:
 
         self.face_detector = FaceRecognizer()
 
-        self.people_net = jetson.inference.detectNet("pednet", threshold=0.7)
+        self.people_net = jetson.inference.detectNet("pednet", threshold=0.8)
         # self.facenet = jetson.inference.detectNet("facenet", threshold=0.2)
 
     def preProcess(self, color_image):
@@ -162,7 +162,7 @@ class Detect:
 
         return color_image
 
-    def sladFace(self, image, factor=3.0):
+    def sladFace(self, image, factor=2.0):
 
         # automatically determine the size of the blurring kernel based
         # on the spatial dimensions of the input image
