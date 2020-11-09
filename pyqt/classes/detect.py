@@ -93,6 +93,7 @@ class Detect:
         return sladdedImage
 
     def detectFaces(self, color_image):
+
         faces_boxes = self.face_detector.predict_faces(color_image)
 
         for facebox in faces_boxes:
