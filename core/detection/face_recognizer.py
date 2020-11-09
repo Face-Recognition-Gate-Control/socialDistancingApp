@@ -1,12 +1,12 @@
 # from .vision.ssd.mb_tiny_RFB_fd import create_Mb_Tiny_RFB_fd, create_Mb_Tiny_RFB_fd_predictor
 # from .vision.ssd.config.fd_config import define_img_size
 
-from vision.ssd.mb_tiny_RFB_fd import (
+from .vision.ssd.mb_tiny_RFB_fd import (
     create_Mb_Tiny_RFB_fd,
     create_Mb_Tiny_RFB_fd_predictor,
 )
 
-from vision.ssd.mb_tiny_fd import create_mb_tiny_fd, create_mb_tiny_fd_predictor
+from .vision.ssd.mb_tiny_fd import create_mb_tiny_fd, create_mb_tiny_fd_predictor
 from .vision.ssd.config.fd_config import define_img_size
 import torch
 
