@@ -94,13 +94,17 @@ class Detect:
 
     def detectFaces(self, color_image):
 
+        cv2.imwrite("full image", color_image)
+
         faces_boxes = self.face_detector.predict_faces(color_image)
 
         for facebox in faces_boxes:
             (dsx, dsy, dex, dey) = facebox
             face = color_image[int(dsy) : int((dey)), int(dsx) : int((dex))]
+            cv2.imwrite("face", face)
             face = self.sladFace(face)
             color_image[int(dsy) : int((dey)), int(dsx) : int((dex))] = face
+            cv2.imwrite("returned", color_image)
 
         return color_image
 
