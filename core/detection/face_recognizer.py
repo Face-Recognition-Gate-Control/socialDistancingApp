@@ -1,14 +1,17 @@
 # from .vision.ssd.mb_tiny_RFB_fd import create_Mb_Tiny_RFB_fd, create_Mb_Tiny_RFB_fd_predictor
 # from .vision.ssd.config.fd_config import define_img_size
-from .vision.ssd.mb_tiny_RFB_fd import (
+
+from vision.ssd.mb_tiny_RFB_fd import (
     create_Mb_Tiny_RFB_fd,
     create_Mb_Tiny_RFB_fd_predictor,
 )
+
+from vision.ssd.mb_tiny_fd import create_mb_tiny_fd, create_mb_tiny_fd_predictor
 from .vision.ssd.config.fd_config import define_img_size
 import torch
 
 
-PATH_TO_FACE_DETECTION_MODEL = "./models/RFB-640/face_model.pth"
+PATH_TO_FACE_DETECTION_MODEL = "./models/RFB-640/face_model_slim.pth"
 
 
 class FaceRecognizer:
@@ -49,7 +52,7 @@ class FaceRecognizer:
         is_testing = True  # evaluation mode
         num_classes = 2  # background and face
 
-        network = create_Mb_Tiny_RFB_fd(
+        network = create_mb_tiny_fd(
             num_classes=num_classes, is_test=is_testing, device=self.torch_device
         )
         network.load(self.model_path)
@@ -62,7 +65,7 @@ class FaceRecognizer:
         Returns:
             [Predictor]: [a wrapper for the buit nn.Module structure]
         """
-        return create_Mb_Tiny_RFB_fd_predictor(
+        return create_mb_tiny_fd_predictor(
             net=self.net,
             candidate_size=FaceRecognizer.CANDIDATE_SIZE,
             device=self.torch_device,
