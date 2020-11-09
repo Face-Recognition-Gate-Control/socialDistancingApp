@@ -99,7 +99,7 @@ class Detect:
             (dsx, dsy, dex, dey) = facebox
             face = color_image[int(dsy) : int((dey)), int(dsx) : int((dex))]
             face = self.sladFace(face)
-            color_image[int(sy) : int((sy + h)), int(sx) : int((sx + w))] = face
+            color_image[int(dsy) : int((dey)), int(dsx) : int((dex))] = face
 
         return color_image
 
