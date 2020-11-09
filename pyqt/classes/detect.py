@@ -17,7 +17,7 @@ class Detect:
 
     def preProcess(self, color_image):
 
-        bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=True)
+        bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=False)
         # convert from BGR -> RGB
         rgb_img = jetson.utils.cudaAllocMapped(
             width=bgr_img.width, height=bgr_img.height, format="rgb8"
