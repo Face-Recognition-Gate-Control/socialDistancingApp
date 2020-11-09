@@ -111,7 +111,7 @@ class MainWindow(QMainWindow):
                 self.camerastream = True
 
             else:
-                self.image.threadActive = False
+                self.image.stop()
 
                 self.camerastream = False
         except Exception as e:
