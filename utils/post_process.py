@@ -125,23 +125,12 @@ def get3d(
     depth_frame,
 ):
 
-    # align_to = rs.stream.color
-    # align = rs.align(align_to)
-
-    # # Align the depth frame to color frame
-    # aligned_frames = align.process(frames)
-    # color_intrin = depth_frame.profile.as_video_stream_profile().intrinsics
-    # # Get aligned frames
-    # aligned_depth_frame = aligned_frames.get_depth_frame()
-
     aligned_depth_intrin = depth_frame.profile.as_video_stream_profile().intrinsics
 
     dist = meanDepth(depth_frame, x, y)
 
     udist = depth_frame.get_distance(x, y)
 
-    # depth_pixel = [x, y]
-    # # In meters
     point = rs.rs2_deproject_pixel_to_point(aligned_depth_intrin, [x, y], dist)
     # dist_to_center = aligned_depth_frame.get_distance(x, y)
 
