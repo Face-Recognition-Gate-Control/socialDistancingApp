@@ -84,14 +84,15 @@ class Detect:
             # faceBox = self.face_detector.predict_faces(cropped)
             # sladdedImage = self.sladFaces2(faceBox, color_image, person)
 
-            face = self.facenet.Detect(testimg)
-            bbox = self.getBBox(face)
+            # face = self.facenet.Detect(testimg)
+            # bbox = self.getBBox(face)
 
-            sladdedImage = self.sladFaces(bbox, color_image, person)
+            # sladdedImage = self.sladFaces(bbox, color_image, person)
+            sladdedImage = self.anonymizeFace_general(color_image, person, area)
 
         return sladdedImage
 
-    def sladFaces2(self, faceBoxes, color_image, personBox):
+    def sladFacesRbf(self, faceBoxes, color_image, personBox):
         (sx, sy, ex, ey) = personBox
         faceBoxes = faceBoxes.tolist()
         for facebox in faceBoxes:
@@ -112,9 +113,19 @@ class Detect:
 
         return color_image
 
-    def sladFaces(self, bbox, color_image, personBox):
+    def anonymizeFace_general(self, color_image, personBox, area):
         (sx, sy, ex, ey) = personBox
-        for roi, area, _ in bbox:
+        (h, w) = area
+
+        face = color_image[int(sy) : int(w) / 4, int(sx) : int(sx + w)]
+        face = self.sladFace(face)
+        color_image[int(sy) : int(w) / 4, int(sx) : int(sx + w)] = face
+
+        return color_image
+
+    def sladFaces(self, faceBox, color_image, personBox):
+        (sx, sy, ex, ey) = personBox
+        for roi, area, _ in faceBox:
             (h, w) = area
 
             (dsx, dsy, dex, dey) = roi
