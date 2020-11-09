@@ -166,6 +166,7 @@ class realsenseThread(QThread):
                 print("Error is :", str(e))
 
         self.camera.stop()
+        self.quit()
 
     def stop(self):
         self.threadActive = False
@@ -214,6 +215,7 @@ class Show(QThread):
 
                 except Exception as e:
                     print(str(e))
+        self.quit()
 
 
 class WorkerSignals(QObject):
