@@ -10,7 +10,7 @@ from core.detection.face_recognizer import FaceRecognizer
 class Detect:
     def __init__(self):
 
-        # self.face_detector = FaceRecognizer()
+        self.face_detector = FaceRecognizer()
 
         self.people_net = jetson.inference.detectNet("ssd-mobilenet-v2", threshold=0.5)
         self.facenet = jetson.inference.detectNet("facenet", threshold=0.2)
@@ -68,7 +68,7 @@ class Detect:
 
         return predBox
 
-    def detectFaces(self, peoples, color_image):
+    def detectFaces2(self, peoples, color_image):
         face_detections = []
 
         sladdedImage = color_image
@@ -91,6 +91,19 @@ class Detect:
             sladdedImage = self.anonymizeFace_general(color_image, person, area)
 
         return sladdedImage
+
+    
+    def detectFaces(self,color_image)
+        faces_boxes = self.face_detector.predict(color_image)
+        
+        for faces_boxe in faces_boxes:
+            (dsx, dsy, dex, dey) = facebox
+            face = color_image[int(dsy) : int((dey)), int(dsx) : int((dex))]
+            face = self.sladFace(face)
+            color_image[int(sy) : int((sy + h)), int(sx) : int((sx + w))] = face
+        
+        return color_image
+
 
     def sladFacesRbf(self, faceBoxes, color_image, personBox):
         (sx, sy, ex, ey) = personBox
