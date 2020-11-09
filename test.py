@@ -7,7 +7,7 @@ import numpy as np
 
 def rgbtocuda(color_image):
 
-    bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=True)
+    bgr_img = jetson.utils.cudaFromNumpy(color_image, isBGR=False)
     # convert from BGR -> RGB
     rgb_img = jetson.utils.cudaAllocMapped(
         width=bgr_img.width, height=bgr_img.height, format="rgb8"
@@ -70,7 +70,7 @@ def startApp():
 # check to see if this is the main thread of execution
 if __name__ == "__main__":
 
-    net = jetson.inference.detectNet("pednet", threshold=0.3)
+    net = jetson.inference.detectNet("pednet", threshold=0.75)
     camera = jetson.utils.videoSource("csi://0")  # '/dev/video0' for V4L2
     display = jetson.utils.videoOutput("display://0")  # 'my_video.mp4' for file
 
