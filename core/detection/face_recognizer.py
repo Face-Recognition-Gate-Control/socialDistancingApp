@@ -18,8 +18,8 @@ class FaceRecognizer:
     """
 
     INPUT_IMAGE_SIZE = 640  # default cv2-size
-    NUMB_OF_RESULTS = 1  # keep 'x' results
-    PROB_THRESHOLD = 0.8  # sens 0 - 1 (1=highest)
+    NUMB_OF_RESULTS = 20  # keep 'x' results
+    PROB_THRESHOLD = 0.6  # sens 0 - 1 (1=highest)
     # only consider the candidates with the highest scores.
     CANDIDATE_SIZE = 200
 
@@ -33,6 +33,7 @@ class FaceRecognizer:
         """
         self.model_path = PATH_TO_FACE_DETECTION_MODEL
         self.torch_device = self._create_and_get_device()
+        print(self.torch_device)
         self._set_network_image_size(image_size=default_size)
         self.net = self._get_network_structure()
         self.predictor = self._get_predictor()
