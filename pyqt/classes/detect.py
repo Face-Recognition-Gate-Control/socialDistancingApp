@@ -92,6 +92,12 @@ class Detect:
 
         return sladdedImage
 
+    def decetesFaces_facenet(self, color_image):
+        img = self.preProcess(color_image)
+        faceboxes = self.facenet.Detect(img)
+        bboxes = self.getBBox(faceboxes)
+        sladdedImage = self.sladface
+
     def detectFaces(self, color_image):
 
         faces_boxes = self.face_detector.predict_faces(color_image)
