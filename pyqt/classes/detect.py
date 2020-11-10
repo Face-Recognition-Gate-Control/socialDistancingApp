@@ -116,7 +116,7 @@ class Detect:
                 mask = cv2.resize(face, (224, 224))
                 mask = img_to_array(mask)
                 mask = preprocess_input(mask)
-                preds = self.maskNet.predict(masks)
+                preds = self.maskNet.predict(mask)
                 print(preds)
                 masks.append(mask)
                 face = self.sladFace(face)
