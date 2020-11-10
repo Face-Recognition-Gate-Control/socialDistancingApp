@@ -115,7 +115,7 @@ class Detect:
                 mask = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
                 mask = cv2.resize(face, (224, 224))
                 mask = img_to_array(mask)
-                mask = preprocess_input(mask)
+                # mask = preprocess_input(mask)
                 preds = self.maskNet.predict(mask)
                 print(preds)
                 masks.append(mask)
