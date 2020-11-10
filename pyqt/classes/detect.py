@@ -122,11 +122,7 @@ class Detect:
                 face = self.sladFace(face)
                 color_image[int(dsy) : int((dey)), int(dsx) : int((dex))] = face
 
-            #masks = np.array(masks, dtype="float32")
-           
-            
-            
-                 
+            # masks = np.array(masks, dtype="float32")
 
         return color_image
 
@@ -201,4 +197,4 @@ class Detect:
 
         else:
 
-            return cv2.GaussianBlur(image, (kW, kH), 0)fd
+            return cv2.GaussianBlur(image, (kW, kH), 0)
