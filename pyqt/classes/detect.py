@@ -105,7 +105,7 @@ class Detect:
         faces_boxes = self.face_detector.predict_faces(color_image)
         if len(faces_boxes) > 0:
 
-            faces = np.array(faces, dtype="float32")
+            faces = np.array(faces_boxes, dtype="float32")
             preds = maskNet.predict(faces, batch_size=32)
             print(preds)
 
