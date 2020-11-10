@@ -102,7 +102,7 @@ class Detect:
         bboxes = self.getBBox(faceboxes)
         sladdedImage = self.sladface
 
-    fedef detect_face_mask(self, face_crops, face_boxes, color_image):
+    def detect_face_mask(self, face_crops, face_boxes, color_image):
         if len(face_crops) > 0:
 
             faces = []
