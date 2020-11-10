@@ -5,12 +5,14 @@ import cv2
 import torch
 from imutils.object_detection import non_max_suppression
 from core.detection.face_recognizer import FaceRecognizer
+from tensorflow.keras.models import load_model
 
 
 class Detect:
     def __init__(self):
 
         self.face_detector = FaceRecognizer()
+        self.maskNet = load_model("mask_detector.model")
 
         self.people_net = jetson.inference.detectNet("pednet", threshold=0.8)
         # self.facenet = jetson.inference.detectNet("facenet", threshold=0.2)
