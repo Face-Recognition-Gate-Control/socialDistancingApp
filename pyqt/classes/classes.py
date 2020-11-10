@@ -162,10 +162,14 @@ class realsenseThread(QThread):
                     )
 
                     self.signals.violation.emit(violation)
-                with image_lock:
-                    fps.update()
 
-                    color_image2 = color_image
+                p = self.rgbtoQimage(color_image)
+
+                self.signals.changePixmap.emit(p)
+                # with image_lock:
+                #     fps.update()
+
+                #     color_image2 = color_image
 
             except Exception as e:
                 print("Error is :", str(e))
