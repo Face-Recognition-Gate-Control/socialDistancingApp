@@ -6,6 +6,8 @@ import torch
 from imutils.object_detection import non_max_suppression
 from core.detection.face_recognizer import FaceRecognizer
 from tensorflow.keras.models import load_model
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
+from tensorflow.keras.preprocessing.image import img_to_array
 
 
 class Detect:
@@ -105,16 +107,22 @@ class Detect:
         faces_boxes = self.face_detector.predict_faces(color_image)
         if len(faces_boxes) > 0:
 
-            faces = np.array(faces_boxes, dtype="float32")
-            preds = self.maskNet.predict(faces, batch_size=32)
-            print(preds)
+            masks = []
 
             for facebox in faces_boxes:
                 (dsx, dsy, dex, dey) = facebox
                 face = color_image[int(dsy) : int((dey)), int(dsx) : int((dex))]
-
+                mask = cv2.cvtColor(face, cv2.Color_BGR2RGB)
+                mask = cv2.resize(face, (224, 224))
+                mask = img_to_array(mask)
+                mask = preprocess_input(mask)
+                masks.append(mask)
                 face = self.sladFace(face)
                 color_image[int(dsy) : int((dey)), int(dsx) : int((dex))] = face
+
+            masks = np.array(masks, dtype="float32")
+            preds = self.maskNet.predict(masks, batch_size=32)
+            print(preds)
 
         return color_image
 
