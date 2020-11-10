@@ -26,7 +26,7 @@ class ClientPy(threading.Thread):
                 print("connected")
                 connected = True
 
-        while True:
+        while connected:
 
             try:
 
@@ -39,5 +39,6 @@ class ClientPy(threading.Thread):
 
             except Exception as e:
                 print(e)
+                connected = False
 
         s.close()
