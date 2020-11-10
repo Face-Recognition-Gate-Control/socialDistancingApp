@@ -49,7 +49,7 @@ class FaceRecognizer:
             [nn.Module]: [neural network layer structure]
         """
         # TODO: move to somewhere else
-        is_testing = False  # evaluation mode
+        is_testing = True  # evaluation mode
         num_classes = 2  # background and face
 
         network = create_mb_tiny_fd(
