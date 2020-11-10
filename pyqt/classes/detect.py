@@ -137,7 +137,7 @@ class Detect:
                 face = self.sladFace(faceCrop)
                 color_image[int(dsy) : int((dey)), int(dsx) : int((dex))] = face
 
-        return (faceCrops, face_boxes)
+        return (faceCrops, faces_boxes)
 
     def sladFacesRbf(self, faceBoxes, color_image, personBox):
         (sx, sy, ex, ey) = personBox
