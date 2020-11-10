@@ -192,7 +192,6 @@ class Detect:
                 kH -= 1
             # apply a Gaussian blur to the input image using our computed
             # kernel size
-            return image
         except Exception as e:
             print(e)
 
