@@ -102,7 +102,7 @@ class Detect:
         bboxes = self.getBBox(faceboxes)
         sladdedImage = self.sladface
 
-    def detect_face_mask(self, face_crops, face_boxes, color_image):
+    fedef detect_face_mask(self, face_crops, face_boxes, color_image):
         if len(face_crops) > 0:
 
             faces = []
@@ -125,11 +125,10 @@ class Detect:
                 cv2.rectangle(color_image, (startX, startY), (endX, endY), color, 2)
 
     def detectFaces(self, color_image):
-
+        faceCrops = []
         faces_boxes = self.face_detector.predict_faces(color_image)
         if len(faces_boxes) > 0:
 
-            faceCrops = []
             for facebox in faces_boxes:
                 (dsx, dsy, dex, dey) = facebox
                 crop = color_image[int(dsy) : int((dey)), int(dsx) : int((dex))]
