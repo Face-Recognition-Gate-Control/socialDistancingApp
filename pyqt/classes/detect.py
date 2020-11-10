@@ -106,7 +106,7 @@ class Detect:
         if len(faces_boxes) > 0:
 
             faces = np.array(faces_boxes, dtype="float32")
-            preds = maskNet.predict(faces, batch_size=32)
+            preds = self.maskNet.predict(faces, batch_size=32)
             print(preds)
 
             for facebox in faces_boxes:
