@@ -12,7 +12,7 @@ class Detect:
     def __init__(self):
 
         self.face_detector = FaceRecognizer()
-        self.maskNet = load_model("classes/mask_detector.model")
+        self.maskNet = load_model("pyqt/classes/mask_detector.model")
 
         self.people_net = jetson.inference.detectNet("pednet", threshold=0.8)
         # self.facenet = jetson.inference.detectNet("facenet", threshold=0.2)
