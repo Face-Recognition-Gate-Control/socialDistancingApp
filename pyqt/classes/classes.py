@@ -141,8 +141,9 @@ class realsenseThread(QThread):
 
                 predictions = self.detector.detectPeople(color_image)
 
-                self.detector.detectFaces(color_image)
+                faces = self.detector.detectFaces(color_image)
 
+                self.detector.detect_face_mask(faces, color_image)
                 numberOfPeople = 0
 
                 numberOfPeople = len(predictions)
@@ -198,7 +199,7 @@ class Show(QThread):
 
     @pyqtSlot()
     def run(self):
-        global processed_frames, depthFrames, color_image2, image_lock
+        global processed_frames, color_image2, image_lock
         print("starting show thread")
         while True:
 

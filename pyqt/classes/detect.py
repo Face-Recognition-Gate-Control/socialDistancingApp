@@ -102,6 +102,23 @@ class Detect:
         bboxes = self.getBBox(faceboxes)
         sladdedImage = self.sladface
 
+    def detect_face_mask():
+        if len(faces_boxes) > 0:
+
+            faces = []
+
+            for facebox in faces_boxes:
+                (dsx, dsy, dex, dey) = facebox
+                face = color_image[int(dsy) : int((dey)), int(dsx) : int((dex))]
+                face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
+                # face = cv2.resize(face, (224, 224))
+                face = img_to_array(face)
+                face = preprocess_input(face)
+                faces.append(face)
+
+            masks = np.array(masks, dtype="float32")
+            preds = self.maskNet.predict(masks, batch_size=32)
+
     def detectFaces(self, color_image):
 
         faces_boxes = self.face_detector.predict_faces(color_image)
@@ -116,14 +133,14 @@ class Detect:
                 mask = cv2.resize(face, (224, 224))
                 mask = img_to_array(mask)
                 mask = preprocess_input(mask)
-                mask = np.array(mask, dtype="float32")
-                preds = self.maskNet.predict(mask, batch_size=32)
-                print(preds)
                 masks.append(mask)
                 face = self.sladFace(face)
                 color_image[int(dsy) : int((dey)), int(dsx) : int((dex))] = face
 
-        return color_image
+            masks = np.array(masks, dtype="float32")
+            preds = self.maskNet.predict(masks, batch_size=32)
+
+        return faces_boxes
 
     def sladFacesRbf(self, faceBoxes, color_image, personBox):
         (sx, sy, ex, ey) = personBox
