@@ -102,7 +102,7 @@ class Detect:
         bboxes = self.getBBox(faceboxes)
         sladdedImage = self.sladface
 
-    def detect_face_mask(self, faces, color_image):
+    def detect_face_mask(self, faces_boxes, color_image):
         if len(faces_boxes) > 0:
 
             faces = []
@@ -116,7 +116,7 @@ class Detect:
                 face = preprocess_input(face)
                 faces.append(face)
 
-            masks = np.array(masks, dtype="float32")
+            masks = np.array(faces, dtype="float32")
             preds = self.maskNet.predict(masks, batch_size=32)
             print(preds)
 
