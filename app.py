@@ -48,9 +48,10 @@ class MainWindow(QMainWindow):
         self.image = realsenseThread(self.signals, self.commandQueue)
         self.image.signals.people.connect(self.setValue)
         self.image.signals.violation.connect(self.violation)
-        self.showImage = Show(self.signals)
-        self.showImage.signals.changePixmap.connect(self.setImage)
-        self.showImage.start()
+        self.image.signals.changePixmap.connect(self.setImage)
+        # self.showImage = Show(self.signals)
+        # self.showImage.signals.changePixmap.connect(self.setImage)
+        # self.showImage.start()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_W:
