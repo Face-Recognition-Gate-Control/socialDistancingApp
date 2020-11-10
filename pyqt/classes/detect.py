@@ -122,7 +122,6 @@ class Detect:
                 (mask, withoutMask) = pred
                 label = "Mask" if mask > withoutMask else "No Mask"
 		        color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
-
                 cv2.rectangle(color_image, (startX, startY), (endX, endY), color, 2)
                 
 
