@@ -24,7 +24,7 @@ class FaceRecognizer:
     NUMB_OF_RESULTS = 1  # keep 'x' results
     PROB_THRESHOLD = 0.8  # sens 0 - 1 (1=highest)
     # only consider the candidates with the highest scores.
-    CANDIDATE_SIZE = 100
+    CANDIDATE_SIZE = 20
 
     def __init__(self, default_size=640):
         """Initializes an instance of the face-prediction model with
@@ -49,7 +49,7 @@ class FaceRecognizer:
             [nn.Module]: [neural network layer structure]
         """
         # TODO: move to somewhere else
-        is_testing = True  # evaluation mode
+        is_testing = False  # evaluation mode
         num_classes = 2  # background and face
 
         network = create_mb_tiny_fd(
