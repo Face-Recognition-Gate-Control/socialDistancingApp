@@ -20,7 +20,6 @@ from PyQt5.QtCore import (
     QTimer,
 )
 from PyQt5.QtGui import QImage, QPixmap, QColor
-from pyqt.createGUI import create
 import time
 import threading, queue
 from multiprocessing import Queue
