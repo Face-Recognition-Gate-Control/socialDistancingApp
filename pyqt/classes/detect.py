@@ -117,7 +117,7 @@ class Detect:
                 mask = img_to_array(mask)
                 mask = preprocess_input(mask)
                 mask = np.array(mask, dtype="float32")
-                preds = self.maskNet.predict(mask)
+                preds = self.maskNet.predict(mask, batch_size=32)
                 print(preds)
                 masks.append(mask)
                 face = self.sladFace(face)
