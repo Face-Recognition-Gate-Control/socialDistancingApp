@@ -102,7 +102,7 @@ class Detect:
         bboxes = self.getBBox(faceboxes)
         sladdedImage = self.sladface
 
-    def detect_face_mask(self, face_crops,face_boxes ,color_image):
+    def detect_face_mask(self, face_crops, face_boxes, color_image):
         if len(face_crops) > 0:
 
             faces = []
@@ -117,15 +117,12 @@ class Detect:
             masks = np.array(faces, dtype="float32")
             preds = self.maskNet.predict(masks, batch_size=32)
 
-            for pred,face in zip(preds,face_boxes):
+            for pred, face in zip(preds, face_boxes):
                 (startX, startY, endX, endY) = box
                 (mask, withoutMask) = pred
                 label = "Mask" if mask > withoutMask else "No Mask"
-		        color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
+                color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
                 cv2.rectangle(color_image, (startX, startY), (endX, endY), color, 2)
-                
-
-            
 
     def detectFaces(self, color_image):
 
@@ -140,7 +137,7 @@ class Detect:
                 face = self.sladFace(faceCrop)
                 color_image[int(dsy) : int((dey)), int(dsx) : int((dex))] = face
 
-        return (faceCrops,face_boxes)
+        return (faceCrops, face_boxes)
 
     def sladFacesRbf(self, faceBoxes, color_image, personBox):
         (sx, sy, ex, ey) = personBox
