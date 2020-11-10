@@ -169,6 +169,7 @@ class realsenseThread(QThread):
 
             except Exception as e:
                 print("Error is :", str(e))
+                self.quit()
 
         fps.stop()
         print("[INFO] elasped time: {:.2f}".format(fps.elapsed()))
