@@ -118,7 +118,7 @@ class Detect:
             preds = self.maskNet.predict(masks, batch_size=32)
 
             for pred, face in zip(preds, face_boxes):
-                (startX, startY, endX, endY) = box
+                (startX, startY, endX, endY) = face
                 (mask, withoutMask) = pred
                 label = "Mask" if mask > withoutMask else "No Mask"
                 color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
