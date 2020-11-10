@@ -20,6 +20,7 @@ from multiprocessing import Queue
 from core.detection.detectCaffe import detect_people
 from utils.post_process import *
 import imutils
+from imutils.video import FPS
 import simpleaudio as sa
 import time
 from pyqt.classes.detect import *
@@ -122,6 +123,8 @@ class realsenseThread(QThread):
         client.setDaemon(True)
         client.start()
 
+        fps = FPS().start()
+
         print("starting stream")
         while self.threadActive:
 
@@ -160,12 +163,16 @@ class realsenseThread(QThread):
 
                     self.signals.violation.emit(violation)
                 with image_lock:
+                    fps.update()
 
                     color_image2 = color_image
 
             except Exception as e:
                 print("Error is :", str(e))
 
+        fps.stop()
+        print("[INFO] elasped time: {:.2f}".format(fps.elapsed()))
+        print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
         self.camera.stop()
         self.quit()
 
