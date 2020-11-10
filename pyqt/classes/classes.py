@@ -166,6 +166,7 @@ class realsenseThread(QThread):
                 p = self.rgbtoQimage(color_image)
 
                 self.signals.changePixmap.emit(p)
+                fps.update()
                 # with image_lock:
                 #     fps.update()
 
