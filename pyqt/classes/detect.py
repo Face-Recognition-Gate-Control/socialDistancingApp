@@ -132,9 +132,9 @@ class Detect:
             faceCrops = []
             for facebox in faces_boxes:
                 (dsx, dsy, dex, dey) = facebox
-                faceCrop = color_image[int(dsy) : int((dey)), int(dsx) : int((dex))]
-                faceCrops.append(faceCrop)
-                face = self.sladFace(faceCrop)
+                crop = color_image[int(dsy) : int((dey)), int(dsx) : int((dex))]
+                faceCrops.append(crop)
+                face = self.sladFace(crop)
                 color_image[int(dsy) : int((dey)), int(dsx) : int((dex))] = face
 
         return (faceCrops, faces_boxes)
