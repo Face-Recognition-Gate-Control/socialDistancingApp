@@ -115,14 +115,13 @@ class Detect:
                 mask = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
                 mask = cv2.resize(face, (224, 224))
                 mask = img_to_array(mask)
-                # mask = preprocess_input(mask)
+                mask = preprocess_input(mask)
+                mask = np.array(mask, dtype="float32")
                 preds = self.maskNet.predict(mask)
                 print(preds)
                 masks.append(mask)
                 face = self.sladFace(face)
                 color_image[int(dsy) : int((dey)), int(dsx) : int((dex))] = face
-
-            # masks = np.array(masks, dtype="float32")
 
         return color_image
 
