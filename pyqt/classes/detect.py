@@ -116,13 +116,17 @@ class Detect:
                 mask = cv2.resize(face, (224, 224))
                 mask = img_to_array(mask)
                 mask = preprocess_input(mask)
+                preds = self.maskNet.predict(masks)
+                print(preds)
                 masks.append(mask)
                 face = self.sladFace(face)
                 color_image[int(dsy) : int((dey)), int(dsx) : int((dex))] = face
 
-            masks = np.array(masks, dtype="float32")
-            preds = self.maskNet.predict(masks, batch_size=32)
-            print(preds)
+            #masks = np.array(masks, dtype="float32")
+           
+            
+            
+                 
 
         return color_image
 
@@ -197,4 +201,4 @@ class Detect:
 
         else:
 
-            return cv2.GaussianBlur(image, (kW, kH), 0)
+            return cv2.GaussianBlur(image, (kW, kH), 0)fd
