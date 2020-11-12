@@ -9,16 +9,6 @@ from PyQt5.QtWidgets import (
     QMainWindow,
     QGraphicsDropShadowEffect,
 )
-from PyQt5.QtCore import (
-    QThread,
-    Qt,
-    pyqtSignal,
-    pyqtSlot,
-    QRunnable,
-    QThreadPool,
-    QObject,
-    QTimer,
-)
 from PyQt5.QtGui import QImage, QPixmap, QColor
 import time
 import threading, queue
