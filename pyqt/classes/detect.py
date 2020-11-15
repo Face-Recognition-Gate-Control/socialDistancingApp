@@ -108,21 +108,24 @@ class Detect:
             faces = []
 
             for face in face_crops:
-                face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
-                face = cv2.resize(face, (224, 224))
-                face = img_to_array(face)
-                face = preprocess_input(face)
-                faces.append(face)
+                if not face.size == 0:
+                    face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
+                    face = cv2.resize(face, (224, 224))
+                    face = img_to_array(face)
+                    face = preprocess_input(face)
+                    faces.append(face)
 
-            masks = np.array(faces, dtype="float32")
-            preds = self.maskNet.predict(masks, batch_size=32)
+            if len(faces) > 0:
 
-            for pred, face in zip(preds, face_boxes):
-                (startX, startY, endX, endY) = face
-                (mask, withoutMask) = pred
-                label = "Mask" if mask > withoutMask else "No Mask"
-                color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
-                cv2.rectangle(color_image, (startX, startY), (endX, endY), color, 2)
+                masks = np.array(faces, dtype="float32")
+                preds = self.maskNet.predict(masks, batch_size=32)
+
+                for pred, face in zip(preds, face_boxes):
+                    (startX, startY, endX, endY) = face
+                    (mask, withoutMask) = pred
+                    label = "Mask" if mask > withoutMask else "No Mask"
+                    color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
+                    cv2.rectangle(color_image, (startX, startY), (endX, endY), color, 2)
 
     def detectFaces(self, color_image):
         faceCrops = []

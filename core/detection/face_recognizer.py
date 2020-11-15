@@ -95,8 +95,8 @@ class FaceRecognizer:
         Returns:
             [str]: [the name of allocated device]
         """
-        # if torch.cuda.is_available():
-        #     return torch.device("cuda:0")
+        if torch.cuda.is_available():
+            return torch.device("cuda:0")
         return torch.device("cpu")
 
     @staticmethod
