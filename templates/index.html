@@ -1,0 +1,56 @@
+{% extends "layout.html" %} {% block content %}
+
+<div id="app">
+  <div class="videoframe">
+    <div><img src="{{ url_for('frame_streamer') }}" alt=/></div>
+
+    <div><img src="{{ url_for('frame_streamer2') }}" alt=/></div>
+  </div>
+</div>
+
+<button @click="sendMessage('hallo')">click</button>
+
+<script>
+  new Vue({
+    el: "#app",
+    data: {
+      title: "",
+      content: "",
+      ws: null,
+    },
+    created: function () {
+      console.log("Starting connection to WebSocket Server");
+      this.ws = new WebSocket("ws://localhost:8000/ws");
+
+      this.ws.onmessage = function (event) {};
+
+      this.ws.onopen = function (event) {
+        console.log(event);
+        console.log("Successfully connected to the echo websocket server...");
+      };
+    },
+    methods: {
+      addText() {
+        return axios
+          .post(
+            "/add",
+            {
+              content: this.content,
+            },
+            {
+              headers: {
+                "Content-type": "application/json",
+              },
+            }
+          )
+          .then((response) => {
+            console.log("content: " + this.content);
+          });
+      },
+      sendMessage() {
+        this.ws.send("hello");
+      },
+    },
+  });
+</script>
+{% endblock %}

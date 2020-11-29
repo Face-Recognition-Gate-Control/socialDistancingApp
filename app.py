@@ -1,4 +1,14 @@
-import sys
+import sys  # needed for `argv` tranfer to `QApplication`
+from PyQt5 import QtWidgets
+from Gui.design.ui_main import Ui_MainWindow
+from src.utils.realsense import RealsenseCamera
+from Gui.design.ui_splash_screen import Ui_SplashScreen
+from PyQt5.QtGui import QImage, QPixmap, QColor
+from Gui.classes.classes import WorkerSignals,Worker,Show
+from src.threads.socialDistancing import SocialDistancing
+from src.threads.maskDetection import MaskDetection
+from multiprocessing import Queue
+from src.detect.detect import Detect
 from PyQt5.QtWidgets import (
     QWidget,
     QLabel,
@@ -9,39 +19,82 @@ from PyQt5.QtWidgets import (
     QMainWindow,
     QGraphicsDropShadowEffect,
 )
-from PyQt5.QtGui import QImage, QPixmap, QColor
-import time
-import threading, queue
-from multiprocessing import Queue
-from pyqt.classes.classes import *
-from pyqt.gui.ui_splash_screen import Ui_SplashScreen
-from pyqt.gui.ui_main import Ui_MainWindow
+from threading import Lock
+import simpleaudio as sa
+
+from PyQt5.QtCore import (
+QThread,
+Qt,
+pyqtSignal,
+pyqtSlot,
+QRunnable,
+QThreadPool,
+QObject,
+QTimer,
+QMutex,
+QReadWriteLock
+)
 
 ## ==> GLOBALS
 counter = 0
-
-
-class MainWindow(QMainWindow):
+class Gui(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
         self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
+        self.ui.setupUi(self)  
+        self.lock = QReadWriteLock
+        self.cap = RealsenseCamera()
+        self.detector = Detect() 
+        
+        
         self.sound = False
         self.camerastream = False
         self.signals = WorkerSignals()
+        self.objThread = QThread()
         self.ui.camera.clicked.connect(self.test)
         self.ui.distance.valueChanged.connect(self.updateDistance)
-        # self.ui.radioButton.toggled.connect(lambda: self.btnstate(self.ui.radioButton))
         self.threadpool = QThreadPool()
         self.violations = 0
         self.commandQueue = Queue()
-        self.image = realsenseThread(self.signals, self.commandQueue)
-        self.image.signals.people.connect(self.setValue)
-        self.image.signals.violation.connect(self.violation)
-        self.showImage = Show(self.signals)
-        self.showImage.signals.changePixmap.connect(self.setImage)
-        self.showImage.start()
+        self.mask_frame_queue = Queue(maxsize=0)
+        self.distance_frame_queue = Queue(maxsize=0)
+        self.threads =[]
+        self.ui.camera.clicked.connect(self.test)
+        self.ui.tabWidget.currentChanged.connect(self.tab)
 
+        #Init people detection stream
+        self.social_dist = SocialDistancing(self.signals,self.cap,self.distance_frame_queue,self.lock,self.detector)
+        self.social_dist.signals.people.connect(self.setValue)
+        self.social_dist.signals.violation.connect(self.warning)
+        
+        
+        #init mask_detection stream
+        self.mask_det = MaskDetection(self.signals, self.cap,self.mask_frame_queue,self.lock,self.detector)
+        
+
+        #init 
+        self.show_mask = Show(self.signals.maskDetection_frame,self.mask_frame_queue)
+        self.show_mask.frame.connect(self.setMaskDetectionStream)
+        #self.show_mask.start()
+        
+        
+        self.show_distance = Show(self.signals.distance_frame, self.distance_frame_queue)
+        self.show_distance.frame.connect(self.setDistanceStream)
+        #self.show_distance.start()
+        
+        
+    
+
+    
+    
+    
+    
+    
+    def tab(self,value):
+        self.signals.tab_selection.emit(value)
+
+    
+    
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_W:
             self.commandQueue.put("up")
@@ -82,7 +135,7 @@ class MainWindow(QMainWindow):
     def setValue(self, value):
         self.ui.people.setText(str(value))
 
-    def violation(self, value):
+    def warning(self, value):
 
         if len(value) > 0 and not self.sound:
 
@@ -90,26 +143,41 @@ class MainWindow(QMainWindow):
             self.ui.status.setText(str(self.violations))
             self.sound = True
             self.playSound()
+            
 
     def test(self):
 
         try:
             if not self.camerastream:
 
-                self.image.start()
+                self.social_dist.start()
+                self.mask_det.start()
                 self.camerastream = True
 
             else:
-                self.image.stop()
+                # self.social_dist.stop()
+                # self.mask_det.stop()
 
                 self.camerastream = False
         except Exception as e:
-
+            print(str(e))
             pass
 
     @pyqtSlot(QImage)
-    def setImage(self, image):
-        self.ui.cameraStream.setPixmap(QPixmap.fromImage(image))
+    def setDistanceStream(self, image):
+        self.ui.stream_1.setPixmap(QPixmap.fromImage(image))
+
+    
+    @pyqtSlot(QImage)
+    def setMaskDetectionStream(self, image):
+        self.ui.stream_2.setPixmap(QPixmap.fromImage(image))
+
+
+
+
+
+
+
 
 
 class SplashScreen(QMainWindow):
@@ -174,7 +242,7 @@ class SplashScreen(QMainWindow):
             self.timer.stop()
 
             # SHOW MAIN WINDOW
-            self.main = MainWindow()
+            self.main = Gui()
             self.main.show()
 
             # CLOSE SPLASH SCREEN
